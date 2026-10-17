@@ -319,6 +319,26 @@ mod tests {
     }
 
     #[test]
+    fn persists_selected_metadata_across_reopens() {
+        let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+        let root = std::env::temp_dir().join(format!(
+            "rc-history-{}-{stamp}", std::process::id()
+        ));
+        let file = root.join("history.sqlite3");
+        let first = open_database(&file).unwrap();
+        let saved = add_report(&first, "/tmp/manual-report.json", "Recorded issue",
+            "stored-id", "linux", "x86_64").unwrap();
+        drop(first);
+        let second = open_database(&file).unwrap();
+        let items = search(&second, "recorded", 20).unwrap();
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].id, saved.id);
+        assert!(forget(&second, saved.id).unwrap());
+        drop(second);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn strict_query_limits_and_no_raw_credentials() {
         let conn = in_memory();
         let item = add_report(
