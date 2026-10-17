@@ -102,6 +102,5 @@ jobs:
       - name: Publish only if every platform passed
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        env:
           GH_REPO: ${{ github.repository }}
         run: gh release edit v0.1.0 --repo "$GH_REPO" --draft=false --prerelease
