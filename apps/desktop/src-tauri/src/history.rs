@@ -3,7 +3,7 @@
 //! imported report JSON or attachments. Indexing requires an affirmative action.
 
 use reprocrate_core::redaction::redact_text;
-use rusqlite::{params, Connection, OptionalExtension};
+use rusqlite::{params, Connection};
 use serde::Serialize;
 use std::fs;
 use std::path::{Path, PathBuf};
