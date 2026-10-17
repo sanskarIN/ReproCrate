@@ -1,4 +1,49 @@
-# ReproCrate development continuity record
+# Latest handoff — v0.2.0 prerelease candidate
+
+Date: 2026-10-17 (Asia/Kolkata). Repository: https://github.com/sanskarIN/ReproCrate.
+Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/ReproCrate/pull/2.
+
+**Current state:** Source and Rust CLI are implemented for v0.2.0, and a guarded pre-release workflow is staged. **v0.2.0 is not yet published** at the time of this note; older verified release is v0.1.0. Do not say the v0.2.0 release exists until verifying the public Releases API.
+
+## Implemented changes on development branch
+
+- `crates/reprocrate-core/src/analysis.rs`: 8 MiB hard input cap, 20,000-line scan cap, 200 distinct finding cap, 600-character message cap; automatic generic/Cargo/pytest/Jest/Vitest recognition; basic heuristic categories; occurrence grouping; deterministic FNV-1a 64-bit non-cryptographic grouping fingerprint; best-effort sanitized analysis; Markdown escaping.
+- `crates/reprocrate-cli/src/log_command.rs`: offline `reprocrate analyze` supporting regular files and standard input (`-`), customizable input bounds, explicit output files, no overwriting of existing output, inert imports and Markdown/JSON output.
+- `crates/reprocrate-cli/src/main.rs`: registers new CLI subcommand.
+- `crates/reprocrate-core/src/report.rs`: optional additive `analysis` field to existing v1.0.0 *report schema*, legacy report deserialization compatible. Analysis runs after capture output is sanitized, not on unsanitized data. No claimed independent root cause verification.
+- `crates/reprocrate-core/src/lib.rs`: shared exports for future Tauri UI.
+- `crates/reprocrate-cli/tests/log_analysis.rs`, `crates/reprocrate-core/tests/schema_compatibility.rs` and `fixtures/logs/`: mock logs, old schema import, stdin safety cap, format detection, no-overwrite, privacy and fingerprint regression tests.
+- `Cargo.toml` and `Cargo.lock`: workspace bumped to v0.2.0; no additional external runtime dependencies.
+- `docs/reference/log-analysis.md`, `docs/releases/v0.2.0.md` and README, changelog, roadmap, CLI reference and SECURITY updates.
+- `.github/workflows/prerelease-v0.2.0.yml`: release workflow stages tested portable CLI archives and SHA-256 checksums from Linux x86-64, macOS ARM64 and Windows x86-64, then verifies expected assets before public pre-release publication.
+
+## Verified quality (branch)
+
+- GitHub Actions CI https://github.com/sanskarIN/ReproCrate/actions/runs/39036931608: Linux Ubuntu 24.04, macOS 14 and Windows 2022 build, test, Clippy (`-D warnings`), and rustfmt all **passed** for commit `9e82f646`. A subsequent workflow-only commit requires its own CI confirmation.
+- Prior CI found a temporary-directory collision on macOS under concurrent tests. Fixed with a monotonic per-process atomic sequence; follow-up CI passed.
+- Earlier formatting-only failures were repaired using `cargo fmt --all` in a temporary trusted GitHub Actions workflow. That write-enabled normalization workflow and trigger were deleted after use.
+- New prerelease packaging: **not yet executed** at this timestamp.
+- Author and committer on new commits: **Sanskar <sanskarin@outlook.in>** (GitHub connector verified for feature commits; check subsequent automations as needed).
+
+## Known limitations
+
+- Framework adapters are heuristic text recognizers, not complete parsers of all test-result formats, and may misclassify mixed logs.
+- Log fingerprints are **not** cryptographic verification, do not encode proof of causality and are not guaranteed unique.
+- Sensitive-information redaction is incomplete by design; unknown secrets, private paths and host identifiers may remain in exports. Users must review before sharing.
+- CLI capture remains a direct host command execution, not a sandbox or full process-tree supervisor.
+- No Tauri desktop UI, safe portable bundle, report comparison, SQLite history, cross-platform desktop installer, hosted documentation, or stable v1.0.0 are claimed.
+
+## Next actions
+
+1. Verify final HEAD CI status, mark PR #2 ready and merge only after checks pass.
+2. Create `.release/v0.2.0` on `main` to invoke the guardrail-based pre-release workflow.
+3. Require all 3 platform packaging/upload jobs to pass, check release metadata/6 files and checksums through GitHub APIs.
+4. Update README/changelog/release handoff with *verified* published links, or record actual blocked jobs.
+5. Plan v0.3.0 security/redaction review and portable bundle threat model; do not skip verification gates.
+
+---
+
+# Historical handoff — v0.1.0
 
 Last verified: October 17, 2026 (Asia/Kolkata).
 
