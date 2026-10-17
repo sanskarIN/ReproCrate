@@ -1,4 +1,37 @@
-# Latest handoff — v0.3.0 pre-release published
+# Latest handoff — v0.4.0 development (not yet published)
+
+Date: October 17, 2026. Repository: https://github.com/sanskarIN/ReproCrate.
+Development branch: `feat/v0.4.0-compare-recipes`.
+Most recent published CLI pre-release: https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0.
+
+## Implemented v0.4.0 source
+
+- `crates/reprocrate-core/src/compare.rs`: privacy-minimizing structural comparison, explicit field relationship and observation-state enums, bounded heuristic fingerprint differences only where both analyses are complete. No raw log or argument values in exported diffs.
+- `crates/reprocrate-core/src/recipe.rs`: schema-versioned, five-step inert human review/checklist recipes; command references omitted by default; validation explicitly rejects automatic-execution flag. Recipe Markdown uses HTML escaping and does not generate executable shell scripts.
+- `crates/reprocrate-cli/src/compare_recipe_commands.rs`: offline `compare`, `recipe create`, `recipe inspect`; independent 4 MiB report import limits and 1 MiB recipe limit, no-overwrite output; command references require explicit review acknowledgement.
+- `crates/reprocrate-cli/src/main.rs`, `crates/reprocrate-core/src/lib.rs`: register commands and core APIs.
+- `crates/reprocrate-cli/tests/compare_recipes.rs`: integration checks for privacy-preserving diffs, incomplete data, opt-in command disclosure, recipe import non-execution and overwrite prevention.
+- `Cargo.toml`, `Cargo.lock`: workspace v0.4.0. No new third-party dependencies introduced for this milestone.
+- `docs/reference/report-comparison.md`, `docs/reference/reproduction-recipes.md`, `docs/releases/v0.4.0.md`: documents supported CLI behavior and conservative claims.
+
+## Validation / release gate
+
+- Cross-platform CI (Ubuntu 24.04, macOS 14, Windows 2022) must pass tests, Clippy `-D warnings`, and rustfmt before merging this development branch.
+- An early Clippy failure was caused by an unreachable pattern in a new enum match; patched in commit `b66fe742`.
+- **v0.4.0 was not published as of this handoff entry.** Do not claim release artifacts exist until GitHub API confirms the public pre-release, file names and sizes.
+- Published v0.3.0 remains intact, with its six native CLI assets.
+
+## Known limitations and next steps
+
+1. Check the latest CI failures, fix implementation/tests/formatting, and verify all 3 OS runners.
+2. Open PR and merge only checked source into `main`, preserving granular commits with `sanskarin@outlook.in`.
+3. Trigger version-specific guarded pre-release workflow and verify native archive + checksum assets before publicly marking v0.4.0 complete.
+4. Continue privacy/redaction improvement, hardened ZIP testing, and eventual v0.5.0 Tauri desktop integration.
+5. Structural similarity is **not** verified reproduction. Fingerprints can collide; redaction is best-effort; there is no sandbox and no automatic recipe execution.
+
+---
+
+# Historical handoff — v0.3.0 pre-release published
 
 Date: 2026-10-17. Repository: https://github.com/sanskarIN/ReproCrate. Source development branch: `feat/v0.3.0-privacy-bundles`. Merged PR: https://github.com/sanskarIN/ReproCrate/pull/3.
 

@@ -7,7 +7,7 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | v0.1.0 | **Shipped as pre-release:** working Rust command capture, bounded output, basic sanitization, JSON/Markdown reports, CI |
 | v0.2.0 | **Shipped as pre-release:** bounded offline log analyzer, initial format detection (Cargo/pytest/Jest/Vitest), deterministic fingerprints, test fixtures. Process-tree cancellation remains future work. |
 | v0.3.0 | **Shipped as pre-release:** local report review, explicit attachment approval, bounded ZIP creation/inspection/verification/safe extraction and hostile-input regression checks. Further security hardening remains planned. |
-| v0.4.0 | Comparisons, structured recipes and compatibility |
+| v0.4.0 | **In development:** privacy-minimizing report comparisons, missing/redacted/truncated field states, non-executable manual recipes, cross-platform CLI tests. |
 | v0.5.0 | Shared-Rust-core Tauri desktop foundation |
 | v0.6.0 | SQLite history, search, accessibility, desktop refinement |
 | v0.7.0 | Issue export review and integration adapters |

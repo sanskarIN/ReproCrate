@@ -43,6 +43,12 @@
 
 **Remaining:** further fuzzing, fuller privacy coverage, end-to-end authentication guidance and stable-release hardening.
 
-## Unreleased — towards v0.4.0
+## Unreleased — v0.4.0 development
 
-Planned: report/environment comparisons and versioned inert reproduction recipes, with continued archive/privacy hardening.
+- Added `reprocrate compare` with deterministic structural field differences and explicit unknown/redacted/truncated states, without exporting raw log or argument values.
+- Added heuristic fingerprint comparison only when *both* reports have complete log analysis.
+- Added `reprocrate recipe create` and `recipe inspect`, versioned inert five-step manual guides and bounded validation.
+- Command references are excluded by default; including one requires both `--include-command` and `--acknowledge-reviewed`.
+- Added shared Rust-core APIs and offline CLI integration tests. Report schema 1.0.0 remains compatible.
+
+Not yet shipped as a pre-release until platform CI and guarded release publishing pass. No automatic reproduction or desktop GUI.

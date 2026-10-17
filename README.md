@@ -2,7 +2,7 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 adds explicit privacy review and integrity-checked portable ZIP bundles.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. The v0.4.0 development branch adds privacy-minimizing report comparisons and inert reproduction checklists.
 
 > **Latest pre-release:** [v0.3.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0), published October 17, 2026, with Windows x86-64, Linux x86-64, and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** Desktop UI, comparisons and hosted documentation remain planned.
 
@@ -28,6 +28,16 @@ cargo run -p reprocrate-cli -- bundle extract diagnostic.zip extracted
 ```
 
 Review the exact JSON and every optional attachment yourself before sharing. The `--acknowledge-reviewed` flag explicitly confirms that review. The tool does not sanitize attachments automatically, upload reports, or execute imported commands. Read the [privacy and bundle guide](docs/reference/privacy-bundles.md).
+
+## Compare reports and generate manual recipes (v0.4.0 development)
+
+```bash
+cargo run -p reprocrate-cli -- compare old.json new.json --output diff.json --markdown diff.md
+cargo run -p reprocrate-cli -- recipe create --report reviewed.json --output recipe.json --markdown recipe.md
+cargo run -p reprocrate-cli -- recipe inspect recipe.json
+```
+
+Comparisons report structural changes without exporting raw log lines or arguments. The recipe's command reference is omitted by default and requires explicit approval when included. Imported recipes **never execute automatically**. See [comparison reference](docs/reference/report-comparison.md) and [recipe reference](docs/reference/reproduction-recipes.md).
 
 ## Build from source
 
@@ -64,7 +74,7 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
+Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, **automated** reproduction, or cloud integrations. Comparing reports and generating manual recipes do not constitute automated reproduction. The pre-release provides verified portable CLI archives only.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 
