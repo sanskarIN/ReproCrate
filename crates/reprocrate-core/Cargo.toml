@@ -11,3 +11,5 @@ description = "Local-first bug reproduction report domain and capture engine"
 serde.workspace = true
 serde_json.workspace = true
 regex.workspace = true
+zip.workspace = true
+sha2.workspace = true
