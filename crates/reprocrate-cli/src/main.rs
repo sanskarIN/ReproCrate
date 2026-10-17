@@ -12,7 +12,11 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 #[derive(Parser)]
-#[command(name = "reprocrate", version, about = "Turn bugs into reproducible reports.")]
+#[command(
+    name = "reprocrate",
+    version,
+    about = "Turn bugs into reproducible reports."
+)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -49,9 +53,7 @@ enum Commands {
         json: bool,
     },
     /// Display metadata from a bounded, valid ReproCrate JSON report.
-    Inspect {
-        path: PathBuf,
-    },
+    Inspect { path: PathBuf },
 }
 
 #[derive(Clone, Copy, Debug, ValueEnum)]
@@ -94,7 +96,8 @@ fn import_json(path: &Path) -> Result<Report, Box<dyn Error>> {
         return Err(format!(
             "unsupported schema {}; this CLI only reads {}",
             report.schema_version, SCHEMA_VERSION
-        ).into());
+        )
+        .into());
     }
     Ok(report)
 }
@@ -110,8 +113,13 @@ fn run() -> Result<(), Box<dyn Error>> {
                 println!("ReproCrate {}", env!("CARGO_PKG_VERSION"));
                 println!("OS: {}", env.os);
                 println!("Architecture: {}", env.architecture);
-                println!("Available parallelism: {}", env.available_parallelism.unwrap_or(0));
-                println!("No hostnames, environment variables, usernames or network IDs are collected.");
+                println!(
+                    "Available parallelism: {}",
+                    env.available_parallelism.unwrap_or(0)
+                );
+                println!(
+                    "No hostnames, environment variables, usernames or network IDs are collected."
+                );
             }
         }
         Commands::Inspect { path } => {
@@ -122,7 +130,11 @@ fn run() -> Result<(), Box<dyn Error>> {
             println!("Program: {}", report.capture.executable);
             println!(
                 "Exit code: {}",
-                report.capture.exit_code.map(|n| n.to_string()).unwrap_or_else(|| "unavailable".into())
+                report
+                    .capture
+                    .exit_code
+                    .map(|n| n.to_string())
+                    .unwrap_or_else(|| "unavailable".into())
             );
             println!("Duration: {} ms", report.capture.duration_ms);
             println!("Timed out: {}", report.capture.timed_out);
@@ -130,13 +142,22 @@ fn run() -> Result<(), Box<dyn Error>> {
             println!("Inspect the original report before sharing.");
         }
         Commands::Capture {
-            output, markdown, timeout_seconds, max_output_bytes, profile, title, command
+            output,
+            markdown,
+            timeout_seconds,
+            max_output_bytes,
+            profile,
+            title,
+            command,
         } => {
             if markdown.as_deref() == Some(output.as_path()) {
                 return Err("--output and --markdown must be different paths".into());
             }
             if output.exists() || markdown.as_ref().is_some_and(|path| path.exists()) {
-                return Err("an output file already exists; choose a new name (overwrite is disabled)".into());
+                return Err(
+                    "an output file already exists; choose a new name (overwrite is disabled)"
+                        .into(),
+                );
             }
             let options = CaptureOptions {
                 timeout: Duration::from_secs(timeout_seconds),
@@ -155,7 +176,9 @@ fn run() -> Result<(), Box<dyn Error>> {
             println!("Exit code: {:?}", report.capture.exit_code);
             println!("Timed out: {}", report.capture.timed_out);
             println!("Redaction pattern matches: {}", report.redaction_matches);
-            eprintln!("Review every field and log excerpt before sharing. Masking is not guaranteed.");
+            eprintln!(
+                "Review every field and log excerpt before sharing. Masking is not guaranteed."
+            );
         }
     }
     Ok(())
@@ -177,7 +200,10 @@ mod tests {
             .expect("valid capture syntax");
         match parsed.command {
             Commands::Capture { command, .. } => {
-                assert_eq!(command, vec![OsString::from("cargo"), OsString::from("test")]);
+                assert_eq!(
+                    command,
+                    vec![OsString::from("cargo"), OsString::from("test")]
+                );
             }
             _ => panic!("unexpected subcommand"),
         }

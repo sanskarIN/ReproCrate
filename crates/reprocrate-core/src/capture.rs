@@ -16,7 +16,10 @@ pub struct CaptureOptions {
 
 impl Default for CaptureOptions {
     fn default() -> Self {
-        Self { timeout: Duration::from_secs(30), max_output_bytes_per_stream: 65_536 }
+        Self {
+            timeout: Duration::from_secs(30),
+            max_output_bytes_per_stream: 65_536,
+        }
     }
 }
 
@@ -75,19 +78,31 @@ fn status_signal(_status: &ExitStatus) -> Option<i32> {
 /// options or failures supervising an already-running process return an I/O error.
 pub fn capture_command(args: &[OsString], options: &CaptureOptions) -> io::Result<Capture> {
     if args.is_empty() {
-        return Err(io::Error::new(io::ErrorKind::InvalidInput, "missing executable"));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "missing executable",
+        ));
     }
     if options.timeout.is_zero() || options.timeout > Duration::from_secs(86_400) {
-        return Err(io::Error::new(io::ErrorKind::InvalidInput, "timeout must be between 1 second and 24 hours"));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "timeout must be between 1 second and 24 hours",
+        ));
     }
     if !(1..=10_485_760).contains(&options.max_output_bytes_per_stream) {
-        return Err(io::Error::new(io::ErrorKind::InvalidInput, "stream limit must be between 1 and 10485760 bytes"));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "stream limit must be between 1 and 10485760 bytes",
+        ));
     }
 
     let started_unix_ms = timestamp_millis();
     let started = Instant::now();
     let program = args[0].to_string_lossy().into_owned();
-    let arguments = args[1..].iter().map(|s| s.to_string_lossy().into_owned()).collect();
+    let arguments = args[1..]
+        .iter()
+        .map(|s| s.to_string_lossy().into_owned())
+        .collect();
     let empty = || Capture {
         executable: program.clone(),
         arguments: arguments.clone(),
@@ -112,7 +127,12 @@ pub fn capture_command(args: &[OsString], options: &CaptureOptions) -> io::Resul
         .spawn()
     {
         Ok(child) => child,
-        Err(error) => return Ok(Capture { launch_error: Some(error.to_string()), ..empty() }),
+        Err(error) => {
+            return Ok(Capture {
+                launch_error: Some(error.to_string()),
+                ..empty()
+            })
+        }
     };
 
     let (tx, rx) = mpsc::sync_channel(16);
@@ -159,10 +179,18 @@ pub fn capture_command(args: &[OsString], options: &CaptureOptions) -> io::Resul
             break;
         }
         match rx.recv_timeout(Duration::from_millis(20)) {
-            Ok(Event::Data(Stream::Stdout, bytes)) =>
-                push_bounded(&mut out, &bytes, options.max_output_bytes_per_stream, &mut out_truncated),
-            Ok(Event::Data(Stream::Stderr, bytes)) =>
-                push_bounded(&mut err, &bytes, options.max_output_bytes_per_stream, &mut err_truncated),
+            Ok(Event::Data(Stream::Stdout, bytes)) => push_bounded(
+                &mut out,
+                &bytes,
+                options.max_output_bytes_per_stream,
+                &mut out_truncated,
+            ),
+            Ok(Event::Data(Stream::Stderr, bytes)) => push_bounded(
+                &mut err,
+                &bytes,
+                options.max_output_bytes_per_stream,
+                &mut err_truncated,
+            ),
             Ok(Event::Finished) => streams_finished = streams_finished.saturating_add(1),
             Err(RecvTimeoutError::Timeout) => {}
             Err(RecvTimeoutError::Disconnected) => {
@@ -203,7 +231,8 @@ mod tests {
     #[test]
     fn missing_executable_generates_reportable_error() {
         let args = vec![OsString::from("reprocrate_nonexistent_program_x9y8z7")];
-        let captured = capture_command(&args, &CaptureOptions::default()).expect("capture response");
+        let captured =
+            capture_command(&args, &CaptureOptions::default()).expect("capture response");
         assert!(captured.launch_error.is_some());
         assert_eq!(captured.exit_code, None);
     }
@@ -222,6 +251,9 @@ mod tests {
             max_output_bytes_per_stream: usize::MAX,
         };
         let result = capture_command(&[OsString::from("ignored")], &options);
-        assert_eq!(result.expect_err("invalid option").kind(), io::ErrorKind::InvalidInput);
+        assert_eq!(
+            result.expect_err("invalid option").kind(),
+            io::ErrorKind::InvalidInput
+        );
     }
 }

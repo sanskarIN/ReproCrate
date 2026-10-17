@@ -8,12 +8,27 @@ pub fn redact_text(value: &str) -> (String, usize) {
     let mut text = value.to_owned();
     let mut matches = 0;
     let rules: [(&str, &str); 6] = [
-        (r"(?i)(authorization\s*:\s*bearer\s+)[A-Za-z0-9._~+/-]+={0,2}", "${1}[REDACTED]"),
+        (
+            r"(?i)(authorization\s*:\s*bearer\s+)[A-Za-z0-9._~+/-]+={0,2}",
+            "${1}[REDACTED]",
+        ),
         (r"(?i)(bearer\s+)[A-Za-z0-9._~+/-]+={0,2}", "${1}[REDACTED]"),
-        (r"(?i)(\b(?:password|passwd|token|secret|api[_-]?key|access[_-]?key)\b\s*[:=]\s*)[^\s,;]+", "${1}[REDACTED]"),
-        (r"(?i)(--(?:password|token|secret|api-key|access-key)(?:=|\s+))[^\s]+", "${1}[REDACTED]"),
-        (r"(?i)(https?://[^\s/:@]+:)[^\s/@]+(@)", "${1}[REDACTED]${2}"),
-        (r"(?s)-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----.*?-----END (?:[A-Z ]*PRIVATE KEY)-----", "[REDACTED PRIVATE KEY]"),
+        (
+            r"(?i)(\b(?:password|passwd|token|secret|api[_-]?key|access[_-]?key)\b\s*[:=]\s*)[^\s,;]+",
+            "${1}[REDACTED]",
+        ),
+        (
+            r"(?i)(--(?:password|token|secret|api-key|access-key)(?:=|\s+))[^\s]+",
+            "${1}[REDACTED]",
+        ),
+        (
+            r"(?i)(https?://[^\s/:@]+:)[^\s/@]+(@)",
+            "${1}[REDACTED]${2}",
+        ),
+        (
+            r"(?s)-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----.*?-----END (?:[A-Z ]*PRIVATE KEY)-----",
+            "[REDACTED PRIVATE KEY]",
+        ),
     ];
     for (pattern, replacement) in rules {
         // The patterns are part of our source, but do not panic if one is edited incorrectly.
@@ -29,8 +44,14 @@ fn looks_like_secret_flag(s: &str) -> bool {
     let flag = s.trim_start_matches('-').to_ascii_lowercase();
     matches!(
         flag.as_str(),
-        "password" | "passwd" | "token" | "secret" | "api-key" | "api_key"
-            | "access-key" | "access_key"
+        "password"
+            | "passwd"
+            | "token"
+            | "secret"
+            | "api-key"
+            | "api_key"
+            | "access-key"
+            | "access_key"
     )
 }
 
@@ -69,7 +90,11 @@ mod tests {
     }
     #[test]
     fn masks_command_pair() {
-        let args = vec!["--token".to_owned(), "topsecret".to_owned(), "test".to_owned()];
+        let args = vec![
+            "--token".to_owned(),
+            "topsecret".to_owned(),
+            "test".to_owned(),
+        ];
         let (sanitized, count) = redact_args(&args);
         assert_eq!(sanitized[1], "[REDACTED]");
         assert_eq!(sanitized[2], "test");
@@ -88,7 +113,8 @@ mod tests {
     }
     #[test]
     fn private_key_block_is_removed() {
-        let (text, _) = redact_text("-----BEGIN PRIVATE KEY-----\nhello\n-----END PRIVATE KEY-----");
+        let (text, _) =
+            redact_text("-----BEGIN PRIVATE KEY-----\nhello\n-----END PRIVATE KEY-----");
         assert!(!text.contains("hello"));
     }
 }

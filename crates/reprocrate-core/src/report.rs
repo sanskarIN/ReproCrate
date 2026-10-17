@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: EPL-2.0
-use crate::{environment::Environment, redaction::{redact_text, redact_args}, VERSION};
+use crate::{
+    environment::Environment,
+    redaction::{redact_args, redact_text},
+    VERSION,
+};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -38,7 +42,9 @@ pub struct Report {
 }
 
 pub fn timestamp_millis() -> u64 {
-    let elapsed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default();
+    let elapsed = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default();
     u64::try_from(elapsed.as_millis()).unwrap_or(u64::MAX)
 }
 
@@ -65,14 +71,18 @@ impl Report {
         let (title, _) = redact_text(&title);
         let count = out_count + err_count + launch_count + exe_count + arg_count + title_count;
         let mut warnings = vec![
-            "Automatic secret masking is best-effort. Review the entire report before sharing.".to_owned(),
+            "Automatic secret masking is best-effort. Review the entire report before sharing."
+                .to_owned(),
             "The selected command was executed on the host; it was not sandboxed.".to_owned(),
         ];
         if sanitized_capture.stdout_truncated || sanitized_capture.stderr_truncated {
             warnings.push("Output exceeded the per-stream capture limit and was truncated.".into());
         }
         if sanitized_capture.timed_out {
-            warnings.push("The command exceeded its timeout and its direct child process was terminated.".into());
+            warnings.push(
+                "The command exceeded its timeout and its direct child process was terminated."
+                    .into(),
+            );
         }
         Self {
             schema_version: SCHEMA_VERSION.into(),
@@ -94,7 +104,9 @@ impl Report {
 }
 
 fn html_escape(text: &str) -> String {
-    text.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+    text.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
 }
 fn inline(text: &str) -> String {
     html_escape(text).replace('\n', " ").replace('\r', " ")
@@ -102,7 +114,11 @@ fn inline(text: &str) -> String {
 fn fenced(text: &str) -> String {
     let escaped = html_escape(text);
     let tick = char::from(96);
-    let longest = escaped.split(|c| c != tick).map(str::len).max().unwrap_or(0);
+    let longest = escaped
+        .split(|c| c != tick)
+        .map(str::len)
+        .max()
+        .unwrap_or(0);
     let fence = tick.to_string().repeat(3.max(longest + 1));
     format!("{fence}text\n{escaped}\n{fence}\n")
 }
@@ -121,7 +137,11 @@ pub fn render_markdown(report: &Report) -> String {
         "Executable: {}  \nArguments: {}  \nExit code: {}  \nTimeout: {}  \nDuration: {} ms\n\n",
         inline(&report.capture.executable),
         inline(&format!("{:?}", report.capture.arguments)),
-        report.capture.exit_code.map(|n| n.to_string()).unwrap_or_else(|| "not available".into()),
+        report
+            .capture
+            .exit_code
+            .map(|n| n.to_string())
+            .unwrap_or_else(|| "not available".into()),
         report.capture.timed_out,
         report.capture.duration_ms
     ));
@@ -134,16 +154,28 @@ pub fn render_markdown(report: &Report) -> String {
         inline(&report.environment.capture_profile),
         inline(&report.environment.os),
         inline(&report.environment.architecture),
-        report.environment.available_parallelism.map(|n| n.to_string()).unwrap_or_else(|| "not collected".into())
+        report
+            .environment
+            .available_parallelism
+            .map(|n| n.to_string())
+            .unwrap_or_else(|| "not collected".into())
     ));
     body.push_str(&format!(
         "## Standard output{}\n\n{}\n",
-        if report.capture.stdout_truncated { " (truncated)" } else { "" },
+        if report.capture.stdout_truncated {
+            " (truncated)"
+        } else {
+            ""
+        },
         fenced(&report.capture.stdout)
     ));
     body.push_str(&format!(
         "## Standard error{}\n\n{}\n",
-        if report.capture.stderr_truncated { " (truncated)" } else { "" },
+        if report.capture.stderr_truncated {
+            " (truncated)"
+        } else {
+            ""
+        },
         fenced(&report.capture.stderr)
     ));
     body.push_str("## Privacy and limitations\n\n");
@@ -175,7 +207,11 @@ mod tests {
             stderr_truncated: false,
             max_output_bytes_per_stream: 512,
         };
-        let report = Report::new("Demo".into(), inspect_environment(CaptureProfile::Minimal), capture);
+        let report = Report::new(
+            "Demo".into(),
+            inspect_environment(CaptureProfile::Minimal),
+            capture,
+        );
         let md = render_markdown(&report);
         assert!(!md.contains("<script>"));
         assert!(!md.contains("password=abc"));
@@ -185,10 +221,18 @@ mod tests {
     fn schema_round_trip() {
         let env = inspect_environment(CaptureProfile::Minimal);
         let capture = Capture {
-            executable: "ok".into(), arguments: vec![], started_unix_ms: 0,
-            duration_ms: 0, exit_code: Some(0), termination_signal: None,
-            timed_out: false, launch_error: None, stdout: String::new(),
-            stderr: String::new(), stdout_truncated: false, stderr_truncated: false,
+            executable: "ok".into(),
+            arguments: vec![],
+            started_unix_ms: 0,
+            duration_ms: 0,
+            exit_code: Some(0),
+            termination_signal: None,
+            timed_out: false,
+            launch_error: None,
+            stdout: String::new(),
+            stderr: String::new(),
+            stdout_truncated: false,
+            stderr_truncated: false,
             max_output_bytes_per_stream: 1,
         };
         let report = Report::new("test".into(), env, capture);
