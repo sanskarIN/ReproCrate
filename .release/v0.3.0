@@ -1,0 +1,3 @@
+Version v0.3.0 pre-release marker.
+Only publish verified CLI artifacts and SHA-256 checksums after all Rust and native packaging gates pass.
+Stable v1.0.0 remains a separate milestone.
