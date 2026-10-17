@@ -1,0 +1,3 @@
+ReproCrate v0.6.0 local desktop history pre-release marker.
+Publish experimental Windows/Linux/macOS CLI and Tauri executable developer previews only after all native builds, tests, archive checks and SHA-256 uploads pass.
+Stable v1.0.0 is not included.
