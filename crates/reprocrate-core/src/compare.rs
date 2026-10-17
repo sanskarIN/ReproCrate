@@ -123,7 +123,7 @@ fn findings_map(report: &Report) -> BTreeMap<String, usize> {
     if let Some(analysis) = &report.analysis {
         for finding in analysis.findings.iter().take(MAX_COMPARABLE_FINDINGS) {
             // Fingerprints must be a short, stable, non-secret grouping ID.
-            if finding.fingerprint.len() != 23
+            if finding.fingerprint.len() != 24
                 || !finding.fingerprint.starts_with("fnv1a64:")
                 || !finding.fingerprint[8..].bytes().all(|b| b.is_ascii_hexdigit())
             {
