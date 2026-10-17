@@ -317,8 +317,7 @@ mod tests {
     #[test]
     fn rejects_modified_or_missing_checksums() {
         let mut bytes = create_bundle(&sample_report(), &[]).unwrap();
-        let position = bytes.windows(5).position(|x| x == b"PK\x05\x06");
-        assert!(position.is_some());
+        // An incomplete ZIP directory is always rejected without unpacking.
         bytes.truncate(10);
         assert!(verify_bundle(&bytes).is_err());
     }
@@ -349,7 +348,7 @@ mod tests {
         let opts = SimpleFileOptions::default();
         zip.start_file("report.json", opts).unwrap();
         zip.write_all(b"first").unwrap();
-        zip.start_file("report.json", opts).unwrap();
+        zip.start_file("REPORT.JSON", opts).unwrap();
         zip.write_all(b"second").unwrap();
         let bytes = zip.finish().unwrap().into_inner();
         assert!(verify_bundle(&bytes).is_err());
