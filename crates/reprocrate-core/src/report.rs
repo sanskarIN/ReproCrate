@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0
 use crate::{
+    analysis::{analyze_text, LogAnalysis, LogFormat},
     environment::Environment,
     redaction::{redact_args, redact_text},
     VERSION,
@@ -38,6 +39,9 @@ pub struct Report {
     pub environment: Environment,
     pub capture: Capture,
     pub redaction_matches: usize,
+    /// Optional, heuristic findings introduced additively in v0.2.0.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub analysis: Option<LogAnalysis>,
     pub warnings: Vec<String>,
 }
 
@@ -70,6 +74,13 @@ impl Report {
         let (_, title_count) = redact_text(&title);
         let (title, _) = redact_text(&title);
         let count = out_count + err_count + launch_count + exe_count + arg_count + title_count;
+        // Only analyze already-sanitized output. Never add raw secrets to reports.
+        let observed_output = format!(
+            "{}\n{}",
+            sanitized_capture.stderr, sanitized_capture.stdout
+        );
+        let findings = analyze_text(&observed_output, LogFormat::Auto, false);
+        let analysis = if findings.findings.is_empty() { None } else { Some(findings) };
         let mut warnings = vec![
             "Automatic secret masking is best-effort. Review the entire report before sharing."
                 .to_owned(),
@@ -98,6 +109,7 @@ impl Report {
             environment,
             capture: sanitized_capture,
             redaction_matches: count,
+            analysis,
             warnings,
         }
     }
@@ -178,6 +190,20 @@ pub fn render_markdown(report: &Report) -> String {
         },
         fenced(&report.capture.stderr)
     ));
+    if let Some(analysis) = &report.analysis {
+        body.push_str("## Observed failure signals (heuristic)\n\n");
+        for finding in &analysis.findings {
+            body.push_str(&format!(
+                "- Line {} | {:?} | {:?} | {} ({} occurrence(s))\n",
+                finding.line,
+                finding.severity,
+                finding.category,
+                inline(&finding.message),
+                finding.occurrences
+            ));
+        }
+        body.push_str("\nThese signals do not establish root cause.\n\n");
+    }
     body.push_str("## Privacy and limitations\n\n");
     for warning in &report.warnings {
         body.push_str(&format!("- {}\n", inline(warning)));
