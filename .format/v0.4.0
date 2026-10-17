@@ -1,0 +1,1 @@
+Run the temporary rustfmt normalizer for reviewed source; remove workflow and marker immediately after success.
