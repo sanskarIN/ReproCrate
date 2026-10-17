@@ -68,7 +68,9 @@ fn new_reports_use_additive_optional_analysis_field() {
     );
     let findings = report.analysis.as_ref().expect("analysis for error");
     assert_eq!(findings.detected_format, "cargo");
-    assert!(!serde_json::to_string(&report).expect("json").contains("known-demo-key"));
+    assert!(!serde_json::to_string(&report)
+        .expect("json")
+        .contains("known-demo-key"));
 }
 
 #[test]

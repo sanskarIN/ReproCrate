@@ -18,8 +18,11 @@ fn scratch() -> PathBuf {
         .duration_since(UNIX_EPOCH)
         .expect("clock")
         .as_nanos();
-    let path =
-        std::env::temp_dir().join(format!("reprocrate-analyze-{}-{nanos}-{}", std::process::id(), TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)));
+    let path = std::env::temp_dir().join(format!(
+        "reprocrate-analyze-{}-{nanos}-{}",
+        std::process::id(),
+        TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+    ));
     fs::create_dir(&path).expect("temp directory");
     path
 }
