@@ -1,4 +1,4 @@
-# CLI reference (v0.1.0 development)
+# CLI reference (v0.2.0 pre-release)
 
 Build first with a stable Rust toolchain:
 
