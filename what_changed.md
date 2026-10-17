@@ -1,67 +1,70 @@
-# ReproCrate development handoff
+# ReproCrate development continuity record
 
-Date: 2026-10-17 (UTC+05:30). Repository: https://github.com/sanskarIN/ReproCrate.
+Last verified: October 17, 2026 (Asia/Kolkata).
 
-**Important naming:** the user's prose mentioned RepoCrate, but the attached project specification and the existing writable repository both name **ReproCrate**. https://github.com/sanskarIN/RepoCrate returned 404; ReproCrate is the target. Do not rename or create another repository without explicit direction.
+## Repository identity
 
-## Current milestone
+- **Actual repository:** https://github.com/sanskarIN/ReproCrate
+- `https://github.com/sanskarIN/RepoCrate` was not found. The uploaded master specification and the writable repository use **ReproCrate**.
+- Default branch: `main`
+- Project source license: **EPL-2.0**; the repository's existing official `LICENSE` was preserved.
+- Confirmed Git author/committer on newly created commits: **Sanskar <sanskarin@outlook.in>**.
 
-Phase 0 completed as repository discovery and architecture design. **v0.1.0 is in development; no GitHub pre-release or verified binary is published.** v1.0.0 is not claimed.
+## Current shipped milestone: v0.1.0 pre-release
 
-## Source implemented
+**Verified published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0
 
-- `Cargo.toml` defines a Rust 2021 workspace with `reprocrate-core` and `reprocrate-cli` (license metadata EPL-2.0).
-- `crates/reprocrate-core/src/environment.rs`: minimal and standard high-level profiles without usernames/hostnames.
-- `crates/reprocrate-core/src/capture.rs`: explicit non-shell child spawning, separate bounded pipes, timeouts, child reap, failure capture and truncation flags.
-- `crates/reprocrate-core/src/redaction.rs`: best-effort token/password/bearer/key masking and command argument masking.
-- `crates/reprocrate-core/src/report.rs`: schema 1.0.0, sanitized JSON model and HTML-escaped Markdown renderer.
-- `crates/reprocrate-cli/src/main.rs`: help/version, capture, doctor and inert report inspection, destination overwrite protection.
-- `crates/reprocrate-cli/tests/cli.rs`: CLI smoke tests.
-- `.github/workflows/rust-ci.yml`: matrix build, tests, clippy and fmt.
-- Root README, roadmap, changelog, security, contributions, conduct, issue/PR templates, architecture, CLI reference and threat model.
-- Pre-existing root `LICENSE` preserved: Eclipse Public License 2.0.
+- GitHub API confirmed `tag_name: v0.1.0`, `prerelease: true`, `draft: false`, published October 17, 2026, 12:56:58 UTC.
+- Six uploaded assets (three real archives and three SHA-256 files):
+  - `reprocrate-v0.1.0-linux-x86_64.tar.gz`
+  - `reprocrate-v0.1.0-linux-x86_64.tar.gz.sha256`
+  - `reprocrate-v0.1.0-macos-arm64.tar.gz`
+  - `reprocrate-v0.1.0-macos-arm64.tar.gz.sha256`
+  - `reprocrate-v0.1.0-windows-x86_64.zip`
+  - `reprocrate-v0.1.0-windows-x86_64.zip.sha256`
+- Release tag target: `d187c85f1c3ee47a9fef4535663c2c850fb1f54d`. Subsequent commits on main only repaired release automation and updated documentation; avoid implying tag tracks latest main.
+- This is an **experimental CLI pre-release**, not stable v1.0.0. No Tauri desktop executable or installer is included.
 
-## Verification
+## Implemented source
 
-- GitHub repository, branch, initial LICENSE and permissions: **verified** using the connected GitHub API.
-- Remote commits and branch updates: **verified** through the connected GitHub API.
-- Local compiler, cargo fmt, cargo clippy, tests and binary E2E: **not run**. The execution container does not have rustc/cargo and cannot reach the Rust distribution network.
-- GitHub Actions **verified**: Rust CI (Ubuntu 24.04, Windows 2022 and macOS 14) passed build, tests, Clippy and rustfmt at commit `5219b891` and passed all those gates again at commit `46e7239c`. The newer timeout/redaction test commit `60c20126` passed Ubuntu and macOS checks; Windows CI was still finalizing when this entry was updated. Verify the newest run before merging.
-- `Cargo.lock`: **generated and committed** by the temporary trusted Rust normalization workflow in commit `c0e2d67a`; formatter passed. The temporary write-enabled workflow was then deleted in commit `5a49df07`.
-- Cross-platform CLI artifacts: **release workflow configured**, but release binaries, GitHub tag, checksums and published pre-release are **not yet verified**. GitHub Pages, Tauri/React desktop, bundles and comparisons are **not implemented/not deployed**.
+- `Cargo.toml`, `Cargo.lock`: versioned Rust 2021 Cargo workspace with reproducible dependency resolution.
+- `crates/reprocrate-core/src/lib.rs`: shared library entry points.
+- `environment.rs`: minimal and standard non-identifying OS/architecture/parallelism capture profiles.
+- `capture.rs`: explicit program execution without shell; bounded separate stdout/stderr, configurable timeout, direct-child reaping, truncation, launch errors, exit state and lossy UTF-8 conversion.
+- `redaction.rs`: conservative best-effort credential, bearer-token, private-key and sensitive argument masking.
+- `report.rs`: schema 1.0.0, per-report IDs, sanitization at the common report boundary, JSON serialization and HTML-escaped Markdown export.
+- `crates/reprocrate-cli/src/main.rs`: functional help/version/doctor/capture/inspect with output overwrite prevention and bounded inert JSON imports.
+- `crates/reprocrate-cli/tests/cli.rs`: independent command-launch, timeout, non-UTF-8, secret redaction and no-overwrite regression tests.
+- `.github/workflows/rust-ci.yml`: Rust build/test/Clippy/rustfmt on Ubuntu 24.04, Windows 2022 and macOS 14.
+- `.github/workflows/prerelease-v0.1.0.yml`: version-specific guarded release workflow, platform packaging, checksums and GitHub Release publication.
+- `README.md`, `ROADMAP.md`, `CHANGELOG.md`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `docs/architecture/overview.md`, `docs/reference/cli.md`, `docs/security/threat-model.md`, `docs/development/dependency-licenses.md`, `docs/releases/v0.1.0.md`.
 
-## Known limitations / security
+## Actual verification
 
-- Best-effort redaction is not a guarantee; review files before sharing.
-- No shell or sandbox. Child may create descendants; timeout terminates only direct child.
-- Output decode is lossy UTF-8, reports are output-limited, capture may miss late grandchild output.
-- Export writes use create-new and remove partial failed files; no fully atomic power-failure-safe file replacement yet.
-- Security tests, privacy review UI, ZIP extraction checks and license dependency audit are incomplete.
-- Platform behavior is unverified until CI passes on each system.
-- HTML/Markdown output is escaped for captured log text, but still requires adversarial review.
+- Initial compiler was absent from the local execution container, and direct Rust installation was unavailable there. All Rust compiler/test results below originate from actual **GitHub-hosted runners**, not inferred local runs.
+- Rust CI builds, tests, Clippy with `-D warnings`, and `cargo fmt --all --check` passed on all 3 target runner platforms. Verified workflow: https://github.com/sanskarIN/ReproCrate/actions/runs/39034021500 (head `90ba9a07`), and again https://github.com/sanskarIN/ReproCrate/actions/runs/39033911011 (timeout/redaction test commit `60c20126`).
+- The prerelease validation job and all three package build/upload jobs succeeded in https://github.com/sanskarIN/ReproCrate/actions/runs/39034318864.
+- First packaging run failed on macOS because `sha256sum` is not installed. Added `shasum -a 256` fallback. Next all 3 platform uploads passed, but the final publication job initially failed because the GitHub CLI ran outside a repository checkout. Fixed GH_REPO handling; a one-time recovery workflow verified the six assets and published the release: https://github.com/sanskarIN/ReproCrate/actions/runs/39034551126 (success).
+- The GitHub Releases API independently confirmed the published release and its real asset sizes. No unbuilt placeholders were attached.
+- Found and fixed a duplicate `env:` key in the release workflow after an unsuccessful workflow-file validation attempt. Temporary release-recovery workflow and its one-time trigger marker were removed after successful publication.
+- The initial release development PR was merged with individual commits preserved: https://github.com/sanskarIN/ReproCrate/pull/1.
 
-## Git handoff
+## Security boundaries / remaining gaps
 
-Branch: `feat/v0.1.0-cli`; draft PR: https://github.com/sanskarIN/ReproCrate/pull/1. Initial main commit `fefef91f9da27101d0636e30b94164849b0f6d84`. Work commits include:
-- `b645e0ed` chore: establish ReproCrate Rust workspace and EPL-2.0 project documentation
-- `92bd9e5d` feat(core): define versioned reports, environment profiles and privacy masking
-- `810d7e81` feat(capture): execute approved processes with bounded pipes and timeouts
-- `edd193f9` feat(cli): add capture, doctor and inert report inspection commands
-- `759f56dd` fix(redaction): sanitize captured arguments at the shared report boundary
-- `c0e2d67a` style(build): generated dependency lockfile and rustfmt
-- `f2f1549c` fix(capture): repair Rust type inference found by Linux CI
-- `5219b891` fix(lint): satisfy Clippy's newline normalization lint
-- `c3bf5e0e` ci(release): add gated, checksum-producing v0.1.0 CLI pre-release workflow
-- `60c20126` test(capture): add real timeout, redaction, and invalid UTF-8 CLI test
+- Running a selected command is **not sandboxed**; child processes may alter the host and their descendants may survive a timeout.
+- Secret detection is best-effort and may miss or over-mask content; user must review full exports.
+- Text conversion is lossy for invalid UTF-8; very large outputs are truncated.
+- Report import is bounded and inert, but archives/bundles and advanced report verification are not implemented.
+- Fully atomic export writes and complete dependency/license/security audits remain incomplete.
+- Desktop GUI, SQLite history, comparisons, reproduction recipes, comprehensive log parsers, GitHub Pages docs, cross-platform desktop installers, code signing/notarization and stable release are **not implemented**.
+- No v1.0.0 release is approved, built or represented as available.
 
-GitHub's created commits have been checked to use author and committer **Sanskar <sanskarin@outlook.in>**.
+## Version roadmap and next tasks
 
-## Next work
+1. **v0.2.0:** Implement a bounded generic log analyzer and initial Cargo/pytest/Jest/Vitest adapters with tested deterministic fingerprints.
+2. Add explicit export-review/redaction workflow, more timeout and large-output adversarial tests, and reliable cancellation.
+3. Introduce environment/report comparison and safe bundle design only after threat-model review.
+4. Begin a Tauri 2 + React desktop app reusing `reprocrate-core`, followed by optional SQLite history.
+5. Complete dependency and license audit, secure packaging, cross-platform smoke testing, docs deployment and all stable gates before considering **v1.0.0**.
 
-1. Confirm latest 3-platform CI including the new integration test is fully green and record the run URL.
-2. Review and merge PR #1 without modifying unrelated history.
-3. Trigger the `.release/v0.1.0` marker on main so the verified release workflow builds real per-platform CLI archives; verify uploaded bytes and checksums.
-4. Record actual release asset URLs and any CI failures in this handoff.
-5. Start v0.2.0: streaming robustness, parser adapters, and explicit export review, without skipping release-quality gates.
-
-No maintainer approval for a stable v1.0.0 release should be inferred from this milestone.
+**Handoff principle:** All actual work and release evidence is in repository history, workflow runs, PR #1 and the verified release. Future phases must not claim completion of planned functionality.
