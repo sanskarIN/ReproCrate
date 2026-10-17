@@ -1,0 +1,7 @@
+FAIL src/math.test.ts
+  ● adds values
+    expect(received).toBe(expected)
+    Expected: 4
+    Received: 5
+Test Suites: 1 failed, 0 passed, 1 total
+Tests:       1 failed, 0 passed, 1 total
