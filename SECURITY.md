@@ -28,3 +28,9 @@ The new `analyze` command reads only an explicitly selected log or stdin, with a
 ## v0.3.0 review and ZIP trust boundaries
 
 `reprocrate review` creates a new report candidate with selected excluded fields and optional exact literal redactions loaded from a local file. No scanner can certify that confidential data was removed. Optional attachments are included verbatim only after explicit manual acknowledgment. The ZIP importer verifies fixed member names, sizes, SHA-256 values, report schema and identity, refuses symlinks/conflicting entries, and checks the whole archive before creating a fresh destination. Checksums **do not authenticate** an archive's author; never run imported scripts automatically. See [archive threat model](docs/security/archive-threat-model.md) and [review and bundles](docs/reference/privacy-bundles.md).
+
+## v0.4.0 comparison and recipe trust boundary
+
+Structural comparisons intentionally exclude raw stdout, stderr, command arguments and other changed values from exported diffs. They can reveal *whether* an observed field changed without sharing it. Masked/truncated fields are indeterminate. Report IDs are carried as labels and need review. Fingerprint comparisons are heuristic grouping signals, not proof of root cause.
+
+Recipes are deliberately inert, omit command references by default, and cannot request automatic execution. Explicit command inclusion requires manual review acknowledgment. Never run a command solely because it appears in a recipe. No upload or telemetry is performed. Consult [comparison docs](docs/reference/report-comparison.md) and [manual recipes](docs/reference/reproduction-recipes.md).
