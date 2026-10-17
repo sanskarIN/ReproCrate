@@ -1,0 +1,23 @@
+# CLI reference (v0.1.0 development)
+
+Build first with a stable Rust toolchain:
+
+```sh
+cargo build --workspace
+cargo run -p reprocrate-cli -- --help
+```
+
+`reprocrate doctor [--json]` prints operating system, architecture and available processor parallelism. It does not inspect environment variables, hardware serials or the network.
+
+`reprocrate capture [OPTIONS] -- COMMAND [ARGS...]` executes the specified program **without a shell**, stores sanitized bounded stdout/stderr, timing and exit status. Default timeout is 30 seconds; default budget is 65,536 bytes **per stream**. `--timeout-seconds N`, `--max-output-bytes N`, `--profile minimal|standard`, `--title TEXT`, `--output PATH`, and `--markdown PATH` control capture and output. `minimal` includes OS and architecture; `standard` adds available processor parallelism. The child inherits the invoking process environment and working directory. ReproCrate does not sandbox the selected executable.
+
+```sh
+cargo run -p reprocrate-cli -- capture --output failure.json --markdown failure.md -- cargo test
+cargo run -p reprocrate-cli -- capture --timeout-seconds 5 --profile minimal --output python-failure.json -- python -m pytest
+```
+
+`reprocrate inspect PATH` prints metadata of a previously exported JSON report (max 4 MiB) with the current schema version. Import is **inert**: it never runs the recorded command.
+
+Capture reports are created only at the chosen paths. Existing files are not overwritten. Command failure does **not** mean ReproCrate failed to capture; check `capture.exit_code` in the JSON. CLI runtime errors return process exit code 2. Capture output is lossy UTF-8; binary output is not faithfully preserved.
+
+**Review before sharing.** Redaction uses documented patterns and may miss secrets. `capture` is not a secure isolation boundary.
