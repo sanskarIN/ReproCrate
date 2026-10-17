@@ -1,6 +1,6 @@
 # ReproCrate Desktop — v0.5.0 foundation
 
-The first desktop frontend is a **local-first Tauri 2 + React/TypeScript application** backed by the existing open-source Rust `reprocrate-core`. It is an experimental developer preview, not a production-ready installer or stable release.
+The first desktop frontend is a **local-first Tauri 2 + React/TypeScript application** backed by the existing open-source Rust `reprocrate-core`. **v0.5.0 is published as an experimental developer pre-release with native executables for Linux, Windows and macOS**, but these are not signed installers, notarized apps, or a stable release. See [release assets](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0).
 
 ## Implemented interactions
 
@@ -42,7 +42,7 @@ cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --all-targets --lo
 
 The browser-only `npm run dev` preview is intentionally **read-only**; invoking a desktop command in a normal browser yields a descriptive error.
 
-Native builds can be run from `apps/desktop` with `npm run desktop:build` (Tauri `--no-bundle`). The app has generated native icons. Native packaging and signing/distribution **must be separately verified** and should not be assumed from passing web build tests.
+Native builds can be run from `apps/desktop` with `npm run desktop:build` (Tauri `--no-bundle`). The app has generated native icons. Native unsigned developer-preview executables **were compiled and published** by the v0.5.0 release workflow across Windows/Linux/macOS. Full graphical smoke testing, signed installation packages and production distribution remain unverified.
 
 ## Security boundaries
 

@@ -57,13 +57,21 @@
 
 **Not included:** automated reproduction, desktop GUI, or a stable v1.0.0 promise. Further privacy/ZIP hardening remains planned.
 
-## Unreleased — v0.5.0 desktop foundation
+## [0.5.0] — 2026-10-17 (pre-release)
+
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0
+
+**Validation:** https://github.com/sanskarIN/ReproCrate/actions/runs/39043664762 (all release jobs passed). GitHub Releases API confirmed `draft: false`, `prerelease: true`, and six real unsigned CLI + desktop executable archives (Windows/Linux/macOS) with six accompanying SHA-256 checksum files.
 
 - Added `apps/desktop`: React 19 + TypeScript + Vite 6 frontend and a separate Tauri 2 Rust workspace that reuses the existing ReproCrate Rust core. The existing CLI remains independently testable.
 - Created a dark responsive workspace UI for report inspection, comparisons, log analysis, manual recipe previews and privacy-review candidate exports.
 - Added explicit native IPC commands with 4 MiB report and 1 MiB log input limits, regular-file-only import, no shell/filesystem plugin grants and create-new-only reviewed JSON saving.
 - Generated native icons from a project SVG and committed separate lockfiles for npm and the desktop's Rust dependencies.
 - Added frontend unit/production build checks and GitHub Actions cross-platform native Rust verification.
-- Staged unsigned desktop developer-preview build verification separately from actual release publication.
+- Verified actual native unsigned desktop executables via https://github.com/sanskarIN/ReproCrate/actions/runs/39043004232 and uploaded real v0.5.0 CLI + desktop packages in a guarded release workflow.
 
-**Not yet complete:** native binaries/installer release gates, full graphical smoke tests, signed or notarized distribution, file picker UX, search/history, secure sandboxing, or stable v1.0.0. Do not present a source-only desktop scaffold as a shipped native executable.
+**Remaining:** signed installers/notarization, clean-machine graphical smoke tests, file picker UX, history/search, automatic update and stronger filesystem sandboxing. The published desktop artifacts are real compiled developer-preview executables but not installers or stable v1.0.0.
+
+## Unreleased — toward v0.6.0
+
+Planned: SQLite-backed local history, searchable report index, accessibility improvements, safer native file selection and desktop refinement.

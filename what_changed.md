@@ -1,9 +1,8 @@
-# Latest handoff — v0.5.0 Tauri desktop foundation (development; not yet released)
+# Latest handoff — v0.5.0 desktop + CLI pre-release published
 
 Date: 2026-10-17, repository https://github.com/sanskarIN/ReproCrate.
-Development branch: `feat/v0.5.0-desktop-foundation`.
-Last verified public release at time of this entry: https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0.
-**Do not claim a v0.5.0 downloadable binary or pre-release until the public GitHub Releases API verifies publication.**
+Source development branch: `feat/v0.5.0-desktop-foundation` (merged as [PR #5](https://github.com/sanskarIN/ReproCrate/pull/5) at `a806aeb7a02c4936d53b9e03dd7e5a2f0e91db59`).
+**Published public experimental release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0. Verified via GitHub Releases API: `draft:false`, `prerelease:true`, publication `2026-10-17T15:15:28Z`, immutable release target `f05920e198cf8abd0df7fc01d096715e604fd1bf`.
 
 ## Implemented code
 
@@ -23,16 +22,23 @@ Last verified public release at time of this entry: https://github.com/sanskarIN
 - Frontend npm tests/production build **passed** and Windows/Linux/macOS Tauri cargo check **passed**: https://github.com/sanskarIN/ReproCrate/actions/runs/39042465054.
 - Existing root CLI Rust CI remained successful after adding the desktop scaffold.
 - Locked npm deps and separate Tauri Cargo.lock and generated icons via successful one-shot run https://github.com/sanskarIN/ReproCrate/actions/runs/39042289779.
-- Native full-link tests and production executable packaging are being verified on branch CI: https://github.com/sanskarIN/ReproCrate/actions/workflows/desktop-build.yml.
-- The desktop requires Tauri 2 system libraries on Linux; Windows and macOS native binary packaging and clean graphical launch are not yet externally verified. Unsigned builds, even if produced, must be labeled experimental/developer previews.
+- All three unsigned Tauri native executables (Windows 2022, Ubuntu 24.04, macOS 14) built successfully with real binaries and passed Rust boundary tests: https://github.com/sanskarIN/ReproCrate/actions/runs/39043004232.
+- **Entire gated v0.5.0 release run succeeded:** https://github.com/sanskarIN/ReproCrate/actions/runs/39043664762 (workspace validation, draft, all three CLI build-upload jobs, all three desktop build-upload jobs, final public publish). GitHub Releases API separately confirms twelve assets:
+  - Desktop Linux x86-64 tarball 3,645,225 bytes + `.sha256` 112 bytes
+  - Desktop macOS ARM64 tarball 3,454,645 bytes + `.sha256` 111 bytes
+  - Desktop Windows x86-64 ZIP 3,435,567 bytes + `.sha256` 112 bytes
+  - CLI Linux x86-64 tarball 1,616,753 bytes + `.sha256` 104 bytes
+  - CLI macOS ARM64 tarball 1,432,212 bytes + `.sha256` 103 bytes
+  - CLI Windows x86-64 ZIP 1,401,423 bytes + `.sha256` 104 bytes
+- The desktop uses system Tauri/WebView prerequisites; actual graphical smoke tests, binary signing/notarization and native installer distributions are still **not** verified. Archives are portable unsigned developer-preview executables, not installers.
 
 ## Next
 
-1. Inspect full-link native build job results, correct errors, and verify executable artifacts on each OS without inventing unsupported release claims.
-2. Preserve root CLI tests and review docs/security as real binaries become available. Merge a clean PR only after platform and frontend quality gates.
-3. Decide a narrowly scoped v0.5.0 prerelease strategy: user-visible native developer-preview executables only if truly built; no installer/signing claims.
-4. Complete release publication, verify exact tag and assets independently with GitHub API, then update README, changelog and this handoff file.
-5. Next milestone v0.6.0 plans SQLite history/search, desktop accessibility/refinement; continue native-security and dependency/license audits.
+1. Next milestone **v0.6.0**: local SQLite history/search, durable safe report index, improved desktop accessibility and controlled native file-picker UX.
+2. Improve desktop privacy review: finer-grained optional fields, no incidental screen logging, test secure export paths and race conditions.
+3. Run clean-machine GUI sessions on Windows/Linux/macOS, build signed installers and validate WebKitGTK/WebView2 availability; do not claim this has already been done.
+4. Audit Tauri/React transitive dependency licenses, archive fuzzing and process-tree cancellation; preserve EPL-2.0 obligations.
+5. Keep v1.0.0 gated on platform, privacy, security, reproducibility and release-quality evidence.
 
 ---
 

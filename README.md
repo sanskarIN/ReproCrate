@@ -2,13 +2,13 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. **v0.5.0 development** introduces a Tauri 2/React desktop interface backed by the same Rust core.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduces a Tauri 2/React desktop interface backed by the same Rust core.
 
-> **Latest pre-release:** [v0.4.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0), published October 17, 2026, with Windows x86-64, Linux x86-64 and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** The desktop UI is in development and hosted documentation is planned.
+> **Latest pre-release:** [v0.5.0 CLI + Desktop developer preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0), published October 17, 2026. The release contains real unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for **both** CLI and desktop, each with a SHA-256 file. **Experimental: not a stable v1.0.0, signed installer or clean-machine graphical QA certification.**
 
 ## Download
 
-See the [v0.4.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
+See the [v0.5.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -39,7 +39,7 @@ cargo run -p reprocrate-cli -- recipe inspect recipe.json
 
 Comparisons report structural changes without exporting raw log lines or arguments. The recipe's command reference is omitted by default and requires explicit approval when included. Imported recipes **never execute automatically**. See [comparison reference](docs/reference/report-comparison.md) and [recipe reference](docs/reference/reproduction-recipes.md).
 
-## Desktop foundation (v0.5.0 development)
+## Desktop foundation (v0.5.0 pre-release)
 
 A local-first, Tauri 2 + React workspace now lives in `apps/desktop`. It currently supports report inspection, report comparisons, bounded log analysis, inert recipe previews and manually controlled privacy-review exports.
 
@@ -53,7 +53,7 @@ npm run desktop:dev
 
 Desktop development requires Node.js, Rust, and the platform requirements for Tauri 2 (WebKitGTK on Linux, WebView2/C++ tools on Windows, Xcode CLI tools on macOS). Its frontend and native Rust workspace have separate reproducible lockfiles; building the CLI does **not** require the desktop prerequisites.
 
-The browser preview is read-only. Commands cannot be executed from imported recipes or reports. Desktop installers and production distribution are **not yet claimed** until native release artifacts are actually verified. Read the [desktop developer guide](docs/reference/desktop.md).
+The browser preview is read-only. Commands cannot be executed from imported recipes or reports. Native developer-preview executables have been compiled and published across three CI operating systems. **Signed installers, notarization, broad OS compatibility and real-window manual QA are not claimed.** Read the [desktop developer guide](docs/reference/desktop.md).
 
 ## Build from source
 
