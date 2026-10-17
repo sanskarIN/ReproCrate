@@ -5,6 +5,7 @@ use crate::redaction::redact_text;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use std::sync::OnceLock;
 
 /// Fixed schema for standalone log analysis; not the captured-report schema.
 pub const ANALYSIS_SCHEMA_VERSION: &str = "1.0.0";
@@ -37,14 +38,14 @@ impl LogFormat {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(rename_all = "snake_case")]
 pub enum Severity {
     Error,
     Warning,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(rename_all = "snake_case")]
 pub enum Category {
     Compilation,
@@ -194,16 +195,21 @@ fn classify(line: &str, adapter: LogFormat) -> Option<(Severity, Category)> {
 /// and long random IDs differ. It intentionally retains error codes and words.
 fn normalized_key(text: &str) -> String {
     let mut key = text.trim().to_ascii_lowercase();
-    for (pattern, replacement) in [
-        (r"0x[0-9a-f]{6,}", "<address>"),
-        (r":[0-9]+:[0-9]+", ":<line>:<col>"),
-        (r"\bline [0-9]+\b", "line <n>"),
-        (r"\b[0-9]{6,}\b", "<number>"),
-        (r"\s+", " "),
-    ] {
-        if let Ok(regex) = Regex::new(pattern) {
-            key = regex.replace_all(&key, replacement).into_owned();
-        }
+    static RULES: OnceLock<Vec<(Regex, &'static str)>> = OnceLock::new();
+    let rules = RULES.get_or_init(|| {
+        [
+            (r"0x[0-9a-f]{6,}", "<address>"),
+            (r":[0-9]+:[0-9]+", ":<line>:<col>"),
+            (r"\\bline [0-9]+\\b", "line <n>"),
+            (r"\\b[0-9]{6,}\\b", "<number>"),
+            (r"\\s+", " "),
+        ]
+        .into_iter()
+        .filter_map(|(pattern, replace)| Regex::new(pattern).ok().map(|regex| (regex, replace)))
+        .collect()
+    });
+    for (regex, replacement) in rules {
+        key = regex.replace_all(&key, *replacement).into_owned();
     }
     key
 }
