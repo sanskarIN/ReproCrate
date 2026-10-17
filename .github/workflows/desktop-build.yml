@@ -1,0 +1,75 @@
+name: Desktop native binaries (preview verification)
+
+on:
+  push:
+    branches: [feat/v0.5.0-desktop-foundation]
+    paths:
+      - "apps/desktop/**"
+      - "crates/reprocrate-core/**"
+      - "Cargo.toml"
+      - ".github/workflows/desktop-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  native-preview:
+    name: Build unsigned desktop preview (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Linux WebKitGTK and GTK build libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev libxdo-dev patchelf
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - name: Install pinned npm modules and verify frontend
+        working-directory: apps/desktop
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Install stable Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Run native Rust boundary unit tests
+        run: cargo +stable test --manifest-path apps/desktop/src-tauri/Cargo.toml --lib --locked
+      - name: Compile native unsigned desktop executable
+        working-directory: apps/desktop
+        run: npm run desktop:build
+      - name: Verify Linux/macOS unsigned executable
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          test -s apps/desktop/src-tauri/target/release/reprocrate-desktop
+          file apps/desktop/src-tauri/target/release/reprocrate-desktop
+      - name: Verify Windows unsigned executable
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path apps/desktop/src-tauri/target/release/reprocrate-desktop.exe)) { throw "Missing native binary" }
+          if ((Get-Item apps/desktop/src-tauri/target/release/reprocrate-desktop.exe).Length -lt 1024) { throw "Incomplete native binary" }
+      - name: Upload unsigned native build (Linux/macOS)
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: desktop-preview-${{ matrix.os }}
+          path: apps/desktop/src-tauri/target/release/reprocrate-desktop
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload unsigned native build (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: desktop-preview-${{ matrix.os }}
+          path: apps/desktop/src-tauri/target/release/reprocrate-desktop.exe
+          if-no-files-found: error
+          retention-days: 7
