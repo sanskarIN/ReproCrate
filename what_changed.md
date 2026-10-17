@@ -3,7 +3,7 @@
 Date: 2026-10-17 (Asia/Kolkata). Repository: https://github.com/sanskarIN/ReproCrate.
 Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/ReproCrate/pull/2.
 
-**Current state:** Source and Rust CLI are implemented for v0.2.0, and a guarded pre-release workflow is staged. **v0.2.0 is not yet published** at the time of this note; older verified release is v0.1.0. Do not say the v0.2.0 release exists until verifying the public Releases API.
+**Current state:** **v0.2.0 experimental CLI pre-release is published and verified**, https://github.com/sanskarIN/ReproCrate/releases/tag/v0.2.0. GitHub API confirms `draft: false`, `prerelease: true`, published `2026-10-17T13:37:22Z`, tag target `65325fd3a39edcc87c64a15fc208754462fd28e8`. The previous v0.1.0 pre-release remains available. Stable v1.0.0 is not complete.
 
 ## Implemented changes on development branch
 
@@ -22,7 +22,14 @@ Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/R
 - GitHub Actions CI https://github.com/sanskarIN/ReproCrate/actions/runs/39036931608: Linux Ubuntu 24.04, macOS 14 and Windows 2022 build, test, Clippy (`-D warnings`), and rustfmt all **passed** for commit `9e82f646`. A subsequent workflow-only commit requires its own CI confirmation.
 - Prior CI found a temporary-directory collision on macOS under concurrent tests. Fixed with a monotonic per-process atomic sequence; follow-up CI passed.
 - Earlier formatting-only failures were repaired using `cargo fmt --all` in a temporary trusted GitHub Actions workflow. That write-enabled normalization workflow and trigger were deleted after use.
-- New prerelease packaging: **not yet executed** at this timestamp.
+- **Release pipeline verified successful:** https://github.com/sanskarIN/ReproCrate/actions/runs/39037161008 (validation, draft, Ubuntu/macOS/Windows build-upload, publish all passed). GitHub's Releases API independently verified the published status and these six real assets:
+  - `reprocrate-v0.2.0-linux-x86_64.tar.gz` (1,289,296 bytes)
+  - `reprocrate-v0.2.0-linux-x86_64.tar.gz.sha256` (104 bytes)
+  - `reprocrate-v0.2.0-macos-arm64.tar.gz` (1,125,997 bytes)
+  - `reprocrate-v0.2.0-macos-arm64.tar.gz.sha256` (103 bytes)
+  - `reprocrate-v0.2.0-windows-x86_64.zip` (1,094,265 bytes)
+  - `reprocrate-v0.2.0-windows-x86_64.zip.sha256` (104 bytes)
+- PR #2 merged into main at `71bd1e3dccbee6b39c611501a575f093ca3d587a`. Subsequent release marker and documentation commits do not change the immutable v0.2.0 tag source.
 - Author and committer on new commits: **Sanskar <sanskarin@outlook.in>** (GitHub connector verified for feature commits; check subsequent automations as needed).
 
 ## Known limitations
@@ -35,11 +42,11 @@ Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/R
 
 ## Next actions
 
-1. Verify final HEAD CI status, mark PR #2 ready and merge only after checks pass.
-2. Create `.release/v0.2.0` on `main` to invoke the guardrail-based pre-release workflow.
-3. Require all 3 platform packaging/upload jobs to pass, check release metadata/6 files and checksums through GitHub APIs.
-4. Update README/changelog/release handoff with *verified* published links, or record actual blocked jobs.
-5. Plan v0.3.0 security/redaction review and portable bundle threat model; do not skip verification gates.
+1. Begin **v0.3.0** privacy review: explicit payload preview and manual redaction before sharing.
+2. Threat-model portable ZIP bundles, enforce extraction limits, verify hashes and reject malicious paths/symlinks.
+3. Extend log adapters conservatively, add parser fixtures and avoid claims of proven root cause.
+4. Review input handling, cancellation, multi-process cleanup, and atomic output writes with adversarial tests.
+5. Continue desktop Tauri/React and long-term stability roadmap only after tested backend foundations; no v1.0.0 publishing without verified gates.
 
 ---
 

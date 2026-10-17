@@ -5,7 +5,7 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | Milestone | Planned objective |
 | --- | --- |
 | v0.1.0 | **Shipped as pre-release:** working Rust command capture, bounded output, basic sanitization, JSON/Markdown reports, CI |
-| v0.2.0 | **In development:** generic log analyzer, initial format detection (Cargo/pytest/Jest/Vitest), deterministic fingerprints, robustness tests. Improved process-tree cancellation remains future work. |
+| v0.2.0 | **Shipped as pre-release:** bounded offline log analyzer, initial format detection (Cargo/pytest/Jest/Vitest), deterministic fingerprints, test fixtures. Process-tree cancellation remains future work. |
 | v0.3.0 | Privacy review, adversarial bundle import/export and verification |
 | v0.4.0 | Comparisons, structured recipes and compatibility |
 | v0.5.0 | Shared-Rust-core Tauri desktop foundation |

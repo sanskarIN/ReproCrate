@@ -1,4 +1,4 @@
-# Log analysis (experimental in v0.2.0)
+# Log analysis (experimental v0.2.0 pre-release)
 
 ReproCrate can analyze existing textual logs and capture output **without executing any embedded commands**. It never reads referenced files automatically.
 

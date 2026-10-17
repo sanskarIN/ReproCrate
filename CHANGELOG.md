@@ -16,7 +16,11 @@
 
 **Not included:** desktop GUI, portable diagnostic bundles, comparison engine, rich framework parsers, signed installers or stable quality claim.
 
-## Unreleased — v0.2.0 development
+## [0.2.0] — 2026-10-17 (pre-release)
+
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.2.0
+
+**Validated:** native CLI build and tests on Ubuntu 24.04, Windows 2022, macOS 14; release workflow https://github.com/sanskarIN/ReproCrate/actions/runs/39037161008 (all jobs passed). Verified portable archives for Linux x86-64, Windows x86-64 and macOS ARM64, with individual SHA-256 files.
 
 - Added bounded, offline `reprocrate analyze` for log files and standard input with optional Markdown export.
 - Added best-effort Cargo/pytest/Jest/Vitest recognition and generic error/timeout/permission categorization.
@@ -24,4 +28,8 @@
 - Added additive optional sanitized failure findings to existing JSON/Markdown capture reports.
 - Added framework fixtures and CLI regression coverage for input limits, no-overwrite, and redaction.
 
-**Not completed:** reliable process-tree cancellation, complete framework test-result parsers, desktop GUI, bundles, stable release. These are planned and not claimed.
+**Not completed:** reliable process-tree cancellation, complete framework test-result parsers, desktop GUI, bundles or stable v1.0.0. These are planned and not claimed.
+
+## Unreleased — toward v0.3.0
+
+Plan: manual privacy review, more robust redaction and secure controlled archive bundles, with adversarial tests.
