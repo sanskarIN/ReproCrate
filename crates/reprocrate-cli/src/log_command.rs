@@ -2,7 +2,8 @@
 //! A bounded, inert log-file analysis command.
 use crate::create_new_report;
 use clap::ValueEnum;
-use reprocrate_core::{analysis_markdown, analyze_text, LogFormat, MAX_LOG_BYTES};
+use reprocrate_core::{analysis_markdown, analyze_text, LogFormat};
+use reprocrate_core::analysis::MAX_LOG_BYTES;
 use std::error::Error;
 use std::fs::{self, File};
 use std::io::{self, Read};
