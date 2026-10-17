@@ -1,0 +1,7 @@
+   Compiling example v0.1.0
+error[E0308]: mismatched types
+  --> src/main.rs:12:4
+error[E0308]: mismatched types
+  --> src/main.rs:99:5
+warning: unused variable: `x`
+error: could not compile `example` due to 2 previous errors

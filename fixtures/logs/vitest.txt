@@ -1,0 +1,5 @@
+ RUN  v3.0.0 vitest
+❯ src/math.test.ts (2 tests | 1 failed)
+ FAIL  src/math.test.ts > adds values
+AssertionError: expected 4 to be 5
+Test Files  1 failed (1)
