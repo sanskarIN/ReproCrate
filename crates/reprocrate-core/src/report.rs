@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: EPL-2.0
-use crate::{environment::Environment, redaction::redact_text, VERSION};
+use crate::{environment::Environment, redaction::{redact_text, redact_args}, VERSION};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -59,10 +59,11 @@ impl Report {
         sanitized_capture.stderr = stderr;
         sanitized_capture.launch_error = launch_error;
         sanitized_capture.executable = executable;
-        // The CLI sanitizes argument boundaries before calling this constructor.
+        let (masked_arguments, arg_count) = redact_args(&sanitized_capture.arguments);
+        sanitized_capture.arguments = masked_arguments;
         let (_, title_count) = redact_text(&title);
         let (title, _) = redact_text(&title);
-        let count = out_count + err_count + launch_count + exe_count + title_count;
+        let count = out_count + err_count + launch_count + exe_count + arg_count + title_count;
         let mut warnings = vec![
             "Automatic secret masking is best-effort. Review the entire report before sharing.".to_owned(),
             "The selected command was executed on the host; it was not sandboxed.".to_owned(),
@@ -96,7 +97,7 @@ fn html_escape(text: &str) -> String {
     text.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
 }
 fn inline(text: &str) -> String {
-    html_escape(text).replace(['\n', '\r'], " ")
+    html_escape(text).replace('\n', " ").replace('\r', " ")
 }
 fn fenced(text: &str) -> String {
     let escaped = html_escape(text);
