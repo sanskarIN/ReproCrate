@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: EPL-2.0
-mod log_command;
 mod compare_recipe_commands;
+mod log_command;
 mod privacy_bundle_commands;
 
 use clap::{Parser, Subcommand, ValueEnum};
-use log_command::{run_analysis, FormatArg};
 use compare_recipe_commands::{run_compare, run_recipe_create, run_recipe_inspect};
+use log_command::{run_analysis, FormatArg};
 use privacy_bundle_commands::{
     run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
 };
@@ -268,12 +268,29 @@ fn run() -> Result<(), Box<dyn Error>> {
                 run_bundle_extract(input, destination)?
             }
         },
-        Commands::Compare { baseline, candidate, output, markdown } => {
+        Commands::Compare {
+            baseline,
+            candidate,
+            output,
+            markdown,
+        } => {
             run_compare(baseline, candidate, output, markdown)?;
         }
         Commands::Recipe { action } => match action {
-            RecipeActions::Create { report, output, markdown, include_command, acknowledge_reviewed } => {
-                run_recipe_create(report, output, markdown, include_command, acknowledge_reviewed)?;
+            RecipeActions::Create {
+                report,
+                output,
+                markdown,
+                include_command,
+                acknowledge_reviewed,
+            } => {
+                run_recipe_create(
+                    report,
+                    output,
+                    markdown,
+                    include_command,
+                    acknowledge_reviewed,
+                )?;
             }
             RecipeActions::Inspect { input } => run_recipe_inspect(input)?,
         },

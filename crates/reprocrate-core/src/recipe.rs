@@ -52,7 +52,10 @@ fn scrub(value: &str) -> String {
 
 /// Export an inert checklist from an already reviewed report.
 /// Opt-in command snapshots need a separate CLI acknowledgement.
-pub fn recipe_from_report(report: &Report, include_command: bool) -> Result<ReproductionRecipe, String> {
+pub fn recipe_from_report(
+    report: &Report,
+    include_command: bool,
+) -> Result<ReproductionRecipe, String> {
     if report.schema_version != SCHEMA_VERSION {
         return Err("unsupported report schema".into());
     }
@@ -65,15 +68,25 @@ pub fn recipe_from_report(report: &Report, include_command: bool) -> Result<Repr
     } else {
         None
     };
-    let mut fingerprints = report.analysis.as_ref().map(|analysis| {
-        analysis.findings.iter()
-            .filter(|item| item.fingerprint.len() == 24
-                && item.fingerprint.starts_with("fnv1a64:")
-                && item.fingerprint[8..].bytes().all(|byte| byte.is_ascii_hexdigit()))
-            .map(|item| item.fingerprint.clone())
-            .take(200)
-            .collect::<Vec<_>>()
-    }).unwrap_or_default();
+    let mut fingerprints = report
+        .analysis
+        .as_ref()
+        .map(|analysis| {
+            analysis
+                .findings
+                .iter()
+                .filter(|item| {
+                    item.fingerprint.len() == 24
+                        && item.fingerprint.starts_with("fnv1a64:")
+                        && item.fingerprint[8..]
+                            .bytes()
+                            .all(|byte| byte.is_ascii_hexdigit())
+                })
+                .map(|item| item.fingerprint.clone())
+                .take(200)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
     fingerprints.sort();
     fingerprints.dedup();
 
@@ -125,8 +138,10 @@ pub fn recipe_from_report(report: &Report, include_command: bool) -> Result<Repr
         automatic_execution: false,
         warnings: vec![
             "The recipe is a human-reviewed plan, not executable automation.".into(),
-            "Command capture is host execution without a sandbox; do not run untrusted commands.".into(),
-            "Redaction is best-effort; even opted-in command arguments may expose sensitive data.".into(),
+            "Command capture is host execution without a sandbox; do not run untrusted commands."
+                .into(),
+            "Redaction is best-effort; even opted-in command arguments may expose sensitive data."
+                .into(),
             "Environment details and fingerprints may be incomplete or inconclusive.".into(),
         ],
     })
@@ -134,13 +149,18 @@ pub fn recipe_from_report(report: &Report, include_command: bool) -> Result<Repr
 
 pub fn validate_recipe(recipe: &ReproductionRecipe) -> Result<(), String> {
     if recipe.schema_version != RECIPE_SCHEMA_VERSION
-        || recipe.source_report_schema != SCHEMA_VERSION {
+        || recipe.source_report_schema != SCHEMA_VERSION
+    {
         return Err("unsupported recipe or report schema version".into());
     }
-    if recipe.automatic_execution || recipe.steps.len() != 5
+    if recipe.automatic_execution
+        || recipe.steps.len() != 5
         || recipe.steps.iter().enumerate().any(|(i, step)| {
-            step.order != (i + 1) as u8 || !step.requires_user_action || step.instruction.len() > 2048
-        }) {
+            step.order != (i + 1) as u8
+                || !step.requires_user_action
+                || step.instruction.len() > 2048
+        })
+    {
         return Err("unsafe or unsupported recipe steps".into());
     }
     if recipe.expected_failure_fingerprints.len() > 200
@@ -148,14 +168,17 @@ pub fn validate_recipe(recipe: &ReproductionRecipe) -> Result<(), String> {
             command.arguments.len() > 4096
                 || command.executable.len() > 4096
                 || command.arguments.iter().any(|arg| arg.len() > 4096)
-        }) {
+        })
+    {
         return Err("recipe exceeds safety limits".into());
     }
     Ok(())
 }
 
 fn escape_inline(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
         .replace(['\n', '\r', '|'], " ")
 }
 
@@ -173,15 +196,21 @@ pub fn recipe_markdown(recipe: &ReproductionRecipe) -> io::Result<String> {
         out.push_str("## User-approved command reference (informational only)\n\n");
         let json = serde_json::to_string(&(&command.executable, &command.arguments))
             .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
-        out.push_str(&format!("Command and argv as JSON strings: {}\n\n",
-            escape_inline(&json.replace(char::from(96), "&#96;"))));
+        out.push_str(&format!(
+            "Command and argv as JSON strings: {}\n\n",
+            escape_inline(&json.replace(char::from(96), "&#96;"))
+        ));
     } else {
         out.push_str("**Command details are deliberately omitted.** Supply them manually only after an independent trust review.\n\n");
     }
     out.push_str("## Manual checklist\n\n");
     for step in &recipe.steps {
-        out.push_str(&format!("{}. **{}** — {}\n",
-            step.order, escape_inline(&step.kind), escape_inline(&step.instruction)));
+        out.push_str(&format!(
+            "{}. **{}** — {}\n",
+            step.order,
+            escape_inline(&step.kind),
+            escape_inline(&step.instruction)
+        ));
     }
     out.push_str("\n## Limitations\n\n");
     for warning in &recipe.warnings {
@@ -194,14 +223,30 @@ pub fn recipe_markdown(recipe: &ReproductionRecipe) -> io::Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{environment::{inspect_environment, CaptureProfile}, report::Capture};
+    use crate::{
+        environment::{inspect_environment, CaptureProfile},
+        report::Capture,
+    };
     fn sample() -> Report {
-        Report::new("fixture".into(), inspect_environment(CaptureProfile::Minimal), Capture {
-            executable: "runner".into(), arguments: vec!["--token".into(), "secret".into()],
-            started_unix_ms: 0, duration_ms: 10, exit_code: Some(1), termination_signal: None,
-            timed_out: false, launch_error: None, stdout: "".into(), stderr: "error: failure".into(),
-            stdout_truncated: false, stderr_truncated: false, max_output_bytes_per_stream: 64,
-        })
+        Report::new(
+            "fixture".into(),
+            inspect_environment(CaptureProfile::Minimal),
+            Capture {
+                executable: "runner".into(),
+                arguments: vec!["--token".into(), "secret".into()],
+                started_unix_ms: 0,
+                duration_ms: 10,
+                exit_code: Some(1),
+                termination_signal: None,
+                timed_out: false,
+                launch_error: None,
+                stdout: "".into(),
+                stderr: "error: failure".into(),
+                stdout_truncated: false,
+                stderr_truncated: false,
+                max_output_bytes_per_stream: 64,
+            },
+        )
     }
 
     #[test]

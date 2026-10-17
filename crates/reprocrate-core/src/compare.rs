@@ -63,9 +63,7 @@ struct Observation {
 
 fn resembles_mask(text: &str) -> bool {
     let lowered = text.to_ascii_lowercase();
-    lowered.contains("[redacted")
-        || lowered.contains("[excluded")
-        || lowered.contains("[masked")
+    lowered.contains("[redacted") || lowered.contains("[excluded") || lowered.contains("[masked")
 }
 
 fn observe(value: Option<String>, incomplete: bool) -> Observation {
@@ -124,7 +122,9 @@ fn findings_map(report: &Report) -> BTreeMap<String, usize> {
             // Fingerprints must be a short, stable, non-secret grouping ID.
             if finding.fingerprint.len() != 24
                 || !finding.fingerprint.starts_with("fnv1a64:")
-                || !finding.fingerprint[8..].bytes().all(|b| b.is_ascii_hexdigit())
+                || !finding.fingerprint[8..]
+                    .bytes()
+                    .all(|b| b.is_ascii_hexdigit())
             {
                 continue;
             }
@@ -147,59 +147,150 @@ pub fn compare_reports(baseline: &Report, candidate: &Report) -> Result<ReportCo
         return Err("unsupported report schema; comparison requires schema 1.0.0".into());
     }
     let mut fields = Vec::new();
-    add_field(&mut fields, "environment.capture_profile",
+    add_field(
+        &mut fields,
+        "environment.capture_profile",
         Some(baseline.environment.capture_profile.clone()),
-        Some(candidate.environment.capture_profile.clone()), false, false);
-    add_field(&mut fields, "environment.os",
+        Some(candidate.environment.capture_profile.clone()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "environment.os",
         Some(baseline.environment.os.clone()),
-        Some(candidate.environment.os.clone()), false, false);
-    add_field(&mut fields, "environment.architecture",
+        Some(candidate.environment.os.clone()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "environment.architecture",
         Some(baseline.environment.architecture.clone()),
-        Some(candidate.environment.architecture.clone()), false, false);
-    add_field(&mut fields, "environment.available_parallelism",
+        Some(candidate.environment.architecture.clone()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "environment.available_parallelism",
         string_option(baseline.environment.available_parallelism),
-        string_option(candidate.environment.available_parallelism), false, false);
-    add_field(&mut fields, "capture.executable",
-        Some(baseline.capture.executable.clone()), Some(candidate.capture.executable.clone()), false, false);
-    add_field(&mut fields, "capture.arguments",
-        if baseline.capture.arguments.is_empty() { None } else { Some(baseline.capture.arguments.join("\0")) },
-        if candidate.capture.arguments.is_empty() { None } else { Some(candidate.capture.arguments.join("\0")) },
-        false, false);
-    add_field(&mut fields, "capture.exit_code",
-        string_option(baseline.capture.exit_code), string_option(candidate.capture.exit_code), false, false);
-    add_field(&mut fields, "capture.termination_signal",
-        string_option(baseline.capture.termination_signal), string_option(candidate.capture.termination_signal),
-        false, false);
-    add_field(&mut fields, "capture.timed_out",
-        Some(baseline.capture.timed_out.to_string()), Some(candidate.capture.timed_out.to_string()), false, false);
-    add_field(&mut fields, "capture.duration_ms",
+        string_option(candidate.environment.available_parallelism),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.executable",
+        Some(baseline.capture.executable.clone()),
+        Some(candidate.capture.executable.clone()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.arguments",
+        if baseline.capture.arguments.is_empty() {
+            None
+        } else {
+            Some(baseline.capture.arguments.join("\0"))
+        },
+        if candidate.capture.arguments.is_empty() {
+            None
+        } else {
+            Some(candidate.capture.arguments.join("\0"))
+        },
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.exit_code",
+        string_option(baseline.capture.exit_code),
+        string_option(candidate.capture.exit_code),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.termination_signal",
+        string_option(baseline.capture.termination_signal),
+        string_option(candidate.capture.termination_signal),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.timed_out",
+        Some(baseline.capture.timed_out.to_string()),
+        Some(candidate.capture.timed_out.to_string()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.duration_ms",
         Some(baseline.capture.duration_ms.to_string()),
-        Some(candidate.capture.duration_ms.to_string()), false, false);
-    add_field(&mut fields, "capture.launch_error",
-        baseline.capture.launch_error.clone(), candidate.capture.launch_error.clone(), false, false);
-    add_field(&mut fields, "capture.stdout",
-        Some(baseline.capture.stdout.clone()), Some(candidate.capture.stdout.clone()),
-        baseline.capture.stdout_truncated, candidate.capture.stdout_truncated);
-    add_field(&mut fields, "capture.stderr",
-        Some(baseline.capture.stderr.clone()), Some(candidate.capture.stderr.clone()),
-        baseline.capture.stderr_truncated, candidate.capture.stderr_truncated);
-    add_field(&mut fields, "capture.stdout_truncated",
+        Some(candidate.capture.duration_ms.to_string()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.launch_error",
+        baseline.capture.launch_error.clone(),
+        candidate.capture.launch_error.clone(),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.stdout",
+        Some(baseline.capture.stdout.clone()),
+        Some(candidate.capture.stdout.clone()),
+        baseline.capture.stdout_truncated,
+        candidate.capture.stdout_truncated,
+    );
+    add_field(
+        &mut fields,
+        "capture.stderr",
+        Some(baseline.capture.stderr.clone()),
+        Some(candidate.capture.stderr.clone()),
+        baseline.capture.stderr_truncated,
+        candidate.capture.stderr_truncated,
+    );
+    add_field(
+        &mut fields,
+        "capture.stdout_truncated",
         Some(baseline.capture.stdout_truncated.to_string()),
-        Some(candidate.capture.stdout_truncated.to_string()), false, false);
-    add_field(&mut fields, "capture.stderr_truncated",
+        Some(candidate.capture.stdout_truncated.to_string()),
+        false,
+        false,
+    );
+    add_field(
+        &mut fields,
+        "capture.stderr_truncated",
         Some(baseline.capture.stderr_truncated.to_string()),
-        Some(candidate.capture.stderr_truncated.to_string()), false, false);
+        Some(candidate.capture.stderr_truncated.to_string()),
+        false,
+        false,
+    );
 
     let mut warnings = vec![
         "Structural comparisons do not prove that a defect is reproducible.".to_owned(),
-        "Values are deliberately omitted from the comparison; inspect source reports privately.".to_owned(),
+        "Values are deliberately omitted from the comparison; inspect source reports privately."
+            .to_owned(),
         "Redacted or truncated values are inconclusive, not equal or different.".to_owned(),
         "Fingerprints are non-cryptographic heuristics and can collide.".to_owned(),
     ];
     let complete = baseline.analysis.as_ref().is_some_and(|analysis| {
-        !analysis.truncated_findings && !analysis.truncated_input && analysis.findings.len() <= MAX_COMPARABLE_FINDINGS
+        !analysis.truncated_findings
+            && !analysis.truncated_input
+            && analysis.findings.len() <= MAX_COMPARABLE_FINDINGS
     }) && candidate.analysis.as_ref().is_some_and(|analysis| {
-        !analysis.truncated_findings && !analysis.truncated_input && analysis.findings.len() <= MAX_COMPARABLE_FINDINGS
+        !analysis.truncated_findings
+            && !analysis.truncated_input
+            && analysis.findings.len() <= MAX_COMPARABLE_FINDINGS
     });
     let mut fingerprint_changes = Vec::new();
     if complete {
@@ -254,7 +345,10 @@ pub fn comparison_markdown(comparison: &ReportComparison) -> String {
     for entry in &comparison.fields {
         out.push_str(&format!(
             "| {} | {:?} | {:?} | {:?} |\n",
-            inline(&entry.field), entry.baseline_state, entry.candidate_state, entry.relationship,
+            inline(&entry.field),
+            entry.baseline_state,
+            entry.candidate_state,
+            entry.relationship,
         ));
     }
     out.push_str("\n## Heuristic failure fingerprints\n\n");
@@ -263,7 +357,10 @@ pub fn comparison_markdown(comparison: &ReportComparison) -> String {
         for item in &comparison.fingerprint_changes {
             out.push_str(&format!(
                 "| {} | {} | {} | {:?} |\n",
-                inline(&item.fingerprint), item.baseline_count, item.candidate_count, item.relationship,
+                inline(&item.fingerprint),
+                item.baseline_count,
+                item.candidate_count,
+                item.relationship,
             ));
         }
     } else {
@@ -279,20 +376,39 @@ pub fn comparison_markdown(comparison: &ReportComparison) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{environment::{inspect_environment, CaptureProfile}, report::Capture};
+    use crate::{
+        environment::{inspect_environment, CaptureProfile},
+        report::Capture,
+    };
 
     fn fixture() -> Report {
-        Report::new("test".into(), inspect_environment(CaptureProfile::Minimal), Capture {
-            executable: "test-runner".into(), arguments: vec!["--safe".into()],
-            started_unix_ms: 0, duration_ms: 10, exit_code: Some(1),
-            termination_signal: None, timed_out: false, launch_error: None,
-            stdout: String::new(), stderr: "error[E0308]: mismatched types".into(),
-            stdout_truncated: false, stderr_truncated: false, max_output_bytes_per_stream: 64,
-        })
+        Report::new(
+            "test".into(),
+            inspect_environment(CaptureProfile::Minimal),
+            Capture {
+                executable: "test-runner".into(),
+                arguments: vec!["--safe".into()],
+                started_unix_ms: 0,
+                duration_ms: 10,
+                exit_code: Some(1),
+                termination_signal: None,
+                timed_out: false,
+                launch_error: None,
+                stdout: String::new(),
+                stderr: "error[E0308]: mismatched types".into(),
+                stdout_truncated: false,
+                stderr_truncated: false,
+                max_output_bytes_per_stream: 64,
+            },
+        )
     }
 
     fn get_field<'a>(comparison: &'a ReportComparison, name: &str) -> &'a FieldDifference {
-        comparison.fields.iter().find(|field| field.field == name).expect("field")
+        comparison
+            .fields
+            .iter()
+            .find(|field| field.field == name)
+            .expect("field")
     }
 
     #[test]
@@ -302,9 +418,18 @@ mod tests {
         after.capture.arguments = vec!["[REDACTED]".into()];
         after.capture.stderr_truncated = true;
         let result = compare_reports(&before, &after).unwrap();
-        assert_eq!(get_field(&result, "capture.arguments").relationship, Relationship::Indeterminate);
-        assert_eq!(get_field(&result, "capture.stderr").relationship, Relationship::Indeterminate);
-        assert_eq!(get_field(&result, "capture.exit_code").relationship, Relationship::Same);
+        assert_eq!(
+            get_field(&result, "capture.arguments").relationship,
+            Relationship::Indeterminate
+        );
+        assert_eq!(
+            get_field(&result, "capture.stderr").relationship,
+            Relationship::Indeterminate
+        );
+        assert_eq!(
+            get_field(&result, "capture.exit_code").relationship,
+            Relationship::Same
+        );
     }
 
     #[test]

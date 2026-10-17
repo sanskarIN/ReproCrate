@@ -3,8 +3,8 @@
 
 use crate::{create_new_report, import_json};
 use reprocrate_core::{
-    compare_reports, comparison_markdown, recipe_from_report, recipe_markdown,
-    validate_recipe, ReproductionRecipe,
+    compare_reports, comparison_markdown, recipe_from_report, recipe_markdown, validate_recipe,
+    ReproductionRecipe,
 };
 use std::error::Error;
 use std::fs::File;
@@ -40,11 +40,21 @@ pub fn run_compare(
         println!("Markdown comparison: {}", path.display());
     }
     println!("JSON comparison: {}", output.display());
-    let changed = diff.fields.iter().filter(|field| {
-        matches!(field.relationship, reprocrate_core::compare::Relationship::Changed)
-    }).count();
+    let changed = diff
+        .fields
+        .iter()
+        .filter(|field| {
+            matches!(
+                field.relationship,
+                reprocrate_core::compare::Relationship::Changed
+            )
+        })
+        .count();
     println!("Changed comparable fields: {changed}");
-    println!("Fingerprint comparison complete: {}", diff.fingerprint_comparison_complete);
+    println!(
+        "Fingerprint comparison complete: {}",
+        diff.fingerprint_comparison_complete
+    );
     eprintln!("The structural differences omit raw values; no root cause was proven.");
     Ok(())
 }
@@ -84,7 +94,8 @@ pub fn run_recipe_inspect(input: PathBuf) -> Result<(), Box<dyn Error>> {
         return Err("recipe exceeds 1 MiB import limit".into());
     }
     let mut bytes = Vec::new();
-    file.take(MAX_RECIPE_BYTES as u64 + 1).read_to_end(&mut bytes)?;
+    file.take(MAX_RECIPE_BYTES as u64 + 1)
+        .read_to_end(&mut bytes)?;
     if bytes.len() > MAX_RECIPE_BYTES {
         return Err("recipe exceeded import cap while reading".into());
     }
@@ -108,7 +119,10 @@ mod tests {
     fn command_snapshot_requires_manual_review_acknowledgment() {
         let err = run_recipe_create(
             PathBuf::from("not-read.json"),
-            PathBuf::from("not-created.json"), None, true, false
+            PathBuf::from("not-created.json"),
+            None,
+            true,
+            false,
         );
         assert!(err.is_err());
     }
