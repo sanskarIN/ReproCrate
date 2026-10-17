@@ -89,7 +89,6 @@ fn compare_field(name: &str, left: Observation, right: Observation) -> FieldDiff
         (Present, Missing) => Relationship::Removed,
         (Present, Present) if left.value == right.value => Relationship::Same,
         (Present, Present) => Relationship::Changed,
-        _ => Relationship::Indeterminate,
     };
     FieldDifference {
         field: name.to_owned(),
