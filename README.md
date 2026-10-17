@@ -4,7 +4,11 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. Its first milestone is a standalone Rust CLI that captures **explicitly selected** commands without a shell, bounds captured output, records outcomes, sanitizes common secret patterns, and exports JSON and Markdown reports.
 
-> **Development status:** v0.1.0 CLI foundation in progress. No stable or downloadable release is claimed. Desktop UI, archival bundles, cross-report comparison and hosted docs are future milestones.
+> **Release status:** [v0.1.0 CLI pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0) published October 17, 2026, with tested Windows x86-64, Linux x86-64, and macOS ARM64 CLI archives and SHA-256 checksums. **It is experimental, not a stable release.** Desktop UI, diagnostic bundles, comparisons and hosted docs are future milestones.
+
+## Download
+
+See the [v0.1.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
 
 ## Build from source
 
@@ -38,7 +42,7 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: verified platform binaries, GUI, secure diagnostic ZIP bundles, rich log adapters, report comparisons, automated reproduction, or cloud integrations.
+Not yet provided: desktop installers/GUI, secure diagnostic ZIP bundles, rich log adapters, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 
