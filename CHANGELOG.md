@@ -57,6 +57,13 @@
 
 **Not included:** automated reproduction, desktop GUI, or a stable v1.0.0 promise. Further privacy/ZIP hardening remains planned.
 
-## Unreleased — toward v0.5.0
+## Unreleased — v0.5.0 desktop foundation
 
-Plan: introduce Tauri 2 + React desktop foundation reusing Rust core, with tests, privacy review and carefully evaluated distribution.
+- Added `apps/desktop`: React 19 + TypeScript + Vite 6 frontend and a separate Tauri 2 Rust workspace that reuses the existing ReproCrate Rust core. The existing CLI remains independently testable.
+- Created a dark responsive workspace UI for report inspection, comparisons, log analysis, manual recipe previews and privacy-review candidate exports.
+- Added explicit native IPC commands with 4 MiB report and 1 MiB log input limits, regular-file-only import, no shell/filesystem plugin grants and create-new-only reviewed JSON saving.
+- Generated native icons from a project SVG and committed separate lockfiles for npm and the desktop's Rust dependencies.
+- Added frontend unit/production build checks and GitHub Actions cross-platform native Rust verification.
+- Staged unsigned desktop developer-preview build verification separately from actual release publication.
+
+**Not yet complete:** native binaries/installer release gates, full graphical smoke tests, signed or notarized distribution, file picker UX, search/history, secure sandboxing, or stable v1.0.0. Do not present a source-only desktop scaffold as a shipped native executable.

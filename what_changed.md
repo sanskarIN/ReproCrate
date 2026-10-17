@@ -1,4 +1,42 @@
-# Latest handoff — v0.4.0 pre-release published
+# Latest handoff — v0.5.0 Tauri desktop foundation (development; not yet released)
+
+Date: 2026-10-17, repository https://github.com/sanskarIN/ReproCrate.
+Development branch: `feat/v0.5.0-desktop-foundation`.
+Last verified public release at time of this entry: https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0.
+**Do not claim a v0.5.0 downloadable binary or pre-release until the public GitHub Releases API verifies publication.**
+
+## Implemented code
+
+- `apps/desktop/src-tauri`: independently versioned Tauri 2 Rust workspace, committed Cargo.lock, generated native icons, restrictive Tauri capability file and CSP; explicitly invokes the same `reprocrate-core` workspace crate via a path dependency.
+- `apps/desktop/src-tauri/src/lib.rs`: native IPC commands: `desktop_status`, `inspect_report`, `compare_report_files`, `analyze_log_file`, `preview_recipe`, `preview_review`, `save_review`.
+- Core IPC safety: only user-selected regular files, symlink/directory/pipe rejection, 4 MiB JSON report cap and 1 MiB log cap, limited manual literal list and new-file-only reviewed export. No shell, network request, authentication or automatic recipe execution command exists.
+- `apps/desktop/src`: React + TypeScript Vite native UI for workspace, inspect, structural comparisons, heuristic log signals, inert manual recipe and privacy preview with selected field omissions/manual masking. Browser view is read-only and explicitly warns that native file access is unavailable.
+- `apps/desktop/src/format.test.ts`: frontend formatting/privacy-presentation unit tests. Npm packages pinned by package-lock.json. Source icon `apps/desktop/public/reprocrate.svg` produces platform assets committed under the native icons folder.
+- Root `Cargo.toml` and lockfile versioned 0.5.0; desktop package and native Rust app also at 0.5.0.
+- Separate `.github/workflows/desktop-ci.yml`: npm tests and production build, then Tauri native Rust check against independent lockfile on Ubuntu 24.04/Windows 2022/macOS 14.
+- `.github/workflows/desktop-build.yml`: additional gated developer-preview native executable build, OS matrix Rust boundary tests and retained build artifacts. This is a build verification workflow, *not* a GitHub Release.
+- Documentation: `docs/reference/desktop.md`, `docs/releases/v0.5.0.md`, security and architecture notes.
+- All new commits use Git identity Sanskar <sanskarin@outlook.in>. Temporary write-enabled icon/lock generator workflow and its trigger were removed after completion.
+
+## Verified evidence and blockers
+
+- Frontend npm tests/production build **passed** and Windows/Linux/macOS Tauri cargo check **passed**: https://github.com/sanskarIN/ReproCrate/actions/runs/39042465054.
+- Existing root CLI Rust CI remained successful after adding the desktop scaffold.
+- Locked npm deps and separate Tauri Cargo.lock and generated icons via successful one-shot run https://github.com/sanskarIN/ReproCrate/actions/runs/39042289779.
+- Native full-link tests and production executable packaging are being verified on branch CI: https://github.com/sanskarIN/ReproCrate/actions/workflows/desktop-build.yml.
+- The desktop requires Tauri 2 system libraries on Linux; Windows and macOS native binary packaging and clean graphical launch are not yet externally verified. Unsigned builds, even if produced, must be labeled experimental/developer previews.
+
+## Next
+
+1. Inspect full-link native build job results, correct errors, and verify executable artifacts on each OS without inventing unsupported release claims.
+2. Preserve root CLI tests and review docs/security as real binaries become available. Merge a clean PR only after platform and frontend quality gates.
+3. Decide a narrowly scoped v0.5.0 prerelease strategy: user-visible native developer-preview executables only if truly built; no installer/signing claims.
+4. Complete release publication, verify exact tag and assets independently with GitHub API, then update README, changelog and this handoff file.
+5. Next milestone v0.6.0 plans SQLite history/search, desktop accessibility/refinement; continue native-security and dependency/license audits.
+
+---
+
+# Historical handoff — v0.4.0 pre-release published
 
 Date: October 17, 2026. Repository: https://github.com/sanskarIN/ReproCrate.
 Source development branch: `feat/v0.4.0-compare-recipes`. Merged pull request: https://github.com/sanskarIN/ReproCrate/pull/4.
