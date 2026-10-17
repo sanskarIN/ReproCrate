@@ -1,4 +1,4 @@
-# Latest handoff — v0.2.0 prerelease candidate
+# Latest handoff — v0.2.0 pre-release published
 
 Date: 2026-10-17 (Asia/Kolkata). Repository: https://github.com/sanskarIN/ReproCrate.
 Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/ReproCrate/pull/2.
