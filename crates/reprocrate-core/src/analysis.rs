@@ -141,9 +141,8 @@ fn classify(line: &str, adapter: LogFormat) -> Option<(Severity, Category)> {
         return None;
     }
     let lower = trimmed.to_ascii_lowercase();
-    let is_warning = lower.starts_with("warning:")
-        || lower.starts_with("warn:")
-        || lower.contains(" warning: ");
+    let is_warning =
+        lower.starts_with("warning:") || lower.starts_with("warn:") || lower.contains(" warning: ");
     let failure = lower.contains("error:")
         || lower.starts_with("error[")
         || lower.starts_with("error ")
@@ -178,8 +177,10 @@ fn classify(line: &str, adapter: LogFormat) -> Option<(Severity, Category)> {
         Category::Dependency
     } else if lower.starts_with("error[") || lower.contains("could not compile") {
         Category::Compilation
-    } else if matches!(adapter, LogFormat::Pytest | LogFormat::Jest | LogFormat::Vitest)
-        || lower.contains("assertionerror")
+    } else if matches!(
+        adapter,
+        LogFormat::Pytest | LogFormat::Jest | LogFormat::Vitest
+    ) || lower.contains("assertionerror")
         || lower.contains("test result: failed")
     {
         Category::Test
@@ -188,7 +189,14 @@ fn classify(line: &str, adapter: LogFormat) -> Option<(Severity, Category)> {
     } else {
         Category::Unknown
     };
-    Some((if is_warning && !failure { Severity::Warning } else { Severity::Error }, category))
+    Some((
+        if is_warning && !failure {
+            Severity::Warning
+        } else {
+            Severity::Error
+        },
+        category,
+    ))
 }
 
 /// Stable normalization for grouping messages where line numbers, addresses
@@ -358,15 +366,27 @@ mod tests {
 
     #[test]
     fn jest_and_vitest_adapters_are_available() {
-        let jest = analyze_text("Test Suites: 1 failed, 0 passed\nFAIL math.test.js", LogFormat::Auto, false);
+        let jest = analyze_text(
+            "Test Suites: 1 failed, 0 passed\nFAIL math.test.js",
+            LogFormat::Auto,
+            false,
+        );
         assert_eq!(jest.detected_format, "jest");
-        let vitest = analyze_text(" RUN  v2.0.1 vitest\n❯ src/add.test.ts (1 failed)", LogFormat::Auto, false);
+        let vitest = analyze_text(
+            " RUN  v2.0.1 vitest\n❯ src/add.test.ts (1 failed)",
+            LogFormat::Auto,
+            false,
+        );
         assert_eq!(vitest.detected_format, "vitest");
     }
 
     #[test]
     fn never_echoes_recognized_secrets() {
-        let result = analyze_text("Error: password=very-secret-token\nAuthorization: Bearer reallysecret", LogFormat::Generic, false);
+        let result = analyze_text(
+            "Error: password=very-secret-token\nAuthorization: Bearer reallysecret",
+            LogFormat::Generic,
+            false,
+        );
         let json = serde_json::to_string(&result).expect("serialize");
         assert!(!json.contains("very-secret-token"));
         assert!(!json.contains("reallysecret"));
@@ -375,14 +395,21 @@ mod tests {
 
     #[test]
     fn does_not_merge_different_messages() {
-        let a = analyze_text("error: compilation failed\nerror: connection failed", LogFormat::Generic, false);
+        let a = analyze_text(
+            "error: compilation failed\nerror: connection failed",
+            LogFormat::Generic,
+            false,
+        );
         assert_eq!(a.findings.len(), 2);
         assert_ne!(a.findings[0].fingerprint, a.findings[1].fingerprint);
     }
 
     #[test]
     fn output_is_bounded_and_escapes_html_and_table_syntax() {
-        let text = (0..400).map(|i| format!("error: fail-{i} <script>|value")).collect::<Vec<_>>().join("\n");
+        let text = (0..400)
+            .map(|i| format!("error: fail-{i} <script>|value"))
+            .collect::<Vec<_>>()
+            .join("\n");
         let analysis = analyze_text(&text, LogFormat::Generic, true);
         assert!(analysis.truncated_findings);
         assert!(analysis.truncated_input);
@@ -394,7 +421,11 @@ mod tests {
 
     #[test]
     fn fixture_does_not_classify_unrelated_normal_lines() {
-        let result = analyze_text("all 10 examples passed\nsome normal debug output", LogFormat::Auto, false);
+        let result = analyze_text(
+            "all 10 examples passed\nsome normal debug output",
+            LogFormat::Auto,
+            false,
+        );
         assert!(result.findings.is_empty());
     }
 }

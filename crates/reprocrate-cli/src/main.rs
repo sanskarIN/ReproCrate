@@ -125,7 +125,13 @@ fn import_json(path: &Path) -> Result<Report, Box<dyn Error>> {
 fn run() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Analyze { input, format, output, markdown, max_input_bytes } => {
+        Commands::Analyze {
+            input,
+            format,
+            output,
+            markdown,
+            max_input_bytes,
+        } => {
             run_analysis(input, format, output, markdown, max_input_bytes)?;
         }
         Commands::Doctor { json } => {

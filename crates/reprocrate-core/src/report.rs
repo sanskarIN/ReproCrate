@@ -75,12 +75,13 @@ impl Report {
         let (title, _) = redact_text(&title);
         let count = out_count + err_count + launch_count + exe_count + arg_count + title_count;
         // Only analyze already-sanitized output. Never add raw secrets to reports.
-        let observed_output = format!(
-            "{}\n{}",
-            sanitized_capture.stderr, sanitized_capture.stdout
-        );
+        let observed_output = format!("{}\n{}", sanitized_capture.stderr, sanitized_capture.stdout);
         let findings = analyze_text(&observed_output, LogFormat::Auto, false);
-        let analysis = if findings.findings.is_empty() { None } else { Some(findings) };
+        let analysis = if findings.findings.is_empty() {
+            None
+        } else {
+            Some(findings)
+        };
         let mut warnings = vec![
             "Automatic secret masking is best-effort. Review the entire report before sharing."
                 .to_owned(),

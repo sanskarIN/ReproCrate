@@ -2,8 +2,8 @@
 //! A bounded, inert log-file analysis command.
 use crate::create_new_report;
 use clap::ValueEnum;
-use reprocrate_core::{analysis_markdown, analyze_text, LogFormat};
 use reprocrate_core::analysis::MAX_LOG_BYTES;
+use reprocrate_core::{analysis_markdown, analyze_text, LogFormat};
 use std::error::Error;
 use std::fs::{self, File};
 use std::io::{self, Read};
@@ -37,9 +37,14 @@ fn read_bounded(path: &Path, limit: usize) -> io::Result<(String, bool)> {
     let mut bytes = Vec::new();
     let limit_plus_one = u64::try_from(limit.saturating_add(1)).unwrap_or(u64::MAX);
     if path.to_str() == Some("-") {
-        io::stdin().lock().take(limit_plus_one).read_to_end(&mut bytes)?;
+        io::stdin()
+            .lock()
+            .take(limit_plus_one)
+            .read_to_end(&mut bytes)?;
     } else {
-        File::open(path)?.take(limit_plus_one).read_to_end(&mut bytes)?;
+        File::open(path)?
+            .take(limit_plus_one)
+            .read_to_end(&mut bytes)?;
     }
     let truncated = bytes.len() > limit;
     bytes.truncate(limit);

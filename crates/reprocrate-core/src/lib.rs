@@ -7,7 +7,9 @@ pub mod environment;
 pub mod redaction;
 pub mod report;
 
-pub use analysis::{analysis_markdown, analyze_text, LogAnalysis, LogFormat, ANALYSIS_SCHEMA_VERSION};
+pub use analysis::{
+    analysis_markdown, analyze_text, LogAnalysis, LogFormat, ANALYSIS_SCHEMA_VERSION,
+};
 pub use capture::{capture_command, CaptureOptions};
 pub use environment::{inspect_environment, CaptureProfile, Environment};
 pub use report::{render_markdown, Capture, Report, SCHEMA_VERSION};
