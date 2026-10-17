@@ -4,8 +4,8 @@
 pub mod analysis;
 pub mod bundle;
 pub mod capture;
-pub mod privacy;
 pub mod environment;
+pub mod privacy;
 pub mod redaction;
 pub mod report;
 
@@ -13,9 +13,9 @@ pub use analysis::{
     analysis_markdown, analyze_text, LogAnalysis, LogFormat, ANALYSIS_SCHEMA_VERSION,
 };
 pub use bundle::{create_bundle, extract_bundle, verify_bundle, BundleManifest};
-pub use privacy::{review_report, ReviewChoices, ReviewSummary};
 pub use capture::{capture_command, CaptureOptions};
 pub use environment::{inspect_environment, CaptureProfile, Environment};
+pub use privacy::{review_report, ReviewChoices, ReviewSummary};
 pub use report::{render_markdown, Capture, Report, SCHEMA_VERSION};
 
 /// The version of this workspace's report generator.

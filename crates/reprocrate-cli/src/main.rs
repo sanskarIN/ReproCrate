@@ -4,7 +4,9 @@ mod privacy_bundle_commands;
 
 use clap::{Parser, Subcommand, ValueEnum};
 use log_command::{run_analysis, FormatArg};
-use privacy_bundle_commands::{run_review, run_bundle_create, run_bundle_inspect, run_bundle_extract};
+use privacy_bundle_commands::{
+    run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
+};
 use reprocrate_core::{
     capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile, Report,
     SCHEMA_VERSION,
@@ -127,7 +129,10 @@ enum BundleActions {
     /// Verify manifest, report identity, names, limits and checksums.
     Verify { input: PathBuf },
     /// Extract only fully validated members into a new, nonexistent directory.
-    Extract { input: PathBuf, destination: PathBuf },
+    Extract {
+        input: PathBuf,
+        destination: PathBuf,
+    },
 }
 
 #[derive(Clone, Copy, Debug, ValueEnum)]
@@ -188,20 +193,43 @@ fn run() -> Result<(), Box<dyn Error>> {
         } => {
             run_analysis(input, format, output, markdown, max_input_bytes)?;
         }
-        Commands::Review { input, output, masks_file, preview,
-            exclude_stdout, exclude_stderr, exclude_arguments,
-            exclude_executable, exclude_analysis } => {
-            run_review(input, output, masks_file, preview,
-                exclude_stdout, exclude_stderr, exclude_arguments,
-                exclude_executable, exclude_analysis)?;
+        Commands::Review {
+            input,
+            output,
+            masks_file,
+            preview,
+            exclude_stdout,
+            exclude_stderr,
+            exclude_arguments,
+            exclude_executable,
+            exclude_analysis,
+        } => {
+            run_review(
+                input,
+                output,
+                masks_file,
+                preview,
+                exclude_stdout,
+                exclude_stderr,
+                exclude_arguments,
+                exclude_executable,
+                exclude_analysis,
+            )?;
         }
         Commands::Bundle { action } => match action {
-            BundleActions::Create { report, output, attachment, acknowledge_reviewed } => {
+            BundleActions::Create {
+                report,
+                output,
+                attachment,
+                acknowledge_reviewed,
+            } => {
                 run_bundle_create(report, output, attachment, acknowledge_reviewed)?;
             }
             BundleActions::Inspect { input } => run_bundle_inspect(input, false)?,
             BundleActions::Verify { input } => run_bundle_inspect(input, true)?,
-            BundleActions::Extract { input, destination } => run_bundle_extract(input, destination)?,
+            BundleActions::Extract { input, destination } => {
+                run_bundle_extract(input, destination)?
+            }
         },
         Commands::Doctor { json } => {
             let env = inspect_environment(CaptureProfile::Standard);

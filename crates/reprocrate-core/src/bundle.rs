@@ -54,7 +54,10 @@ fn is_allowed_path(path: &str) -> bool {
     if path == "manifest.json" || path == "report.json" {
         return true;
     }
-    let Some(number) = path.strip_prefix("attachments/").and_then(|rest| rest.strip_suffix(".bin")) else {
+    let Some(number) = path
+        .strip_prefix("attachments/")
+        .and_then(|rest| rest.strip_suffix(".bin"))
+    else {
         return false;
     };
     number.len() == 3 && number.bytes().all(|b| b.is_ascii_digit())
@@ -84,18 +87,23 @@ pub fn create_bundle(report: &Report, attachments: &[Vec<u8>]) -> io::Result<Vec
         if bytes.len() > MAX_ATTACHMENT_BYTES {
             return Err(invalid("attachment is too large"));
         }
-        budget = budget.checked_add(bytes.len()).ok_or_else(|| invalid("bundle size overflow"))?;
+        budget = budget
+            .checked_add(bytes.len())
+            .ok_or_else(|| invalid("bundle size overflow"))?;
         if budget > MAX_UNCOMPRESSED_BYTES {
             return Err(invalid("uncompressed bundle exceeds cap"));
         }
         members.insert(member_name(index), bytes.clone());
     }
 
-    let artifacts = members.iter().map(|(path, bytes)| BundleArtifact {
-        path: path.clone(),
-        size: bytes.len(),
-        sha256: digest(bytes),
-    }).collect();
+    let artifacts = members
+        .iter()
+        .map(|(path, bytes)| BundleArtifact {
+            path: path.clone(),
+            size: bytes.len(),
+            sha256: digest(bytes),
+        })
+        .collect();
     let manifest = BundleManifest {
         schema_version: BUNDLE_SCHEMA_VERSION.into(),
         report_id: report.report_id.clone(),
@@ -111,7 +119,9 @@ pub fn create_bundle(report: &Report, attachments: &[Vec<u8>]) -> io::Result<Vec
     let options = SimpleFileOptions::default()
         .compression_method(CompressionMethod::Deflated)
         .unix_permissions(0o600);
-    writer.start_file("manifest.json", options).map_err(zip_error)?;
+    writer
+        .start_file("manifest.json", options)
+        .map_err(zip_error)?;
     writer.write_all(&manifest_bytes)?;
     for (path, contents) in &members {
         writer.start_file(path, options).map_err(zip_error)?;
@@ -148,7 +158,11 @@ fn inspect_members(bytes: &[u8]) -> io::Result<(BundleManifest, BTreeMap<String,
     for index in 0..archive.len() {
         let mut entry = archive.by_index(index).map_err(zip_error)?;
         let name = entry.name().to_owned();
-        if !is_allowed_path(&name) || name.contains('\\') || name.starts_with('/') || name.contains("..") {
+        if !is_allowed_path(&name)
+            || name.contains('\\')
+            || name.starts_with('/')
+            || name.contains("..")
+        {
             return Err(invalid("unsafe or unrecognized ZIP member path"));
         }
         if entry.is_dir() || entry.is_symlink() {
@@ -172,7 +186,8 @@ fn inspect_members(bytes: &[u8]) -> io::Result<(BundleManifest, BTreeMap<String,
         if entry.size() > cap as u64 {
             return Err(invalid("ZIP member exceeds declared size cap"));
         }
-        uncompressed = uncompressed.checked_add(entry.size() as usize)
+        uncompressed = uncompressed
+            .checked_add(entry.size() as usize)
             .ok_or_else(|| invalid("uncompressed-size overflow"))?;
         if uncompressed > MAX_UNCOMPRESSED_BYTES + MAX_MANIFEST_BYTES {
             return Err(invalid("uncompressed archive exceeds aggregate cap"));
@@ -185,7 +200,8 @@ fn inspect_members(bytes: &[u8]) -> io::Result<(BundleManifest, BTreeMap<String,
         members.insert(name, data);
     }
 
-    let manifest_bytes = members.remove("manifest.json")
+    let manifest_bytes = members
+        .remove("manifest.json")
         .ok_or_else(|| invalid("bundle manifest.json missing"))?;
     let manifest: BundleManifest = serde_json::from_slice(&manifest_bytes)
         .map_err(|_| invalid("malformed bundle manifest"))?;
@@ -212,7 +228,8 @@ fn inspect_members(bytes: &[u8]) -> io::Result<(BundleManifest, BTreeMap<String,
             return Err(invalid("archive integrity check failed"));
         }
     }
-    let report_bytes = members.get("report.json")
+    let report_bytes = members
+        .get("report.json")
         .ok_or_else(|| invalid("bundle report.json missing"))?;
     let report: Report = serde_json::from_slice(report_bytes)
         .map_err(|_| invalid("bundle contains malformed report"))?;
@@ -260,17 +277,27 @@ pub fn extract_bundle(bytes: &[u8], destination: &Path) -> io::Result<BundleMani
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{environment::{inspect_environment, CaptureProfile}, report::Capture};
+    use crate::{
+        environment::{inspect_environment, CaptureProfile},
+        report::Capture,
+    };
     fn sample_report() -> Report {
         Report::new(
             "safe sample".into(),
             inspect_environment(CaptureProfile::Minimal),
             Capture {
-                executable: "rustc".into(), arguments: vec!["--version".into()],
-                started_unix_ms: 0, duration_ms: 1, exit_code: Some(0),
-                termination_signal: None, timed_out: false, launch_error: None,
-                stdout: "rustc test".into(), stderr: String::new(),
-                stdout_truncated: false, stderr_truncated: false,
+                executable: "rustc".into(),
+                arguments: vec!["--version".into()],
+                started_unix_ms: 0,
+                duration_ms: 1,
+                exit_code: Some(0),
+                termination_signal: None,
+                timed_out: false,
+                launch_error: None,
+                stdout: "rustc test".into(),
+                stderr: String::new(),
+                stdout_truncated: false,
+                stderr_truncated: false,
                 max_output_bytes_per_stream: 32,
             },
         )
@@ -281,7 +308,10 @@ mod tests {
         let archive = create_bundle(&sample_report(), &[b"approved fixture".to_vec()]).unwrap();
         let manifest = verify_bundle(&archive).unwrap();
         assert_eq!(manifest.artifacts.len(), 2);
-        assert!(manifest.artifacts.iter().any(|a| a.path == "attachments/000.bin"));
+        assert!(manifest
+            .artifacts
+            .iter()
+            .any(|a| a.path == "attachments/000.bin"));
     }
 
     #[test]
@@ -301,7 +331,13 @@ mod tests {
 
     #[test]
     fn refuses_unsafe_member_names() {
-        for bad in ["../report.json", "/report.json", "attachments/../../foo", "c:\\evil", "attachments/000.bin/extra"] {
+        for bad in [
+            "../report.json",
+            "/report.json",
+            "attachments/../../foo",
+            "c:\\evil",
+            "attachments/000.bin/extra",
+        ] {
             assert!(!is_allowed_path(bad));
         }
     }
@@ -325,7 +361,8 @@ mod tests {
         let mut zip = ZipWriter::new(writer);
         let opts = SimpleFileOptions::default();
         zip.start_file("manifest.json", opts).unwrap();
-        zip.write_all(br#"{"schema_version":"1.0.0","report_id":"x","artifacts":[]}"#).unwrap();
+        zip.write_all(br#"{"schema_version":"1.0.0","report_id":"x","artifacts":[]}"#)
+            .unwrap();
         zip.start_file("report.json", opts).unwrap();
         zip.write_all(b"{}").unwrap();
         let bytes = zip.finish().unwrap().into_inner();

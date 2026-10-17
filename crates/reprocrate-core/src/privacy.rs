@@ -100,17 +100,26 @@ pub fn review_report(source: &Report, choices: &ReviewChoices) -> (Report, Revie
         summary.excluded_fields.push("analysis".into());
     }
     if !summary.excluded_fields.is_empty() || summary.additional_mask_matches > 0 {
-        report.warnings.push("Additional exclusions or masks were applied by the user during review.".into());
+        report
+            .warnings
+            .push("Additional exclusions or masks were applied by the user during review.".into());
     }
-    report.warnings.push("This is an editable review candidate, not proof of a secret-free report.".into());
-    report.redaction_matches = report.redaction_matches.saturating_add(summary.additional_mask_matches);
+    report
+        .warnings
+        .push("This is an editable review candidate, not proof of a secret-free report.".into());
+    report.redaction_matches = report
+        .redaction_matches
+        .saturating_add(summary.additional_mask_matches);
     (report, summary)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{environment::{inspect_environment, CaptureProfile}, report::Capture};
+    use crate::{
+        environment::{inspect_environment, CaptureProfile},
+        report::Capture,
+    };
 
     fn sample() -> Report {
         Report::new(
@@ -119,12 +128,16 @@ mod tests {
             Capture {
                 executable: "cargo".into(),
                 arguments: vec!["--token".into(), "unrecognized-secret-value".into()],
-                started_unix_ms: 0, duration_ms: 0,
-                exit_code: None, termination_signal: None, timed_out: false,
+                started_unix_ms: 0,
+                duration_ms: 0,
+                exit_code: None,
+                termination_signal: None,
+                timed_out: false,
                 launch_error: None,
                 stdout: "internal project private-token goes here".into(),
                 stderr: "error: permission denied".into(),
-                stdout_truncated: false, stderr_truncated: false,
+                stdout_truncated: false,
+                stderr_truncated: false,
                 max_output_bytes_per_stream: 1024,
             },
         )
@@ -140,15 +153,20 @@ mod tests {
         let (report, summary) = review_report(&input, &opts);
         assert!(summary.additional_mask_matches >= 1);
         assert!(!report.capture.stdout.contains("private-token"));
-        assert_eq!(input.capture.stdout, "internal project private-token goes here");
+        assert_eq!(
+            input.capture.stdout,
+            "internal project private-token goes here"
+        );
     }
 
     #[test]
     fn removes_requested_fields_and_repeated_args() {
         let input = sample();
         let opts = ReviewChoices {
-            exclude_stdout: true, exclude_stderr: true,
-            exclude_arguments: true, exclude_analysis: true,
+            exclude_stdout: true,
+            exclude_stderr: true,
+            exclude_arguments: true,
+            exclude_analysis: true,
             ..ReviewChoices::default()
         };
         let (report, result) = review_report(&input, &opts);

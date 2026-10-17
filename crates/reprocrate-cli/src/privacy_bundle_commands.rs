@@ -3,8 +3,8 @@
 
 use crate::{create_new_report, import_json};
 use reprocrate_core::bundle::{
-    create_bundle, extract_bundle, verify_bundle, MAX_ARCHIVE_BYTES, MAX_ATTACHMENT_BYTES,
-    MAX_ATTACHMENTS, MAX_REPORT_BYTES,
+    create_bundle, extract_bundle, verify_bundle, MAX_ARCHIVE_BYTES, MAX_ATTACHMENTS,
+    MAX_ATTACHMENT_BYTES, MAX_REPORT_BYTES,
 };
 use reprocrate_core::{review_report, ReviewChoices};
 use std::error::Error;
@@ -94,7 +94,10 @@ pub fn run_review(
         create_new_report(&path, &rendered)?;
         println!("Reviewed candidate: {}", path.display());
     }
-    println!("Additional redaction matches: {}", summary.additional_mask_matches);
+    println!(
+        "Additional redaction matches: {}",
+        summary.additional_mask_matches
+    );
     println!("Excluded fields: {}", summary.excluded_fields.join(", "));
     if preview {
         // --preview is an explicit opt-in to print the exact JSON export.
@@ -112,7 +115,9 @@ pub fn run_bundle_create(
     acknowledge_reviewed: bool,
 ) -> Result<(), Box<dyn Error>> {
     if !acknowledge_reviewed {
-        return Err("bundle creation requires --acknowledge-reviewed after examining every input".into());
+        return Err(
+            "bundle creation requires --acknowledge-reviewed after examining every input".into(),
+        );
     }
     if output.exists() {
         return Err("bundle output already exists (overwrite disabled)".into());
@@ -143,7 +148,10 @@ pub fn run_bundle_inspect(path: PathBuf, verify: bool) -> Result<(), Box<dyn Err
     println!("Report ID: {}", manifest.report_id);
     println!("Integrity: verified");
     for file in &manifest.artifacts {
-        println!("{} ({} bytes, SHA-256 {})", file.path, file.size, file.sha256);
+        println!(
+            "{} ({} bytes, SHA-256 {})",
+            file.path, file.size, file.sha256
+        );
     }
     if verify {
         println!("Bundle validation passed; imported commands were not executed.");
@@ -165,7 +173,12 @@ mod tests {
     use super::*;
     #[test]
     fn rejects_missing_review_acknowledgement() {
-        let result = run_bundle_create(PathBuf::from("missing.json"), PathBuf::from("out.zip"), vec![], false);
+        let result = run_bundle_create(
+            PathBuf::from("missing.json"),
+            PathBuf::from("out.zip"),
+            vec![],
+            false,
+        );
         assert!(result.is_err());
     }
     #[test]
