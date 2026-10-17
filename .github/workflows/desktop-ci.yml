@@ -2,7 +2,7 @@ name: Desktop foundation CI
 
 on:
   push:
-    branches: [main, feat/v0.5.0-desktop-foundation]
+    branches: [main, 'feat/v*']
     paths:
       - "apps/desktop/**"
       - "crates/reprocrate-core/**"

@@ -82,6 +82,7 @@ fn open_database(path: &Path) -> Result<Connection, String> {
         .map_err(|e| e.to_string())?;
     conn.execute_batch(
         "PRAGMA journal_mode = DELETE;
+         PRAGMA secure_delete = ON;
          PRAGMA synchronous = FULL;
          CREATE TABLE IF NOT EXISTS report_history (
             id INTEGER PRIMARY KEY,
