@@ -29,7 +29,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v0.1.0 --target "$GITHUB_SHA" --title "ReproCrate v0.1.0 (CLI pre-release)" --notes-file docs/releases/v0.1.0.md --prerelease --draft
+          if gh release view v0.1.0 --json isDraft --jq .isDraft > /tmp/reprocrate-draft-state 2>/dev/null; then
+            if [ "$(cat /tmp/reprocrate-draft-state)" != "true" ]; then
+              echo "Refusing to overwrite an already published release" >&2
+              exit 1
+            fi
+            echo "Reusing the existing unpublished draft for failed-job retry"
+          else
+            gh release create v0.1.0 --target "$GITHUB_SHA" --title "ReproCrate v0.1.0 (CLI pre-release)" --notes-file docs/releases/v0.1.0.md --prerelease --draft
+          fi
 
   build-upload:
     needs: draft-release
@@ -57,7 +65,11 @@ jobs:
           package="reprocrate-v0.1.0-${os}-${arch}.tar.gz"
           tar -czf "$package" -C target/release reprocrate
           tar -tzf "$package"
-          sha256sum "$package" > "$package.sha256"
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "$package" > "$package.sha256"
+          else
+            shasum -a 256 "$package" > "$package.sha256"
+          fi
           echo "PACKAGE=$package" >> "$GITHUB_ENV"
       - name: Package Windows executable and checksum
         if: runner.os == 'Windows'
