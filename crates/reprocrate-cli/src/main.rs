@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: EPL-2.0
 mod log_command;
+mod compare_recipe_commands;
 mod privacy_bundle_commands;
 
 use clap::{Parser, Subcommand, ValueEnum};
 use log_command::{run_analysis, FormatArg};
+use compare_recipe_commands::{run_compare, run_recipe_create, run_recipe_inspect};
 use privacy_bundle_commands::{
     run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
 };
@@ -100,6 +102,20 @@ enum Commands {
         #[command(subcommand)]
         action: BundleActions,
     },
+    /// Compare two saved reports without exporting raw output or arguments.
+    Compare {
+        baseline: PathBuf,
+        candidate: PathBuf,
+        #[arg(long, default_value = "reprocrate-comparison.json")]
+        output: PathBuf,
+        #[arg(long)]
+        markdown: Option<PathBuf>,
+    },
+    /// Produce or inspect a structured, non-executable reproduction guide.
+    Recipe {
+        #[command(subcommand)]
+        action: RecipeActions,
+    },
     /// Print the small amount of environment information captured by profiles.
     Doctor {
         #[arg(long)]
@@ -133,6 +149,27 @@ enum BundleActions {
         input: PathBuf,
         destination: PathBuf,
     },
+}
+
+#[derive(Subcommand)]
+enum RecipeActions {
+    /// Export a manual troubleshooting checklist from a saved report.
+    Create {
+        #[arg(long)]
+        report: PathBuf,
+        #[arg(long, default_value = "reprocrate-recipe.json")]
+        output: PathBuf,
+        #[arg(long)]
+        markdown: Option<PathBuf>,
+        /// Include the report's command and arguments only after approval.
+        #[arg(long)]
+        include_command: bool,
+        /// Explicitly acknowledge reviewing the command and arguments.
+        #[arg(long)]
+        acknowledge_reviewed: bool,
+    },
+    /// Validate an inert recipe file and show only its metadata.
+    Inspect { input: PathBuf },
 }
 
 #[derive(Clone, Copy, Debug, ValueEnum)]
@@ -230,6 +267,15 @@ fn run() -> Result<(), Box<dyn Error>> {
             BundleActions::Extract { input, destination } => {
                 run_bundle_extract(input, destination)?
             }
+        },
+        Commands::Compare { baseline, candidate, output, markdown } => {
+            run_compare(baseline, candidate, output, markdown)?;
+        }
+        Commands::Recipe { action } => match action {
+            RecipeActions::Create { report, output, markdown, include_command, acknowledge_reviewed } => {
+                run_recipe_create(report, output, markdown, include_command, acknowledge_reviewed)?;
+            }
+            RecipeActions::Inspect { input } => run_recipe_inspect(input)?,
         },
         Commands::Doctor { json } => {
             let env = inspect_environment(CaptureProfile::Standard);
