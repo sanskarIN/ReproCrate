@@ -3,7 +3,7 @@
 //! User-chosen paths are read as bounded regular files and never executed.
 
 use reprocrate_core::{
-    analyze_text, compare_reports, recipe_from_report, review_report, CaptureProfile, LogAnalysis,
+    analyze_text, compare_reports, recipe_from_report, review_report, LogAnalysis,
     LogFormat, Report, ReportComparison, ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
 };
 use serde::Serialize;
@@ -259,7 +259,6 @@ mod tests {
     #[test]
     fn desktop_reports_offline_intent() {
         assert!(desktop_status().mode.contains("no automatic upload"));
-        let _ = CaptureProfile::Minimal;
     }
 
     #[test]
