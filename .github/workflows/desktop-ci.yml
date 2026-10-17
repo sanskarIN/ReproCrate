@@ -1,0 +1,69 @@
+name: Desktop foundation CI
+
+on:
+  push:
+    branches: [main, feat/v0.5.0-desktop-foundation]
+    paths:
+      - "apps/desktop/**"
+      - "crates/reprocrate-core/**"
+      - ".github/workflows/desktop-ci.yml"
+  pull_request:
+    paths:
+      - "apps/desktop/**"
+      - "crates/reprocrate-core/**"
+      - ".github/workflows/desktop-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Desktop / React tests and production build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - name: Install locked frontend dependencies
+        working-directory: apps/desktop
+        run: npm ci --no-audit --no-fund
+      - name: Unit tests
+        working-directory: apps/desktop
+        run: npm test
+      - name: TypeScript and Vite production build
+        working-directory: apps/desktop
+        run: npm run build
+
+  native:
+    name: Desktop / Tauri check (${{ matrix.os }})
+    needs: frontend
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Linux WebKitGTK and app indicator prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev libxdo-dev patchelf
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - name: Install and build desktop UI
+        shell: bash
+        run: |
+          cd apps/desktop
+          npm ci --no-audit --no-fund
+          npm run build
+      - name: Install stable Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+      - name: Verify independently locked native desktop crate
+        run: cargo +stable check --manifest-path apps/desktop/src-tauri/Cargo.toml --all-targets --locked
