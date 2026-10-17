@@ -1,3 +1,5 @@
 ReproCrate CLI v0.1.0 pre-release marker
 Only publish after all validation and per-platform release packaging jobs pass.
 Stable v1.0.0 remains blocked on substantial future development and verification.
+
+Retry after fixing macOS shasum and safe asset replacement; source CLI unchanged.
