@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: EPL-2.0
+mod log_command;
+
 use clap::{Parser, Subcommand, ValueEnum};
+use log_command::{run_analysis, FormatArg};
 use reprocrate_core::{
     capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile, Report,
     SCHEMA_VERSION,
@@ -46,6 +49,23 @@ enum Commands {
         /// Explicit command and arguments. Precede them with --.
         #[arg(last = true, num_args = 1.., required = true)]
         command: Vec<OsString>,
+    },
+    /// Analyze a selected log (or '-' for stdin) without executing its contents.
+    Analyze {
+        /// Path to textual log file, or '-' to read standard input.
+        input: PathBuf,
+        /// Heuristic format detector or an explicitly selected parser.
+        #[arg(long, value_enum, default_value_t = FormatArg::Auto)]
+        format: FormatArg,
+        /// Destination for sanitized JSON analysis (no overwrite).
+        #[arg(long, default_value = "reprocrate-analysis.json")]
+        output: PathBuf,
+        /// Optional sanitized Markdown analysis destination.
+        #[arg(long)]
+        markdown: Option<PathBuf>,
+        /// Maximum bytes read from the selected log (1..=8388608).
+        #[arg(long, default_value_t = 1_048_576)]
+        max_input_bytes: usize,
     },
     /// Print the small amount of environment information captured by profiles.
     Doctor {
@@ -105,6 +125,9 @@ fn import_json(path: &Path) -> Result<Report, Box<dyn Error>> {
 fn run() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
     match cli.command {
+        Commands::Analyze { input, format, output, markdown, max_input_bytes } => {
+            run_analysis(input, format, output, markdown, max_input_bytes)?;
+        }
         Commands::Doctor { json } => {
             let env = inspect_environment(CaptureProfile::Standard);
             if json {
