@@ -1,4 +1,4 @@
-# CLI reference (v0.3.0 pre-release)
+# CLI reference (v0.4.0 pre-release)
 
 Build first with a stable Rust toolchain:
 
@@ -32,7 +32,7 @@ Capture reports are created only at the chosen paths. Existing files are not ove
 
 `reprocrate bundle create --report reviewed.json --output data.zip [--attachment FILE]... --acknowledge-reviewed` requires approval of each included file. `reprocrate bundle inspect data.zip`, `bundle verify data.zip`, and `bundle extract data.zip NEW_DIRECTORY` validate portable bundles without executing them. See [privacy bundle guide](privacy-bundles.md) for exact limits and limitations.
 
-## Report comparison and manual recipes (v0.4.0 development)
+## Report comparison and manual recipes (v0.4.0 pre-release)
 
 `reprocrate compare BASELINE.json CANDIDATE.json [--output diff.json] [--markdown diff.md]` performs a bounded offline **structural** comparison. The resulting files omit raw log and argument values, and represent redacted/truncated fields as indeterminate. Fingerprints are only compared when both analyses are complete.
 

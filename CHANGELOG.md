@@ -43,7 +43,11 @@
 
 **Remaining:** further fuzzing, fuller privacy coverage, end-to-end authentication guidance and stable-release hardening.
 
-## Unreleased — v0.4.0 development
+## [0.4.0] — 2026-10-17 (pre-release)
+
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0
+
+**Verified:** GitHub Actions https://github.com/sanskarIN/ReproCrate/actions/runs/39040339254 (validation, platform build/upload and publication all passed); GitHub Releases API confirmed public pre-release and six authentic CLI archive/checksum assets.
 
 - Added `reprocrate compare` with deterministic structural field differences and explicit unknown/redacted/truncated states, without exporting raw log or argument values.
 - Added heuristic fingerprint comparison only when *both* reports have complete log analysis.
@@ -51,4 +55,8 @@
 - Command references are excluded by default; including one requires both `--include-command` and `--acknowledge-reviewed`.
 - Added shared Rust-core APIs and offline CLI integration tests. Report schema 1.0.0 remains compatible.
 
-Not yet shipped as a pre-release until platform CI and guarded release publishing pass. No automatic reproduction or desktop GUI.
+**Not included:** automated reproduction, desktop GUI, or a stable v1.0.0 promise. Further privacy/ZIP hardening remains planned.
+
+## Unreleased — toward v0.5.0
+
+Plan: introduce Tauri 2 + React desktop foundation reusing Rust core, with tests, privacy review and carefully evaluated distribution.

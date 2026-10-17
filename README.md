@@ -2,13 +2,13 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. The v0.4.0 development branch adds privacy-minimizing report comparisons and inert reproduction checklists.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 adds privacy-minimizing report comparisons and inert reproduction checklists.
 
-> **Latest pre-release:** [v0.3.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0), published October 17, 2026, with Windows x86-64, Linux x86-64, and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** Desktop UI, comparisons and hosted documentation remain planned.
+> **Latest pre-release:** [v0.4.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0), published October 17, 2026, with Windows x86-64, Linux x86-64 and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** Desktop UI and hosted documentation remain planned.
 
 ## Download
 
-See the [v0.3.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
+See the [v0.4.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -29,7 +29,7 @@ cargo run -p reprocrate-cli -- bundle extract diagnostic.zip extracted
 
 Review the exact JSON and every optional attachment yourself before sharing. The `--acknowledge-reviewed` flag explicitly confirms that review. The tool does not sanitize attachments automatically, upload reports, or execute imported commands. Read the [privacy and bundle guide](docs/reference/privacy-bundles.md).
 
-## Compare reports and generate manual recipes (v0.4.0 development)
+## Compare reports and generate manual recipes (available in v0.4.0)
 
 ```bash
 cargo run -p reprocrate-cli -- compare old.json new.json --output diff.json --markdown diff.md

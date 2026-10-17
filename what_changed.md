@@ -1,8 +1,8 @@
-# Latest handoff — v0.4.0 development (not yet published)
+# Latest handoff — v0.4.0 pre-release published
 
 Date: October 17, 2026. Repository: https://github.com/sanskarIN/ReproCrate.
-Development branch: `feat/v0.4.0-compare-recipes`.
-Most recent published CLI pre-release: https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0.
+Source development branch: `feat/v0.4.0-compare-recipes`. Merged pull request: https://github.com/sanskarIN/ReproCrate/pull/4.
+**Current published pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0. GitHub API confirmed `draft:false`, `prerelease:true`, `published_at:2026-10-17T14:23:19Z`, tag target `18456cafb3a758771a52784350bcd1fd069fad17`.
 
 ## Implemented v0.4.0 source
 
@@ -16,18 +16,23 @@ Most recent published CLI pre-release: https://github.com/sanskarIN/ReproCrate/r
 
 ## Validation / release gate
 
-- Cross-platform CI (Ubuntu 24.04, macOS 14, Windows 2022) must pass tests, Clippy `-D warnings`, and rustfmt before merging this development branch.
-- An early Clippy failure was caused by an unreachable pattern in a new enum match; patched in commit `b66fe742`.
-- **v0.4.0 was not published as of this handoff entry.** Do not claim release artifacts exist until GitHub API confirms the public pre-release, file names and sizes.
-- Published v0.3.0 remains intact, with its six native CLI assets.
+- **Passed CI:** https://github.com/sanskarIN/ReproCrate/actions/runs/39040215862. Ubuntu 24.04, macOS 14 and Windows 2022 all passed workspace compilation, tests, Clippy with `-D warnings`, and rustfmt.
+- Fixed an early Clippy unreachable-pattern error and an intermittent macOS parallel scratch-directory test collision; normalized Rust source via a temporary formatter workflow then removed it.
+- **PR #4 merged:** `2d592a116851a05c241edc89ce2a7e194d05c309` with individual feature commits retained.
+- **Release workflow successful:** https://github.com/sanskarIN/ReproCrate/actions/runs/39040339254 (validate, draft, Linux/macOS/Windows build-upload, and publish).
+- GitHub Releases API independently confirmed six uploaded real assets:
+  - `reprocrate-v0.4.0-linux-x86_64.tar.gz` (1,616,775 bytes) + `.sha256` (104 bytes)
+  - `reprocrate-v0.4.0-macos-arm64.tar.gz` (1,432,261 bytes) + `.sha256` (103 bytes)
+  - `reprocrate-v0.4.0-windows-x86_64.zip` (1,401,405 bytes) + `.sha256` (104 bytes)
+- The v0.1.0, v0.2.0, v0.3.0 pre-releases remain available; none is stable v1.0.0.
 
 ## Known limitations and next steps
 
-1. Check the latest CI failures, fix implementation/tests/formatting, and verify all 3 OS runners.
-2. Open PR and merge only checked source into `main`, preserving granular commits with `sanskarin@outlook.in`.
-3. Trigger version-specific guarded pre-release workflow and verify native archive + checksum assets before publicly marking v0.4.0 complete.
-4. Continue privacy/redaction improvement, hardened ZIP testing, and eventual v0.5.0 Tauri desktop integration.
-5. Structural similarity is **not** verified reproduction. Fingerprints can collide; redaction is best-effort; there is no sandbox and no automatic recipe execution.
+1. **v0.5.0:** develop shared-Rust-core Tauri 2 + React desktop app foundation, add cross-platform GUI build and smoke tests.
+2. Continue privacy/redaction improvements, hostile bundle fuzzing, file IO race review, better process-tree cancellation and dependency-license audit.
+3. Strengthen report/recipe schema validation against attacker-supplied values and clarify manual review controls in UI.
+4. Keep all builds reproducible and track CI and release evidence. Only advance to stable v1.0.0 after its own privacy, reliability and platform gates are verified.
+5. Limitations: structural similarity is **not** independently verified reproduction; fingerprints can collide; automatic masking can miss secrets; command capture remains unsandboxed and recipes cannot auto-execute.
 
 ---
 
