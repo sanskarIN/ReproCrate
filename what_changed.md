@@ -1,4 +1,37 @@
-# Latest handoff — v0.2.0 pre-release published
+# Latest handoff — v0.3.0 development (not released)
+
+Date: 2026-10-17. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.3.0-privacy-bundles`.
+
+## Implemented source and design
+
+- Core `crates/reprocrate-core/src/privacy.rs`: additional literal masks and exclusions for a copied report, with scanner-limit warnings.
+- Core `crates/reprocrate-core/src/bundle.rs`: ZIP manifest, per-file SHA-256, compressed/decompressed bounds, fixed archive member names, duplicate/symlink/traversal defenses, verification-before-extraction and new-directory writes.
+- CLI `crates/reprocrate-cli/src/privacy_bundle_commands.rs`: review, bundle create, inspect, verify and extract with explicit manual approval of selected report and attachments.
+- `crates/reprocrate-cli/src/main.rs`: registers CLI subcommands.
+- `Cargo.toml` and `Cargo.lock`: v0.3.0 Rust workspace, ZIP (deflate-only) and sha2 dependencies.
+- `crates/reprocrate-cli/tests/bundle_cli.rs` and core unit tests: end-to-end report review, ZIP verification/extraction and hostile-input rejection.
+- `docs/reference/privacy-bundles.md`, `docs/security/archive-threat-model.md`, `docs/releases/v0.3.0.md`, README/roadmap/changelog/security/CLI reference.
+- Existing v0.2.0 pre-release remains available; do **not** present v0.3.0 as published until confirmed by API.
+
+## Validation and known gaps
+
+- Generated Cargo.lock and formatted Rust through a one-shot GitHub Actions workflow; temporary elevated-permission workflow was then removed.
+- Initial ZIP unit tests exposed test assumptions incompatible with zip 2.x (duplicate names refused on writing, end-of-directory signature width). Corrected the fixture tests in commit `8288b2c`.
+- The newest cross-platform test run must be verified before PR merge and release. GitHub Actions status is not inferred to be passing merely because the workflow exists.
+- ZIP content integrity != author authentication. Manual review is not a guarantee of secret-free exports. Archive importer is bounded but needs further third-party review/fuzzing.
+- No cloud upload, automatic imported-script execution, GUI, SQLite, cross-report comparison or stable release.
+
+## Next steps
+
+1. Confirm passing Ubuntu/Windows/macOS CI for the current branch and fix any failures.
+2. Stage guarded v0.3.0 pre-release workflow, open a PR, merge only verified commit.
+3. Trigger the v0.3.0 release by version marker after merge, verify real binary archives/checksums and release metadata.
+4. Record verified exact release and artifact links here; update README/changelog only after publishing.
+5. Continue toward v0.4.0 comparisons and recipes, and audit remaining privacy/ZIP limitations before stable v1.0.0.
+
+---
+
+# Historical handoff — v0.2.0 pre-release published
 
 Date: 2026-10-17 (Asia/Kolkata). Repository: https://github.com/sanskarIN/ReproCrate.
 Branch: `feat/v0.2.0-log-analysis`. Pull request: https://github.com/sanskarIN/ReproCrate/pull/2.

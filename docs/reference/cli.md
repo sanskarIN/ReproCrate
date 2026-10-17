@@ -1,4 +1,4 @@
-# CLI reference (v0.2.0 pre-release)
+# CLI reference (v0.3.0 development candidate)
 
 Build first with a stable Rust toolchain:
 
@@ -25,3 +25,9 @@ Capture reports are created only at the chosen paths. Existing files are not ove
 ## Analyze selected logs (v0.2.0 pre-release)
 
 `reprocrate analyze INPUT [--format auto|generic|cargo|pytest|jest|vitest] [--output PATH] [--markdown PATH] [--max-input-bytes N]` analyzes bounded text only. Use `-` as INPUT for standard input. It never executes commands found in the file. Default byte cap 1 MiB; hard cap 8 MiB. Automatic pattern redaction is fallible and exported text must be reviewed before sharing. See [log analysis](log-analysis.md) for details.
+
+## Privacy review and portable archives (v0.3.0 development)
+
+`reprocrate review INPUT --output NEW.json [--masks-file FILE] [--preview] [--exclude-stdout] [--exclude-stderr] [--exclude-arguments] [--exclude-executable] [--exclude-analysis]` creates an independently inspectable edited report. `--preview` explicitly prints the full JSON payload.
+
+`reprocrate bundle create --report reviewed.json --output data.zip [--attachment FILE]... --acknowledge-reviewed` requires approval of each included file. `reprocrate bundle inspect data.zip`, `bundle verify data.zip`, and `bundle extract data.zip NEW_DIRECTORY` validate portable bundles without executing them. See [privacy bundle guide](privacy-bundles.md) for exact limits and limitations.

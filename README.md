@@ -2,7 +2,7 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 adds bounded offline log analysis and heuristic failure fingerprints.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. The v0.3.0 development branch adds explicit privacy review and integrity-checked portable ZIP bundles.
 
 > **Latest pre-release:** [v0.2.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.2.0), published October 17, 2026, with Windows x86-64, Linux x86-64, and macOS ARM64 portable CLI archives and SHA-256 checksums. **Experimental: not stable v1.0.0.** Desktop UI, diagnostic bundles, comparisons and hosted documentation remain planned.
 
@@ -17,6 +17,17 @@ cargo run -p reprocrate-cli -- analyze fixtures/logs/cargo.txt --output findings
 ```
 
 Generic log analysis and early Cargo/pytest/Jest/Vitest heuristics are offline and do not execute imported logs. Grouping fingerprints are **not cryptographic** and do not establish the root cause. Read [log analysis reference](docs/reference/log-analysis.md).
+
+## Privacy review and diagnostic bundles (v0.3.0 development)
+
+```bash
+cargo run -p reprocrate-cli -- review failed.json --output reviewed.json --exclude-arguments --preview
+cargo run -p reprocrate-cli -- bundle create --report reviewed.json --output diagnostic.zip --acknowledge-reviewed
+cargo run -p reprocrate-cli -- bundle verify diagnostic.zip
+cargo run -p reprocrate-cli -- bundle extract diagnostic.zip extracted
+```
+
+Review the exact JSON and every optional attachment yourself before sharing. The `--acknowledge-reviewed` flag explicitly confirms that review. The tool does not sanitize attachments automatically, upload reports, or execute imported commands. Read the [privacy and bundle guide](docs/reference/privacy-bundles.md).
 
 ## Build from source
 
@@ -48,10 +59,12 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Minimal/standard OS and architecture metadata
 - Offline generic log import and early Cargo/pytest/Jest/Vitest heuristics (v0.2.0 pre-release)
 - Basic secret masking for common credential patterns
+- Explicit field exclusion and manually selected literal masks (v0.3.0 development)
+- Bounded ZIP bundle create, inspect, verify and extract with SHA-256 manifest checks (v0.3.0 development)
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: desktop installers/GUI, safe diagnostic ZIP bundles, comprehensive test-framework parsers, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
+Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 
