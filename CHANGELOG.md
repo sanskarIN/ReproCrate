@@ -30,6 +30,11 @@
 
 **Not completed:** reliable process-tree cancellation, complete framework test-result parsers, desktop GUI, bundles or stable v1.0.0. These are planned and not claimed.
 
-## Unreleased — toward v0.3.0
+## Unreleased — v0.3.0 candidate
 
-Plan: manual privacy review, more robust redaction and secure controlled archive bundles, with adversarial tests.
+- Added `reprocrate review` with additional literal masking from a bounded private file, whole-report preview and explicit field exclusions.
+- Added `reprocrate bundle create|inspect|verify|extract` for versioned, bounded, SHA-256-manifest ZIP archives.
+- Implemented verification-before-extraction, fixed archive paths, entry-count and size limits, malicious entry rejection, and manual approval for attachments.
+- Added security documentation and cross-platform tests, retaining EPL-2.0 and local-only operation.
+
+**Remaining:** cross-platform release acceptance, further fuzzing, fuller privacy coverage and stable-release hardening.

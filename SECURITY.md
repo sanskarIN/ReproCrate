@@ -24,3 +24,7 @@ Known boundaries and work remaining are tracked in [what_changed.md](what_change
 ## v0.2.0 log analysis boundary
 
 The new `analyze` command reads only an explicitly selected log or stdin, with a strict 8 MiB maximum. It does not follow log paths, execute imported reproduction commands, or make network requests. Analysis fields are sanitized before persistence, but pattern redaction cannot guarantee removal of all secrets. Diffs, fingerprints and format detection remain untrusted heuristics, not conclusions about exploitability or root cause.
+
+## v0.3.0 review and ZIP trust boundaries
+
+`reprocrate review` creates a new report candidate with selected excluded fields and optional exact literal redactions loaded from a local file. No scanner can certify that confidential data was removed. Optional attachments are included verbatim only after explicit manual acknowledgment. The ZIP importer verifies fixed member names, sizes, SHA-256 values, report schema and identity, refuses symlinks/conflicting entries, and checks the whole archive before creating a fresh destination. Checksums **do not authenticate** an archive's author; never run imported scripts automatically. See [archive threat model](docs/security/archive-threat-model.md) and [review and bundles](docs/reference/privacy-bundles.md).
