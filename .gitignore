@@ -1,0 +1,12 @@
+/target/
+/.DS_Store
+/.idea/
+/.vscode/*
+!/.vscode/extensions.json
+*.tmp
+*.swp
+.env
+.env.*
+!.env.example
+/reprocrate-report-*.json
+/reprocrate-report-*.md

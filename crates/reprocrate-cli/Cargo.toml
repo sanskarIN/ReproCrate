@@ -1,0 +1,17 @@
+[package]
+name = "reprocrate-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Local-first developer diagnostics CLI"
+
+[[bin]]
+name = "reprocrate"
+path = "src/main.rs"
+
+[dependencies]
+reprocrate-core = { path = "../reprocrate-core" }
+clap = { version = "4", features = ["derive"] }
+serde_json.workspace = true
