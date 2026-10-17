@@ -102,3 +102,47 @@ fn failed_program_still_produces_a_useful_report() {
     assert!(report["capture"]["exit_code"].is_null());
     fs::remove_dir_all(dir).expect("cleanup");
 }
+
+#[test]
+fn fixture_emit_and_sleep() {
+    if std::env::var_os("REPROCRATE_TEST_CHILD").is_none() {
+        return;
+    }
+    use std::io::Write;
+    println!("password=fixture_only_secret");
+    eprintln!("Authorization: Bearer fixture_bearer_token");
+    let _ = std::io::stdout().write_all(&[0xff, 0xfe]);
+    let _ = std::io::stdout().flush();
+    std::thread::sleep(std::time::Duration::from_secs(4));
+}
+
+#[test]
+fn timeout_and_best_effort_redaction_work_end_to_end() {
+    let dir = scratch();
+    let report_path = dir.join("timed-out.json");
+    let test_binary = std::env::current_exe().expect("test binary path");
+    let output = Command::new(binary())
+        .env("REPROCRATE_TEST_CHILD", "1")
+        .arg("capture")
+        .arg("--timeout-seconds")
+        .arg("1")
+        .arg("--output")
+        .arg(&report_path)
+        .arg("--")
+        .arg(&test_binary)
+        .args(["--exact", "fixture_emit_and_sleep", "--nocapture"])
+        .output()
+        .expect("CLI starts");
+    assert!(
+        output.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let raw = fs::read_to_string(&report_path).expect("report saved");
+    let record: Value = serde_json::from_str(&raw).expect("valid JSON");
+    assert_eq!(record["capture"]["timed_out"], true);
+    assert_eq!(record["capture"]["launch_error"], Value::Null);
+    assert!(!raw.contains("fixture_only_secret"), "password leaked");
+    assert!(!raw.contains("fixture_bearer_token"), "bearer leaked");
+    fs::remove_dir_all(dir).expect("cleanup");
+}
