@@ -21,3 +21,7 @@ cargo run -p reprocrate-cli -- capture --timeout-seconds 5 --profile minimal --o
 Capture reports are created only at the chosen paths. Existing files are not overwritten. Command failure does **not** mean ReproCrate failed to capture; check `capture.exit_code` in the JSON. CLI runtime errors return process exit code 2. Capture output is lossy UTF-8; binary output is not faithfully preserved.
 
 **Review before sharing.** Redaction uses documented patterns and may miss secrets. `capture` is not a secure isolation boundary.
+
+## Analyze selected logs (v0.2.0 development)
+
+`reprocrate analyze INPUT [--format auto|generic|cargo|pytest|jest|vitest] [--output PATH] [--markdown PATH] [--max-input-bytes N]` analyzes bounded text only. Use `-` as INPUT for standard input. It never executes commands found in the file. Default byte cap 1 MiB; hard cap 8 MiB. Automatic pattern redaction is fallible and exported text must be reviewed before sharing. See [log analysis](log-analysis.md) for details.

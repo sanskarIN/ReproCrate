@@ -16,6 +16,12 @@
 
 **Not included:** desktop GUI, portable diagnostic bundles, comparison engine, rich framework parsers, signed installers or stable quality claim.
 
-## Unreleased — toward 0.2.0
+## Unreleased — v0.2.0 development
 
-Future work: reliable cancellation, log parsers, deterministic fingerprints, privacy review and wider adversarial testing. These features are not yet shipped.
+- Added bounded, offline `reprocrate analyze` for log files and standard input with optional Markdown export.
+- Added best-effort Cargo/pytest/Jest/Vitest recognition and generic error/timeout/permission categorization.
+- Added deterministic non-cryptographic FNV-1a message fingerprints and repeat-group counts.
+- Added additive optional sanitized failure findings to existing JSON/Markdown capture reports.
+- Added framework fixtures and CLI regression coverage for input limits, no-overwrite, and redaction.
+
+**Not completed:** reliable process-tree cancellation, complete framework test-result parsers, desktop GUI, bundles, stable release. These are planned and not claimed.

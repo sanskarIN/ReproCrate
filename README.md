@@ -2,13 +2,21 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. Its first milestone is a standalone Rust CLI that captures **explicitly selected** commands without a shell, bounds captured output, records outcomes, sanitizes common secret patterns, and exports JSON and Markdown reports.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. The v0.2.0 development branch adds bounded offline log analysis and heuristic failure fingerprints.
 
 > **Release status:** [v0.1.0 CLI pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0) published October 17, 2026, with tested Windows x86-64, Linux x86-64, and macOS ARM64 CLI archives and SHA-256 checksums. **It is experimental, not a stable release.** Desktop UI, diagnostic bundles, comparisons and hosted docs are future milestones.
 
 ## Download
 
 See the [v0.1.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
+
+## Analyze logs (v0.2.0 development branch)
+
+```bash
+cargo run -p reprocrate-cli -- analyze fixtures/logs/cargo.txt --output findings.json --markdown findings.md
+```
+
+Generic log analysis and early Cargo/pytest/Jest/Vitest heuristics are offline and do not execute imported logs. Grouping fingerprints are **not cryptographic** and do not establish the root cause. Read [log analysis reference](docs/reference/log-analysis.md).
 
 ## Build from source
 
@@ -38,11 +46,12 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Independent stdout/stderr byte limits and truncation indicators
 - Configurable timeout with child termination and recorded exit state
 - Minimal/standard OS and architecture metadata
+- Offline generic log import and early Cargo/pytest/Jest/Vitest heuristics (v0.2.0 development)
 - Basic secret masking for common credential patterns
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: desktop installers/GUI, secure diagnostic ZIP bundles, rich log adapters, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
+Not yet provided: desktop installers/GUI, safe diagnostic ZIP bundles, comprehensive test-framework parsers, report comparisons, automated reproduction, or cloud integrations. The pre-release provides verified portable CLI archives only.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 
