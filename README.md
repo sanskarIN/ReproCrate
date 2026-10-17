@@ -2,9 +2,9 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 adds privacy-minimizing report comparisons and inert reproduction checklists.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. **v0.5.0 development** introduces a Tauri 2/React desktop interface backed by the same Rust core.
 
-> **Latest pre-release:** [v0.4.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0), published October 17, 2026, with Windows x86-64, Linux x86-64 and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** Desktop UI and hosted documentation remain planned.
+> **Latest pre-release:** [v0.4.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.4.0), published October 17, 2026, with Windows x86-64, Linux x86-64 and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** The desktop UI is in development and hosted documentation is planned.
 
 ## Download
 
@@ -38,6 +38,22 @@ cargo run -p reprocrate-cli -- recipe inspect recipe.json
 ```
 
 Comparisons report structural changes without exporting raw log lines or arguments. The recipe's command reference is omitted by default and requires explicit approval when included. Imported recipes **never execute automatically**. See [comparison reference](docs/reference/report-comparison.md) and [recipe reference](docs/reference/reproduction-recipes.md).
+
+## Desktop foundation (v0.5.0 development)
+
+A local-first, Tauri 2 + React workspace now lives in `apps/desktop`. It currently supports report inspection, report comparisons, bounded log analysis, inert recipe previews and manually controlled privacy-review exports.
+
+```bash
+cd apps/desktop
+npm ci
+npm test
+npm run build
+npm run desktop:dev
+```
+
+Desktop development requires Node.js, Rust, and the platform requirements for Tauri 2 (WebKitGTK on Linux, WebView2/C++ tools on Windows, Xcode CLI tools on macOS). Its frontend and native Rust workspace have separate reproducible lockfiles; building the CLI does **not** require the desktop prerequisites.
+
+The browser preview is read-only. Commands cannot be executed from imported recipes or reports. Desktop installers and production distribution are **not yet claimed** until native release artifacts are actually verified. Read the [desktop developer guide](docs/reference/desktop.md).
 
 ## Build from source
 

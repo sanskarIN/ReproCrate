@@ -34,3 +34,10 @@ The new `analyze` command reads only an explicitly selected log or stdin, with a
 Structural comparisons intentionally exclude raw stdout, stderr, command arguments and other changed values from exported diffs. They can reveal *whether* an observed field changed without sharing it. Masked/truncated fields are indeterminate. Report IDs are carried as labels and need review. Fingerprint comparisons are heuristic grouping signals, not proof of root cause.
 
 Recipes are deliberately inert, omit command references by default, and cannot request automatic execution. Explicit command inclusion requires manual review acknowledgment. Never run a command solely because it appears in a recipe. No upload or telemetry is performed. Consult [comparison docs](docs/reference/report-comparison.md) and [manual recipes](docs/reference/reproduction-recipes.md).
+
+
+## v0.5.0 desktop IPC and offline boundaries
+
+The experimental Tauri 2 desktop app uses the shared Rust core behind a narrow IPC layer. Its frontend requests only core Tauri capabilities; it does not install shell, filesystem, HTTP, updater, or external upload plugins. The UI may open only paths the user explicitly types, and Rust import rejects symlinks/directories/pipes with strict report and log read caps. Native previews stay local.
+
+The privacy-review screen explicitly presents potentially sensitive output for the user's inspection and creates a new output file without overwriting the source. Manual literal masks and scanner patterns are **not proof that the output is secret-free**. Local file path entry, TOCTOU races and native GUI privacy have not had independent external audits. Do not copy real secrets into reports or share reviewed exports blindly. See [desktop boundary documentation](docs/reference/desktop.md).
