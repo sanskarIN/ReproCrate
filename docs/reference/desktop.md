@@ -57,3 +57,9 @@ Native builds can be run from `apps/desktop` with `npm run desktop:build` (Tauri
 ## Remaining desktop work
 
 Native OS smoke-testing in real graphical sessions; file-picker UX with precisely scoped grants; incremental large-log reading and cancellation; local history/search; workflow persistence; keyboard and screen-reader testing; signed installers, distribution and update policies; end-user documentation; network/permission review; and sandboxing for any future command execution. None of these features is claimed to be complete in v0.5.0.
+
+## v0.6.0 local history (development)
+
+The desktop gains a **Report history** view with explicit per-report indexing, bounded local search and "Inspect"/"Forget index" actions. It stores limited, possibly sensitive metadata in an app-private SQLite file and does not copy logs or entire reports. The CLI remains independent. See [history and privacy](history.md).
+
+The feature is in the v0.6.0 development branch and is not part of the published v0.5.0 binaries. Future work includes a native file picker, accessibility evaluation, full database migrations and secure-data-retention review.

@@ -72,6 +72,12 @@
 
 **Remaining:** signed installers/notarization, clean-machine graphical smoke tests, file picker UX, history/search, automatic update and stronger filesystem sandboxing. The published desktop artifacts are real compiled developer-preview executables but not installers or stable v1.0.0.
 
-## Unreleased — toward v0.6.0
+## Unreleased — v0.6.0 development
 
-Planned: SQLite-backed local history, searchable report index, accessibility improvements, safer native file selection and desktop refinement.
+- Added opt-in SQLite history in the desktop's private app-data folder; indexes explicitly selected JSON reports only.
+- Stored limited metadata: report path, best-effort-sanitized title and ID, OS/architecture, indexing time. Raw output, arguments, attachments and report JSON are not stored.
+- Added bounded case-insensitive search, refresh-on-reindex, "Inspect" navigation and "Forget index" deletion without touching original files.
+- Added parameterized SQL and tests for indexing, duplicate paths, query limits, secret-like metadata, injection and deletion.
+- Kept React/browser preview read-only and extended native Windows/Linux/macOS desktop checks.
+
+**Unfinished:** native file-picker UX, secure erasure guarantees, encrypted database, full UI accessibility evaluation and stable v1.0.0. Not published until CI and release assets are verified.

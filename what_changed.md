@@ -1,4 +1,39 @@
-# Latest handoff — v0.5.0 desktop + CLI pre-release published
+# Latest handoff — v0.6.0 local desktop history (development, not released)
+
+Date: 2026-10-17. Repo: https://github.com/sanskarIN/ReproCrate
+Development branch: `feat/v0.6.0-desktop-history`.
+Last verified public pre-release remains https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0 with 12 CLI/desktop binary/checksum assets. v0.6.0 is **not** yet publicly released.
+
+## Implemented this milestone
+
+- `apps/desktop/src-tauri/src/history.rs`: explicit SQLite indexing under local app-data directory; stores user-selected path, best-effort-masked report title/ID, OS/architecture and index timestamp, but no raw logs, command arguments, attachment bytes or report JSON.
+- Schema v1, unique report paths (re-index updates), 1,000-row limit, 128-byte search query limit, result cap, SQL parameters, basic DB permissions and SQLite secure-delete request. Data storage is opt-in.
+- `apps/desktop/src-tauri/src/lib.rs`: Tauri command registration for `remember_report`, `search_history` and `forget_history_entry`; keeps inert report parsing and size validation.
+- `apps/desktop/src/HistoryPanel.tsx` and App navigation: index, search, reopen in report inspector, forget only the index row. No auto scan/upload.
+- `apps/desktop/src/bridge.ts` / `types.ts` and CSS: type-safe desktop index API and accessible form controls, disabled in browser preview.
+- Added `rusqlite` bundled SQLite in the desktop-only Cargo workspace; CLI/root Cargo dependencies remain independent.
+- Versioned root CLI/core, desktop Rust, app config and npm metadata to v0.6.0, plus regenerated reproducible dependency lockfiles.
+- Updated desktop and native CI branch filters for future development; temporary elevated-permission lock-generation workflow removed after success.
+- Security/history guide: `docs/reference/history.md`. Release candidate notes: `docs/releases/v0.6.0.md`.
+
+## Validation and blockers
+
+- Dependency lockfile and formatting workflow succeeded: https://github.com/sanskarIN/ReproCrate/actions/runs/39045206451. Local source/tests require final 3-OS CI verification before merge.
+- Desktop frontend, Tauri check and full native executable workflow are running on the v0.6.0 branch. Do **not** assert pass or release until jobs explicitly succeed.
+- Historical file paths and metadata may reveal private details. Best-effort masking is not a confidentiality guarantee, and SQLite row deletion cannot guarantee erasure from backups or snapshots.
+- Outstanding for future phases: signed installers, graphical clean-machine smoke tests, file-picker UX, lifecycle migrations, database encryption, full accessibility checks, process sandbox and stable v1.0.0.
+
+## Next tasks
+
+1. Resolve any SQLite compile/test/formatting errors, validate React/Vite and Tauri native Windows/Linux/macOS tests.
+2. Stage gated v0.6.0 release workflow and open PR only when checks are demonstrably passing. Merge preserving signed-off (author + committer) email `sanskarin@outlook.in`.
+3. Publish CLI + unsigned desktop developer previews only after all artifacts/checksums exist, and verify via Releases API.
+4. Update README/changelog/roadmap/handoff with actual release evidence and names only after publication.
+5. Plan v0.7.0 security-reviewed issue export, external adapter boundaries and further privacy/accessibility hardening.
+
+---
+
+# Historical handoff — v0.5.0 desktop + CLI pre-release published
 
 Date: 2026-10-17, repository https://github.com/sanskarIN/ReproCrate.
 Source development branch: `feat/v0.5.0-desktop-foundation` (merged as [PR #5](https://github.com/sanskarIN/ReproCrate/pull/5) at `a806aeb7a02c4936d53b9e03dd7e5a2f0e91db59`).
