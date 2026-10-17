@@ -99,7 +99,7 @@ pub fn capture_command(args: &[OsString], options: &CaptureOptions) -> io::Resul
     let started_unix_ms = timestamp_millis();
     let started = Instant::now();
     let program = args[0].to_string_lossy().into_owned();
-    let arguments = args[1..]
+    let arguments: Vec<String> = args[1..]
         .iter()
         .map(|s| s.to_string_lossy().into_owned())
         .collect();
