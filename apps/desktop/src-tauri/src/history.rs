@@ -57,7 +57,9 @@ fn open_database(path: &Path) -> Result<Connection, String> {
         {
             use std::os::unix::fs::PermissionsExt;
             if stat.permissions().mode() & 0o077 != 0 {
-                return Err("History database permissions are too broad; restrict to owner (0600).".into());
+                return Err(
+                    "History database permissions are too broad; restrict to owner (0600).".into(),
+                );
             }
         }
     } else {
@@ -71,11 +73,13 @@ fn open_database(path: &Path) -> Result<Connection, String> {
         }
         // Do not overwrite pre-existing files. If another instance wins
         // creation, open it only after validating its file type next call.
-        let _file = options.open(path)
+        let _file = options
+            .open(path)
             .map_err(|e| format!("Cannot safely create private history database: {e}"))?;
     }
     let conn = Connection::open(path).map_err(|e| format!("Cannot open local history: {e}"))?;
-    conn.busy_timeout(Duration::from_secs(3)).map_err(|e| e.to_string())?;
+    conn.busy_timeout(Duration::from_secs(3))
+        .map_err(|e| e.to_string())?;
     conn.execute_batch(
         "PRAGMA journal_mode = DELETE;
          PRAGMA synchronous = FULL;
@@ -90,8 +94,9 @@ fn open_database(path: &Path) -> Result<Connection, String> {
           );
          CREATE INDEX IF NOT EXISTS idx_history_recent
            ON report_history(indexed_unix_seconds DESC, id DESC);
-         PRAGMA user_version = 1;"
-    ).map_err(|e| format!("Cannot initialize local history: {e}"))?;
+         PRAGMA user_version = 1;",
+    )
+    .map_err(|e| format!("Cannot initialize local history: {e}"))?;
     Ok(conn)
 }
 
@@ -99,11 +104,17 @@ fn bounded_text(value: &str, cap: usize) -> String {
     // Ensure char boundary and drop control characters so console/UI strings
     // can be presented safely. These are metadata, not raw evidence.
     let (sanitized, _) = redact_text(value);
-    sanitized.chars()
+    sanitized
+        .chars()
         .filter(|ch| !ch.is_control())
         .scan(0usize, |size, ch| {
             let len = ch.len_utf8();
-            if *size + len > cap { None } else { *size += len; Some(ch) }
+            if *size + len > cap {
+                None
+            } else {
+                *size += len;
+                Some(ch)
+            }
         })
         .collect()
 }
@@ -120,21 +131,33 @@ fn add_report(
         return Err("A valid report path of at most 4096 bytes is required.".into());
     }
     let label = bounded_text(title, MAX_LABEL_BYTES);
-    let label = if label.is_empty() { "Untitled report".to_owned() } else { label };
+    let label = if label.is_empty() {
+        "Untitled report".to_owned()
+    } else {
+        label
+    };
     let report_id = bounded_text(report_id, 160);
     let os = bounded_text(os, 80);
     let architecture = bounded_text(architecture, 80);
-    let count: i64 = conn.query_row("SELECT COUNT(*) FROM report_history", [], |row| row.get(0))
+    let count: i64 = conn
+        .query_row("SELECT COUNT(*) FROM report_history", [], |row| row.get(0))
         .map_err(|e| e.to_string())?;
-    let exists: bool = conn.query_row(
-        "SELECT EXISTS(SELECT 1 FROM report_history WHERE path = ?1)",
-        params![path], |row| row.get(0),
-    ).map_err(|e| e.to_string())?;
+    let exists: bool = conn
+        .query_row(
+            "SELECT EXISTS(SELECT 1 FROM report_history WHERE path = ?1)",
+            params![path],
+            |row| row.get(0),
+        )
+        .map_err(|e| e.to_string())?;
     if !exists && count >= MAX_RECORDS {
-        return Err("History contains 1000 reports. Forget an unused entry before adding another.".into());
+        return Err(
+            "History contains 1000 reports. Forget an unused entry before adding another.".into(),
+        );
     }
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)
-        .map_err(|e| e.to_string())?.as_secs() as i64;
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|e| e.to_string())?
+        .as_secs() as i64;
     conn.execute(
         "INSERT INTO report_history(path,label,report_id,os,architecture,indexed_unix_seconds)
          VALUES (?1,?2,?3,?4,?5,?6)
@@ -142,18 +165,25 @@ fn add_report(
            label=excluded.label, report_id=excluded.report_id, os=excluded.os,
            architecture=excluded.architecture, indexed_unix_seconds=excluded.indexed_unix_seconds",
         params![path, label, report_id, os, architecture, now],
-    ).map_err(|e| format!("Could not index local report: {e}"))?;
+    )
+    .map_err(|e| format!("Could not index local report: {e}"))?;
     conn.query_row(
         "SELECT id,path,label,report_id,os,architecture,indexed_unix_seconds
          FROM report_history WHERE path = ?1",
-        params![path], decode_entry,
-    ).map_err(|e| e.to_string())
+        params![path],
+        decode_entry,
+    )
+    .map_err(|e| e.to_string())
 }
 
 fn decode_entry(row: &rusqlite::Row<'_>) -> rusqlite::Result<HistoryEntry> {
     Ok(HistoryEntry {
-        id: row.get(0)?, path: row.get(1)?, label: row.get(2)?,
-        report_id: row.get(3)?, os: row.get(4)?, architecture: row.get(5)?,
+        id: row.get(0)?,
+        path: row.get(1)?,
+        label: row.get(2)?,
+        report_id: row.get(3)?,
+        os: row.get(4)?,
+        architecture: row.get(5)?,
         indexed_unix_seconds: row.get(6)?,
     })
 }
@@ -164,23 +194,31 @@ fn search(conn: &Connection, query: &str, page_size: u32) -> Result<Vec<HistoryE
         return Err("Search query must be at most 128 bytes.".into());
     }
     let size = i64::from(page_size.clamp(1, MAX_PAGE_SIZE));
-    let mut statement = conn.prepare(
-        "SELECT id,path,label,report_id,os,architecture,indexed_unix_seconds
+    let mut statement = conn
+        .prepare(
+            "SELECT id,path,label,report_id,os,architecture,indexed_unix_seconds
          FROM report_history WHERE
            ?1 = '' OR instr(lower(label), lower(?1)) > 0
            OR instr(lower(os), lower(?1)) > 0
            OR instr(lower(architecture), lower(?1)) > 0
-         ORDER BY indexed_unix_seconds DESC, id DESC LIMIT ?2"
-    ).map_err(|e| e.to_string())?;
-    let entries = statement.query_map(params![query, size], decode_entry)
+         ORDER BY indexed_unix_seconds DESC, id DESC LIMIT ?2",
+        )
         .map_err(|e| e.to_string())?;
-    entries.collect::<rusqlite::Result<Vec<_>>>().map_err(|e| e.to_string())
+    let entries = statement
+        .query_map(params![query, size], decode_entry)
+        .map_err(|e| e.to_string())?;
+    entries
+        .collect::<rusqlite::Result<Vec<_>>>()
+        .map_err(|e| e.to_string())
 }
 
 fn forget(conn: &Connection, id: i64) -> Result<bool, String> {
-    if id < 1 { return Err("Invalid history ID.".into()); }
+    if id < 1 {
+        return Err("Invalid history ID.".into());
+    }
     conn.execute("DELETE FROM report_history WHERE id = ?1", params![id])
-        .map(|rows| rows > 0).map_err(|e| e.to_string())
+        .map(|rows| rows > 0)
+        .map_err(|e| e.to_string())
 }
 
 fn database_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
@@ -194,17 +232,27 @@ pub fn remember_report(app: tauri::AppHandle, path: String) -> Result<HistoryEnt
     let report = crate::load_report(&path)?;
     let conn = open_database(&database_path(&app)?)?;
     add_report(
-        &conn, &path, &report.title, &report.report_id,
-        &report.environment.os, &report.environment.architecture,
+        &conn,
+        &path,
+        &report.title,
+        &report.report_id,
+        &report.environment.os,
+        &report.environment.architecture,
     )
 }
 
 #[tauri::command]
 pub fn search_history(
-    app: tauri::AppHandle, query: Option<String>, limit: Option<u32>,
+    app: tauri::AppHandle,
+    query: Option<String>,
+    limit: Option<u32>,
 ) -> Result<Vec<HistoryEntry>, String> {
     let conn = open_database(&database_path(&app)?)?;
-    search(&conn, query.as_deref().unwrap_or(""), limit.unwrap_or(DEFAULT_PAGE_SIZE))
+    search(
+        &conn,
+        query.as_deref().unwrap_or(""),
+        limit.unwrap_or(DEFAULT_PAGE_SIZE),
+    )
 }
 
 #[tauri::command]
@@ -232,10 +280,24 @@ mod tests {
     #[test]
     fn opt_in_index_search_and_delete_without_touching_reports() {
         let conn = in_memory();
-        let first = add_report(&conn, "/private/report-one.json", "First Rust failure",
-            "r1", "linux", "x86_64").unwrap();
-        let second = add_report(&conn, "/private/report-two.json", "Python failure",
-            "r2", "windows", "x86_64").unwrap();
+        let first = add_report(
+            &conn,
+            "/private/report-one.json",
+            "First Rust failure",
+            "r1",
+            "linux",
+            "x86_64",
+        )
+        .unwrap();
+        let second = add_report(
+            &conn,
+            "/private/report-two.json",
+            "Python failure",
+            "r2",
+            "windows",
+            "x86_64",
+        )
+        .unwrap();
         assert_ne!(first.id, second.id);
         assert_eq!(search(&conn, "rust", 50).unwrap().len(), 1);
         assert_eq!(search(&conn, "windows", 50).unwrap().len(), 1);
@@ -258,9 +320,15 @@ mod tests {
     #[test]
     fn strict_query_limits_and_no_raw_credentials() {
         let conn = in_memory();
-        let item = add_report(&conn, "/tmp/test.json",
+        let item = add_report(
+            &conn,
+            "/tmp/test.json",
             "Bearer abcdefgh1234567890 should be scrubbed",
-            "abc", "linux", "x86_64").unwrap();
+            "abc",
+            "linux",
+            "x86_64",
+        )
+        .unwrap();
         assert!(!item.label.contains("abcdefgh1234567890"));
         assert!(search(&conn, &"q".repeat(129), 10).is_err());
         assert_eq!(search(&conn, "none", 500).unwrap().len(), 0);

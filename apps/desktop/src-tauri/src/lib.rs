@@ -5,8 +5,8 @@
 mod history;
 
 use reprocrate_core::{
-    analyze_text, compare_reports, recipe_from_report, review_report, LogAnalysis,
-    LogFormat, Report, ReportComparison, ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
+    analyze_text, compare_reports, recipe_from_report, review_report, LogAnalysis, LogFormat,
+    Report, ReportComparison, ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
 };
 use serde::Serialize;
 use std::fs::{self, File, OpenOptions};
@@ -148,7 +148,10 @@ fn inspect_report(path: String) -> Result<ReportSummary, String> {
 }
 
 #[tauri::command]
-fn compare_report_files(baseline_path: String, candidate_path: String) -> Result<ReportComparison, String> {
+fn compare_report_files(
+    baseline_path: String,
+    candidate_path: String,
+) -> Result<ReportComparison, String> {
     let baseline = load_report(&baseline_path)?;
     let candidate = load_report(&candidate_path)?;
     compare_reports(&baseline, &candidate)
@@ -269,7 +272,9 @@ mod tests {
     #[test]
     fn bounded_reader_rejects_missing_or_non_regular_files() {
         let path = std::env::temp_dir().join(format!(
-            "reprocrate-missing-{}-{}", std::process::id(), TEMP.fetch_add(1, Ordering::Relaxed)
+            "reprocrate-missing-{}-{}",
+            std::process::id(),
+            TEMP.fetch_add(1, Ordering::Relaxed)
         ));
         assert!(read_regular(&path, MAX_REPORT_BYTES).is_err());
         assert!(read_regular(&std::env::temp_dir(), MAX_REPORT_BYTES).is_err());
