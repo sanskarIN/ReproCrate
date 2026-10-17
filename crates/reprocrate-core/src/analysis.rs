@@ -200,9 +200,9 @@ fn normalized_key(text: &str) -> String {
         [
             (r"0x[0-9a-f]{6,}", "<address>"),
             (r":[0-9]+:[0-9]+", ":<line>:<col>"),
-            (r"\\bline [0-9]+\\b", "line <n>"),
-            (r"\\b[0-9]{6,}\\b", "<number>"),
-            (r"\\s+", " "),
+            (r"\bline [0-9]+\b", "line <n>"),
+            (r"\b[0-9]{6,}\b", "<number>"),
+            (r"\s+", " "),
         ]
         .into_iter()
         .filter_map(|(pattern, replace)| Regex::new(pattern).ok().map(|regex| (regex, replace)))
