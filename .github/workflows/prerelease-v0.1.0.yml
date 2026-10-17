@@ -91,7 +91,7 @@ jobs:
         run: |
           test -f "$PACKAGE"
           test -f "$PACKAGE.sha256"
-          gh release upload v0.1.0 "$PACKAGE" "$PACKAGE.sha256"
+          gh release upload v0.1.0 "$PACKAGE" "$PACKAGE.sha256" --clobber
 
   publish:
     needs: build-upload
