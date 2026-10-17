@@ -41,3 +41,9 @@ Recipes are deliberately inert, omit command references by default, and cannot r
 The experimental Tauri 2 desktop app uses the shared Rust core behind a narrow IPC layer. Its frontend requests only core Tauri capabilities; it does not install shell, filesystem, HTTP, updater, or external upload plugins. The UI may open only paths the user explicitly types, and Rust import rejects symlinks/directories/pipes with strict report and log read caps. Native previews stay local.
 
 The privacy-review screen explicitly presents potentially sensitive output for the user's inspection and creates a new output file without overwriting the source. Manual literal masks and scanner patterns are **not proof that the output is secret-free**. Local file path entry, TOCTOU races and native GUI privacy have not had independent external audits. Do not copy real secrets into reports or share reviewed exports blindly. See [desktop boundary documentation](docs/reference/desktop.md).
+
+## v0.6.0 local history and metadata
+
+The desktop history feature is opt-in: only explicitly selected report paths and limited report metadata are stored in SQLite. Raw stdout/stderr, command arguments, attachments and full reports are not indexed. The SQLite database resides in the application data directory, is owner-only on Unix, rejects an existing database symlink/special file, and uses parameterized queries and bounded results.
+
+**File paths, titles, IDs, timestamps, and system details are potentially sensitive**, even after best-effort textual masking. History is not separately encrypted; trust your operating system's disk encryption and local account permissions. Forgetting an index entry removes a row without deleting the report and does not guarantee erasure from backups or device snapshots. History never scans folders, executes imported content or uploads data. See [history guide](docs/reference/history.md).

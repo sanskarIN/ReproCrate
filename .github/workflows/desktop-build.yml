@@ -2,7 +2,7 @@ name: Desktop native binaries (preview verification)
 
 on:
   push:
-    branches: [feat/v0.5.0-desktop-foundation]
+    branches: ['feat/v*']
     paths:
       - "apps/desktop/**"
       - "crates/reprocrate-core/**"

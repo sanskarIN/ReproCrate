@@ -2,7 +2,7 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduces a Tauri 2/React desktop interface backed by the same Rust core.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. **v0.6.0 development** adds opt-in private SQLite report history and search.
 
 > **Latest pre-release:** [v0.5.0 CLI + Desktop developer preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0), published October 17, 2026. The release contains real unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for **both** CLI and desktop, each with a SHA-256 file. **Experimental: not a stable v1.0.0, signed installer or clean-machine graphical QA certification.**
 
@@ -55,6 +55,12 @@ Desktop development requires Node.js, Rust, and the platform requirements for Ta
 
 The browser preview is read-only. Commands cannot be executed from imported recipes or reports. Native developer-preview executables have been compiled and published across three CI operating systems. **Signed installers, notarization, broad OS compatibility and real-window manual QA are not claimed.** Read the [desktop developer guide](docs/reference/desktop.md).
 
+## Opt-in local desktop history (v0.6.0 development)
+
+The new **Report history** desktop view allows explicit indexing of a previously saved diagnostic report, local search, reopening via the inspector, and removal from the index. Indexing is **never automatic**, and the app stores only report paths and minimal metadata in a local SQLite database; raw logs and command arguments are not copied.
+
+File paths and metadata can themselves be private. Forgetting an index entry does not delete the source report or guarantee erasure from backups. See the [history and privacy guide](docs/reference/history.md).
+
 ## Build from source
 
 Install a stable Rust toolchain (Rust 1.82 or newer), then:
@@ -90,7 +96,7 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, **automated** reproduction, or cloud integrations. Comparing reports and generating manual recipes do not constitute automated reproduction. The pre-release provides verified portable CLI archives only.
+Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, **automated** reproduction, or cloud integrations. Comparing reports and generating manual recipes do not constitute automated reproduction. v0.5.0 provides verified unsigned desktop developer-preview binaries as well as CLI archives; neither is a signed installer.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { desktop, desktopAvailable } from "./bridge";
+import HistoryPanel from "./HistoryPanel";
 import { countComparisonChanges, durationLabel, filenameDisplay } from "./format";
 import type { DesktopStatus, LogAnalysis, Recipe, ReportComparison, ReportSummary, ReviewedReport, ReviewOptions, View } from "./types";
 
 const sections: {id:View; title:string; summary:string}[] = [
   {id:"overview",title:"Workspace",summary:"Your local diagnostics desk"},
+  {id:"history",title:"Report history",summary:"Your opt-in private index"},
   {id:"inspect",title:"Inspect report",summary:"Read stored metadata"},
   {id:"compare",title:"Compare reports",summary:"Private structural changes"},
   {id:"logs",title:"Analyze logs",summary:"Heuristic failure signals"},
@@ -100,6 +102,8 @@ export default function App() {
           </div>
           <div className="privacy-line"><span aria-hidden="true">◈</span><strong>Designed for trust</strong><p>Explicit file paths · no imported command execution · no background upload · manual review before sharing</p></div>
         </>}
+
+        {view==="history"&&<HistoryPanel onOpen={(path)=>{setReportPath(path);setSummary(null);navigate("inspect");}}/>}
 
         {view==="inspect"&&<>
           <div className="page-intro"><span>02 / READ-ONLY</span><h1>Inspect a diagnostic report</h1><p>Load a bounded ReproCrate JSON report and examine recorded metadata. No command is executed.</p></div>

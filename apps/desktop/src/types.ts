@@ -1,4 +1,4 @@
-export type View = "overview" | "inspect" | "compare" | "logs" | "recipe" | "privacy";
+export type View = "overview" | "history" | "inspect" | "compare" | "logs" | "recipe" | "privacy";
 export type Relationship = "same" | "changed" | "added" | "removed" | "indeterminate";
 export interface DesktopStatus { name: string; version: string; operating_system: string; architecture: string; mode: string }
 export interface ReportSummary {
@@ -15,3 +15,13 @@ export interface LogAnalysis { detected_format: string; scanned_lines: number; t
 export interface Recipe { source_report_id: string; schema_version: string; command: {executable:string; arguments:string[]} | null; steps: {order:number; kind:string; instruction:string; requires_user_action:boolean}[]; warnings:string[]; automatic_execution: boolean }
 export interface ReviewOptions { excludeStdout:boolean; excludeStderr:boolean; excludeArguments:boolean; excludeExecutable:boolean; excludeAnalysis:boolean; literals:string }
 export interface ReviewedReport { title:string; report_id:string; capture:{executable:string; arguments:string[]; stdout:string; stderr:string}; warnings:string[] }
+
+export interface HistoryEntry {
+  id: number;
+  path: string;
+  label: string;
+  report_id: string;
+  os: string;
+  architecture: string;
+  indexed_unix_seconds: number;
+}
