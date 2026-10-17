@@ -1,0 +1,30 @@
+name: One-shot ReproCrate v0.3.0 normalization
+
+on:
+  push:
+    branches: [feat/v0.3.0-privacy-bundles]
+    paths: [.format/v0.3.0]
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-24.04
+    if: github.repository == 'sanskarIN/ReproCrate'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: feat/v0.3.0-privacy-bundles
+      - run: rustup toolchain install stable --profile minimal --component rustfmt
+      - run: |
+          cargo +stable generate-lockfile
+          cargo +stable fmt --all
+      - run: |
+          git config user.name "Sanskar"
+          git config user.email "sanskarin@outlook.in"
+          git add Cargo.lock crates/reprocrate-core/src crates/reprocrate-core/tests crates/reprocrate-cli/src crates/reprocrate-cli/tests
+          if ! git diff --cached --quiet; then
+            git commit -m "style(build): lock ZIP dependencies and format v0.3.0 Rust"
+            git push origin HEAD:feat/v0.3.0-privacy-bundles
+          fi
