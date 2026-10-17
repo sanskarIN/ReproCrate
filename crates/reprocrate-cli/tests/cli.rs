@@ -3,6 +3,8 @@ use serde_json::Value;
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use std::sync::atomic::{AtomicU64, Ordering};
+static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 use std::time::{SystemTime, UNIX_EPOCH};
 
 fn binary() -> &'static str {
@@ -15,7 +17,7 @@ fn scratch() -> PathBuf {
         .expect("clock")
         .as_nanos();
     let path =
-        std::env::temp_dir().join(format!("reprocrate-test-{}-{unique}", std::process::id()));
+        std::env::temp_dir().join(format!("reprocrate-test-{}-{unique}-{}", std::process::id(), TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)));
     fs::create_dir(&path).expect("create isolated scratch directory");
     path
 }
