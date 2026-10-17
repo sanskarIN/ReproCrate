@@ -9,7 +9,7 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | v0.3.0 | **Shipped as pre-release:** local report review, explicit attachment approval, bounded ZIP creation/inspection/verification/safe extraction and hostile-input regression checks. Further security hardening remains planned. |
 | v0.4.0 | **Shipped as pre-release:** structural report comparison with missing/redacted/truncated field states, inert manual recipe guides, cross-platform CLI tests. |
 | v0.5.0 | **Shipped as pre-release:** Tauri 2/React desktop foundation, shared Rust-core IPC, report inspection, comparisons, bounded log analysis, inert recipes, privacy review, cross-platform CI and unsigned desktop developer-preview executables. No installers or stable claim. |
-| v0.6.0 | **In development:** explicitly opted-in private SQLite report history, bounded search, inspection links and index deletion, desktop tests; accessibility and file-picker refinement remain incomplete. |
+| v0.6.0 | **Shipped as pre-release:** opt-in private SQLite report history, bounded local search, inspection links, forgetting indexed entries, three-OS desktop tests and real unsigned executables. Accessibility/file-picker/security refinement remains planned. |
 | v0.7.0 | Issue export review and integration adapters |
 | v0.8.0 | Cross-platform distribution, docs site, license/security audits |
 | v0.9.0 | Release candidate and clean-machine testing |

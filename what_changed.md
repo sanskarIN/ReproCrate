@@ -1,8 +1,8 @@
-# Latest handoff — v0.6.0 local desktop history (development, not released)
+# Latest handoff — v0.6.0 local desktop history pre-release published
 
 Date: 2026-10-17. Repo: https://github.com/sanskarIN/ReproCrate
-Development branch: `feat/v0.6.0-desktop-history`.
-Last verified public pre-release remains https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0 with 12 CLI/desktop binary/checksum assets. v0.6.0 is **not** yet publicly released.
+Source branch: `feat/v0.6.0-desktop-history`, merged via [PR #9](https://github.com/sanskarIN/ReproCrate/pull/9) at `511642112e450727c1269aa6918072f9cc7bad91`.
+**Current published pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0. GitHub Releases API confirms `draft:false`, `prerelease:true`, publication `2026-10-17T15:50:54Z`, tag target `18dcaabdeafb2d84f8a935aef54799df5498dc1e`.
 
 ## Implemented this milestone
 
@@ -16,20 +16,30 @@ Last verified public pre-release remains https://github.com/sanskarIN/ReproCrate
 - Updated desktop and native CI branch filters for future development; temporary elevated-permission lock-generation workflow removed after success.
 - Security/history guide: `docs/reference/history.md`. Release candidate notes: `docs/releases/v0.6.0.md`.
 
-## Validation and blockers
+## Verified CI, native packages, and publication
 
-- Dependency lockfile and formatting workflow succeeded: https://github.com/sanskarIN/ReproCrate/actions/runs/39045206451. Local source/tests require final 3-OS CI verification before merge.
-- Desktop frontend, Tauri check and full native executable workflow are running on the v0.6.0 branch. Do **not** assert pass or release until jobs explicitly succeed.
-- Historical file paths and metadata may reveal private details. Best-effort masking is not a confidentiality guarantee, and SQLite row deletion cannot guarantee erasure from backups or snapshots.
-- Outstanding for future phases: signed installers, graphical clean-machine smoke tests, file-picker UX, lifecycle migrations, database encryption, full accessibility checks, process sandbox and stable v1.0.0.
+- **Dependency/formatting:** https://github.com/sanskarIN/ReproCrate/actions/runs/39045206451. One-shot trusted lockfile generator succeeded and its elevated-permission workflow was removed before merge.
+- **Source tests:** https://github.com/sanskarIN/ReproCrate/actions/runs/39045623956. React tests/production build and native Rust Tauri checks passed on Ubuntu 24.04, Windows 2022 and macOS 14. Root CLI CI was green, including checked source commits.
+- **Real unsigned desktop executable compilation:** https://github.com/sanskarIN/ReproCrate/actions/runs/39045623960 (Windows/Linux/macOS all succeeded).
+- **PR #9 merged** into main at `511642112e450727c1269aa6918072f9cc7bad91`.
+- **Versioned v0.6.0 release workflow:** https://github.com/sanskarIN/ReproCrate/actions/runs/39046224080 — validation, draft, all three CLI package jobs, all three desktop package jobs and final publish passed.
+- GitHub Releases API verified the publication timestamp, pre-release status and real, nonempty assets:
+  - `reprocrate-desktop-v0.6.0-linux-x86_64.tar.gz` (4,693,020 bytes) + `.sha256` (112 bytes)
+  - `reprocrate-desktop-v0.6.0-macos-arm64.tar.gz` (4,348,505 bytes) + `.sha256` (111 bytes)
+  - `reprocrate-desktop-v0.6.0-windows-x86_64.zip` (4,366,750 bytes) + `.sha256` (112 bytes)
+  - `reprocrate-v0.6.0-linux-x86_64.tar.gz` (1,616,673 bytes) + `.sha256` (104 bytes)
+  - `reprocrate-v0.6.0-macos-arm64.tar.gz` (1,432,310 bytes) + `.sha256` (103 bytes)
+  - `reprocrate-v0.6.0-windows-x86_64.zip` (1,401,427 bytes) + `.sha256` (104 bytes)
+- These binaries are **unsigned developer previews**; native GUI launch on clean machines and signed installer flows have not been validated. Filesystem paths, report titles and index metadata remain sensitive even after best-effort sanitization. SQLite deletion cannot promise secure erasure.
+- **No stable v1.0.0** has been published or represented as production ready.
 
-## Next tasks
+## Next milestone — v0.7.0 and later
 
-1. Resolve any SQLite compile/test/formatting errors, validate React/Vite and Tauri native Windows/Linux/macOS tests.
-2. Stage gated v0.6.0 release workflow and open PR only when checks are demonstrably passing. Merge preserving signed-off (author + committer) email `sanskarin@outlook.in`.
-3. Publish CLI + unsigned desktop developer previews only after all artifacts/checksums exist, and verify via Releases API.
-4. Update README/changelog/roadmap/handoff with actual release evidence and names only after publication.
-5. Plan v0.7.0 security-reviewed issue export, external adapter boundaries and further privacy/accessibility hardening.
+1. Implement *explicit, reviewed* GitHub issue Markdown export and conservative integration adapters with no automatic upload.
+2. Add native file picker UX with least-privilege grants, keyboard/screen-reader verification and persisted settings controls.
+3. Deepen security with archive fuzzing, SQLite migration/retention review, atomic output, process-tree cleanup and real GUI smoke tests.
+4. Audit all resolved dependency licenses and security reports across Rust, npm, SQLite, Tauri and system libraries.
+5. Continue distribution/docs site and signed/notarized packaging in later milestones; stable v1.0.0 remains blocked on its own quality/privacy gates.
 
 ---
 

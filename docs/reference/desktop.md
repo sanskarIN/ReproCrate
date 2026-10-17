@@ -1,6 +1,6 @@
 # ReproCrate Desktop — v0.5.0 foundation
 
-The first desktop frontend is a **local-first Tauri 2 + React/TypeScript application** backed by the existing open-source Rust `reprocrate-core`. **v0.5.0 is published as an experimental developer pre-release with native executables for Linux, Windows and macOS**, but these are not signed installers, notarized apps, or a stable release. See [release assets](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.5.0).
+The desktop frontend is a **local-first Tauri 2 + React/TypeScript application** backed by the open-source Rust `reprocrate-core`. **v0.6.0 is published as an experimental developer pre-release with native executables for Linux, Windows and macOS**, including opt-in SQLite history. These are not signed installers, notarized apps, or a stable release. See [release assets](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0).
 
 ## Implemented interactions
 
@@ -56,10 +56,10 @@ Native builds can be run from `apps/desktop` with `npm run desktop:build` (Tauri
 
 ## Remaining desktop work
 
-Native OS smoke-testing in real graphical sessions; file-picker UX with precisely scoped grants; incremental large-log reading and cancellation; local history/search; workflow persistence; keyboard and screen-reader testing; signed installers, distribution and update policies; end-user documentation; network/permission review; and sandboxing for any future command execution. None of these features is claimed to be complete in v0.5.0.
+Native OS smoke-testing in real graphical sessions; file-picker UX with precisely scoped grants; incremental large-log reading and cancellation; workflow persistence; keyboard and screen-reader testing; signed installers, distribution and update policies; end-user documentation; network/permission review; and sandboxing for any future command execution. None of these features is claimed to be complete in v0.5.0.
 
-## v0.6.0 local history (development)
+## v0.6.0 local history (available)
 
 The desktop gains a **Report history** view with explicit per-report indexing, bounded local search and "Inspect"/"Forget index" actions. It stores limited, possibly sensitive metadata in an app-private SQLite file and does not copy logs or entire reports. The CLI remains independent. See [history and privacy](history.md).
 
-The feature is in the v0.6.0 development branch and is not part of the published v0.5.0 binaries. Future work includes a native file picker, accessibility evaluation, full database migrations and secure-data-retention review.
+The feature is present in the published v0.6.0 developer-preview desktop binaries, not in earlier v0.5.0 binaries. Future work includes a native file picker, accessibility evaluation, full database migrations and secure-data-retention review.

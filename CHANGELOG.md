@@ -72,7 +72,11 @@
 
 **Remaining:** signed installers/notarization, clean-machine graphical smoke tests, file picker UX, history/search, automatic update and stronger filesystem sandboxing. The published desktop artifacts are real compiled developer-preview executables but not installers or stable v1.0.0.
 
-## Unreleased — v0.6.0 development
+## [0.6.0] — 2026-10-17 (pre-release)
+
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0
+
+**Verified:** https://github.com/sanskarIN/ReproCrate/actions/runs/39046224080 (all validation, six CLI/desktop build/upload and publish jobs passed). GitHub Releases API independently confirmed the public pre-release and 12 real binary/checksum files.
 
 - Added opt-in SQLite history in the desktop's private app-data folder; indexes explicitly selected JSON reports only.
 - Stored limited metadata: report path, best-effort-sanitized title and ID, OS/architecture, indexing time. Raw output, arguments, attachments and report JSON are not stored.
@@ -80,4 +84,8 @@
 - Added parameterized SQL and tests for indexing, duplicate paths, query limits, secret-like metadata, injection and deletion.
 - Kept React/browser preview read-only and extended native Windows/Linux/macOS desktop checks.
 
-**Unfinished:** native file-picker UX, secure erasure guarantees, encrypted database, full UI accessibility evaluation and stable v1.0.0. Not published until CI and release assets are verified.
+**Unfinished:** native file-picker UX, secure erasure guarantees, encrypted database, full UI accessibility evaluation and stable v1.0.0. Native desktop files are unsigned developer previews, not installers.
+
+## Unreleased — toward v0.7.0
+
+Plan: secure, explicit issue export previews and integration adapters, improved native file selection/accessibility, comprehensive privacy and filesystem tests.
