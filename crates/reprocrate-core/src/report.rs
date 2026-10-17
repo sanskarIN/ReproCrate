@@ -109,7 +109,7 @@ fn html_escape(text: &str) -> String {
         .replace('>', "&gt;")
 }
 fn inline(text: &str) -> String {
-    html_escape(text).replace('\n', " ").replace('\r', " ")
+    html_escape(text).replace(['\n', '\r'], " ")
 }
 fn fenced(text: &str) -> String {
     let escaped = html_escape(text);
