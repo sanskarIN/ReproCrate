@@ -1,0 +1,23 @@
+[package]
+name = "reprocrate-desktop"
+version = "0.5.0"
+authors = ["Sanskar"]
+edition = "2021"
+license = "EPL-2.0"
+publish = false
+rust-version = "1.88"
+
+[workspace]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+reprocrate-core = { path = "../../../crates/reprocrate-core" }
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
