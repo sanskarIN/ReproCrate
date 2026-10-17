@@ -2,6 +2,8 @@
 //! The desktop's narrow, explicit IPC boundary. No shell or filesystem plugin.
 //! User-chosen paths are read as bounded regular files and never executed.
 
+mod history;
+
 use reprocrate_core::{
     analyze_text, compare_reports, recipe_from_report, review_report, LogAnalysis,
     LogFormat, Report, ReportComparison, ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
@@ -237,7 +239,10 @@ pub fn run() {
             analyze_log_file,
             preview_recipe,
             preview_review,
-            save_review
+            save_review,
+            history::remember_report,
+            history::search_history,
+            history::forget_history_entry
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start the ReproCrate desktop application");
