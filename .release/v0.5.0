@@ -1,0 +1,3 @@
+ReproCrate v0.5.0 guarded experimental CLI and unsigned Tauri desktop pre-release.
+The workflow must pass Rust/React validation and build real Windows, Linux and macOS CLI and desktop binaries, then attach SHA-256 files before publishing.
+Do not classify as stable or signed installers.
