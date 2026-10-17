@@ -1,0 +1,2 @@
+Format the v0.2.0 Rust source files in the development branch.
+Remove this trigger and the temporary write-enabled workflow after a successful run.
