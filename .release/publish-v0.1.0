@@ -1,0 +1,2 @@
+Finalize the already built, checked and uploaded CLI archives from the release run.
+Publish only if all six expected platform archives and checksum files exist.
