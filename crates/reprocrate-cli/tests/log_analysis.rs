@@ -4,7 +4,10 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
+
+static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 fn binary() -> &'static str {
     env!("CARGO_BIN_EXE_reprocrate")
@@ -16,7 +19,7 @@ fn scratch() -> PathBuf {
         .expect("clock")
         .as_nanos();
     let path =
-        std::env::temp_dir().join(format!("reprocrate-analyze-{}-{nanos}", std::process::id()));
+        std::env::temp_dir().join(format!("reprocrate-analyze-{}-{nanos}-{}", std::process::id(), TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)));
     fs::create_dir(&path).expect("temp directory");
     path
 }
