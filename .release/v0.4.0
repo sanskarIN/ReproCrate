@@ -1,0 +1,3 @@
+Version v0.4.0 pre-release trigger after cross-platform source quality checks.
+Package Linux, macOS and Windows CLI with checksums; publish only when validation and all platform jobs pass.
+Stable v1.0.0 is not implied.
