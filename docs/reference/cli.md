@@ -1,4 +1,4 @@
-# CLI reference (v0.3.0 development candidate)
+# CLI reference (v0.3.0 pre-release)
 
 Build first with a stable Rust toolchain:
 
@@ -26,7 +26,7 @@ Capture reports are created only at the chosen paths. Existing files are not ove
 
 `reprocrate analyze INPUT [--format auto|generic|cargo|pytest|jest|vitest] [--output PATH] [--markdown PATH] [--max-input-bytes N]` analyzes bounded text only. Use `-` as INPUT for standard input. It never executes commands found in the file. Default byte cap 1 MiB; hard cap 8 MiB. Automatic pattern redaction is fallible and exported text must be reviewed before sharing. See [log analysis](log-analysis.md) for details.
 
-## Privacy review and portable archives (v0.3.0 development)
+## Privacy review and portable archives (v0.3.0 pre-release)
 
 `reprocrate review INPUT --output NEW.json [--masks-file FILE] [--preview] [--exclude-stdout] [--exclude-stderr] [--exclude-arguments] [--exclude-executable] [--exclude-analysis]` creates an independently inspectable edited report. `--preview` explicitly prints the full JSON payload.
 

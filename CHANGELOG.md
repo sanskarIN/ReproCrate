@@ -30,11 +30,19 @@
 
 **Not completed:** reliable process-tree cancellation, complete framework test-result parsers, desktop GUI, bundles or stable v1.0.0. These are planned and not claimed.
 
-## Unreleased — v0.3.0 candidate
+## [0.3.0] — 2026-10-17 (pre-release)
+
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0
+
+**Verification:** https://github.com/sanskarIN/ReproCrate/actions/runs/39038674027 (all jobs succeeded, including native Windows/Linux/macOS package builds). GitHub API confirms three uploaded CLI archives and accompanying SHA-256 files.
 
 - Added `reprocrate review` with additional literal masking from a bounded private file, whole-report preview and explicit field exclusions.
 - Added `reprocrate bundle create|inspect|verify|extract` for versioned, bounded, SHA-256-manifest ZIP archives.
 - Implemented verification-before-extraction, fixed archive paths, entry-count and size limits, malicious entry rejection, and manual approval for attachments.
 - Added security documentation and cross-platform tests, retaining EPL-2.0 and local-only operation.
 
-**Remaining:** cross-platform release acceptance, further fuzzing, fuller privacy coverage and stable-release hardening.
+**Remaining:** further fuzzing, fuller privacy coverage, end-to-end authentication guidance and stable-release hardening.
+
+## Unreleased — towards v0.4.0
+
+Planned: report/environment comparisons and versioned inert reproduction recipes, with continued archive/privacy hardening.

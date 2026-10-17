@@ -2,13 +2,13 @@
 
 **Turn bugs into reproducible reports.**
 
-ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. The v0.3.0 development branch adds explicit privacy review and integrity-checked portable ZIP bundles.
+ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 adds explicit privacy review and integrity-checked portable ZIP bundles.
 
-> **Latest pre-release:** [v0.2.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.2.0), published October 17, 2026, with Windows x86-64, Linux x86-64, and macOS ARM64 portable CLI archives and SHA-256 checksums. **Experimental: not stable v1.0.0.** Desktop UI, diagnostic bundles, comparisons and hosted documentation remain planned.
+> **Latest pre-release:** [v0.3.0 CLI](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0), published October 17, 2026, with Windows x86-64, Linux x86-64, and macOS ARM64 portable CLI archives and SHA-256 checksum files. **Experimental: not stable v1.0.0.** Desktop UI, comparisons and hosted documentation remain planned.
 
 ## Download
 
-See the [v0.2.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.2.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
+See the [v0.3.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0) for the Windows x86-64 ZIP, Linux x86-64 tarball, macOS ARM64 tarball and corresponding checksum files. Extract the archive and run the executable directly; no installer is included.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -18,7 +18,7 @@ cargo run -p reprocrate-cli -- analyze fixtures/logs/cargo.txt --output findings
 
 Generic log analysis and early Cargo/pytest/Jest/Vitest heuristics are offline and do not execute imported logs. Grouping fingerprints are **not cryptographic** and do not establish the root cause. Read [log analysis reference](docs/reference/log-analysis.md).
 
-## Privacy review and diagnostic bundles (v0.3.0 development)
+## Privacy review and diagnostic bundles (available in v0.3.0)
 
 ```bash
 cargo run -p reprocrate-cli -- review failed.json --output reviewed.json --exclude-arguments --preview
@@ -59,7 +59,7 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Minimal/standard OS and architecture metadata
 - Offline generic log import and early Cargo/pytest/Jest/Vitest heuristics (v0.2.0 pre-release)
 - Basic secret masking for common credential patterns
-- Explicit field exclusion and manually selected literal masks (v0.3.0 development)
+- Explicit field exclusion and manually selected literal masks (v0.3.0 pre-release)
 - Bounded ZIP bundle create, inspect, verify and extract with SHA-256 manifest checks (v0.3.0 development)
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary

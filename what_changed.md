@@ -1,6 +1,6 @@
-# Latest handoff — v0.3.0 development (not released)
+# Latest handoff — v0.3.0 pre-release published
 
-Date: 2026-10-17. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.3.0-privacy-bundles`.
+Date: 2026-10-17. Repository: https://github.com/sanskarIN/ReproCrate. Source development branch: `feat/v0.3.0-privacy-bundles`. Merged PR: https://github.com/sanskarIN/ReproCrate/pull/3.
 
 ## Implemented source and design
 
@@ -11,23 +11,28 @@ Date: 2026-10-17. Repository: https://github.com/sanskarIN/ReproCrate. Developme
 - `Cargo.toml` and `Cargo.lock`: v0.3.0 Rust workspace, ZIP (deflate-only) and sha2 dependencies.
 - `crates/reprocrate-cli/tests/bundle_cli.rs` and core unit tests: end-to-end report review, ZIP verification/extraction and hostile-input rejection.
 - `docs/reference/privacy-bundles.md`, `docs/security/archive-threat-model.md`, `docs/releases/v0.3.0.md`, README/roadmap/changelog/security/CLI reference.
-- Existing v0.2.0 pre-release remains available; do **not** present v0.3.0 as published until confirmed by API.
+- **v0.3.0 is published and verified:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.3.0. GitHub Releases API confirms `draft: false`, `prerelease: true`, published `2026-10-17T13:59:45Z`, source tag commit `ba63bb18481ab92eabd91e80c0fbf632781d253a`.
+- Six real uploaded release assets: `reprocrate-v0.3.0-linux-x86_64.tar.gz` (1,565,671 bytes) + its `.sha256`; `reprocrate-v0.3.0-macos-arm64.tar.gz` (1,382,422 bytes) + its `.sha256`; `reprocrate-v0.3.0-windows-x86_64.zip` (1,347,797 bytes) + its `.sha256`.
+- v0.2.0 and v0.1.0 pre-releases remain available; stable v1.0.0 is not complete.
 
 ## Validation and known gaps
 
 - Generated Cargo.lock and formatted Rust through a one-shot GitHub Actions workflow; temporary elevated-permission workflow was then removed.
 - Initial ZIP unit tests exposed test assumptions incompatible with zip 2.x (duplicate names refused on writing, end-of-directory signature width). Corrected the fixture tests in commit `8288b2c`.
-- The newest cross-platform test run must be verified before PR merge and release. GitHub Actions status is not inferred to be passing merely because the workflow exists.
+- Rust CI on Ubuntu 24.04, Windows 2022 and macOS 14 passed build, tests, Clippy `-D warnings` and formatting at https://github.com/sanskarIN/ReproCrate/actions/runs/39038561203 (also https://github.com/sanskarIN/ReproCrate/actions/runs/39038595395). Initial failing ZIP test assumptions were corrected before merging.
+- PR #3 merged into `main` at commit `7c1c9085d283e0b3d655e7284215bc4975733535`.
+- v0.3.0 publication workflow fully succeeded: https://github.com/sanskarIN/ReproCrate/actions/runs/39038674027 (validation, draft, Linux/Windows/macOS archive uploads, public release).
+- GitHub Releases API separately confirmed the tag, publication status and uploaded asset sizes. No placeholder downloads.
 - ZIP content integrity != author authentication. Manual review is not a guarantee of secret-free exports. Archive importer is bounded but needs further third-party review/fuzzing.
 - No cloud upload, automatic imported-script execution, GUI, SQLite, cross-report comparison or stable release.
 
 ## Next steps
 
-1. Confirm passing Ubuntu/Windows/macOS CI for the current branch and fix any failures.
-2. Stage guarded v0.3.0 pre-release workflow, open a PR, merge only verified commit.
-3. Trigger the v0.3.0 release by version marker after merge, verify real binary archives/checksums and release metadata.
-4. Record verified exact release and artifact links here; update README/changelog only after publishing.
-5. Continue toward v0.4.0 comparisons and recipes, and audit remaining privacy/ZIP limitations before stable v1.0.0.
+1. Start **v0.4.0**: compare sanitized reports/environments with explicit missing/redacted/unknown states and inert reproduction recipes.
+2. Deepen security tests: ZIP fuzzing, symlink/hardlink edge cases, compression bombs, atomic writes and Windows path peculiarities.
+3. Harden privacy review: richer manual workflow, data provenance and separate attachment preview.
+4. Audit dependency licenses and vulnerable transitive dependencies before expanding distribution targets.
+5. Continue Rust-core-sharing Tauri 2/React desktop development after API stability is proven; stable v1.0.0 is not authorized or ready.
 
 ---
 
