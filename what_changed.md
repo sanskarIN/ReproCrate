@@ -26,9 +26,9 @@ Phase 0 completed as repository discovery and architecture design. **v0.1.0 is i
 - GitHub repository, branch, initial LICENSE and permissions: **verified** using the connected GitHub API.
 - Remote commits and branch updates: **verified** through the connected GitHub API.
 - Local compiler, cargo fmt, cargo clippy, tests and binary E2E: **not run**. The execution container does not have rustc/cargo and cannot reach the Rust distribution network.
-- GitHub Actions: **not yet verified** at the time this entry was prepared; check the Actions tab and update status after runs.
-- `Cargo.lock`: **not generated**. The initial CI workflow uses `--locked` and will need a committed lockfile before it can pass. Do not claim passing CI until generated.
-- Cross-platform release binaries, SHA-256 sums, GitHub releases/tags, GitHub Pages, Tauri/React desktop, bundles, comparisons: **not implemented/not published**.
+- GitHub Actions **verified**: Rust CI (Ubuntu 24.04, Windows 2022 and macOS 14) passed build, tests, Clippy and rustfmt at commit `5219b891` and passed all those gates again at commit `46e7239c`. The newer timeout/redaction test commit `60c20126` passed Ubuntu and macOS checks; Windows CI was still finalizing when this entry was updated. Verify the newest run before merging.
+- `Cargo.lock`: **generated and committed** by the temporary trusted Rust normalization workflow in commit `c0e2d67a`; formatter passed. The temporary write-enabled workflow was then deleted in commit `5a49df07`.
+- Cross-platform CLI artifacts: **release workflow configured**, but release binaries, GitHub tag, checksums and published pre-release are **not yet verified**. GitHub Pages, Tauri/React desktop, bundles and comparisons are **not implemented/not deployed**.
 
 ## Known limitations / security
 
@@ -42,21 +42,26 @@ Phase 0 completed as repository discovery and architecture design. **v0.1.0 is i
 
 ## Git handoff
 
-Branch: `feat/v0.1.0-cli`. Initial main commit `fefef91f9da27101d0636e30b94164849b0f6d84`. Work commits include:
+Branch: `feat/v0.1.0-cli`; draft PR: https://github.com/sanskarIN/ReproCrate/pull/1. Initial main commit `fefef91f9da27101d0636e30b94164849b0f6d84`. Work commits include:
 - `b645e0ed` chore: establish ReproCrate Rust workspace and EPL-2.0 project documentation
 - `92bd9e5d` feat(core): define versioned reports, environment profiles and privacy masking
 - `810d7e81` feat(capture): execute approved processes with bounded pipes and timeouts
 - `edd193f9` feat(cli): add capture, doctor and inert report inspection commands
 - `759f56dd` fix(redaction): sanitize captured arguments at the shared report boundary
+- `c0e2d67a` style(build): generated dependency lockfile and rustfmt
+- `f2f1549c` fix(capture): repair Rust type inference found by Linux CI
+- `5219b891` fix(lint): satisfy Clippy's newline normalization lint
+- `c3bf5e0e` ci(release): add gated, checksum-producing v0.1.0 CLI pre-release workflow
+- `60c20126` test(capture): add real timeout, redaction, and invalid UTF-8 CLI test
 
 GitHub's created commits have been checked to use author and committer **Sanskar <sanskarin@outlook.in>**.
 
 ## Next work
 
-1. Generate and commit Cargo.lock using a trusted Rust environment; repair compile errors.
-2. Run CI matrix; fix formatting, clippy and tests and record evidence.
-3. Add real output/cancellation/timeout security regression tests and a final local export review facility.
-4. Prepare v0.1.0 pre-release only after passable builds and real artifacts.
-5. Then progress to v0.2.0 streaming robustness and log parsers; do not skip release-quality gates.
+1. Confirm latest 3-platform CI including the new integration test is fully green and record the run URL.
+2. Review and merge PR #1 without modifying unrelated history.
+3. Trigger the `.release/v0.1.0` marker on main so the verified release workflow builds real per-platform CLI archives; verify uploaded bytes and checksums.
+4. Record actual release asset URLs and any CI failures in this handoff.
+5. Start v0.2.0: streaming robustness, parser adapters, and explicit export review, without skipping release-quality gates.
 
 No maintainer approval for a stable v1.0.0 release should be inferred from this milestone.
