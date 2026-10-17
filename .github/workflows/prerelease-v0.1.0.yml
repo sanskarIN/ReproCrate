@@ -63,11 +63,11 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
+          $arch = if ($env:PROCESSOR_ARCHITECTURE -eq "AMD64") { "x86_64" } else { $env:PROCESSOR_ARCHITECTURE.ToLower() }
           $package = "reprocrate-v0.1.0-windows-$arch.zip"
           Compress-Archive -Path target/release/reprocrate.exe -DestinationPath $package
           Expand-Archive -Path $package -DestinationPath checked
-          & checked/reprocrate.exe --version
+          & "./checked/reprocrate.exe" --version
           if ($LASTEXITCODE -ne 0) { exit 1 }
           $hash = (Get-FileHash -Algorithm SHA256 -Path $package).Hash.ToLower()
           "$hash  $package" | Set-Content -Path "$package.sha256"
