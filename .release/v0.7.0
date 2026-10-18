@@ -1,3 +1,5 @@
 ReproCrate v0.7.0 local-only issue draft integration pre-release.
 Source includes merged PR #11.
 Release requires full validation and six genuine CLI/desktop platform archives with individual SHA-256 files; never publish incomplete packages.
+
+Validation retry: include rustfmt-corrected CLI issue regression test at 375bff9cc732c72f2b193cd3a2d90d196c714fd7.
