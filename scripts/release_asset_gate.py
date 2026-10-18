@@ -48,17 +48,28 @@ def verify_release(release, version):
     return len(assets)
 
 
+def select_release(source, version):
+    """GitHub does not expose unpublished drafts at the tag lookup endpoint.
+
+    Enumerate accessible releases, requiring exactly one matching tag instead.
+    """
+    if not isinstance(source, list):
+        return source
+    matches = [
+        entry for entry in source
+        if isinstance(entry, dict) and entry.get("tag_name") == f"v{version}"
+    ]
+    if len(matches) != 1:
+        raise ValueError("Expected exactly one draft with the requested tag")
+    return matches[0]
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", required=True)
     args = parser.parse_args()
     try:
-        source = json.load(sys.stdin)
-        if isinstance(source, list):
-            matching = [item for item in source if isinstance(item, dict) and item.get("tag_name") == f"v{args.version}"]
-            if len(matching) != 1:
-                raise ValueError("Expected exactly one draft with the requested tag")
-            source = matching[0]
+        source = select_release(json.load(sys.stdin), args.version)
         count = verify_release(source, args.version)
     except (ValueError, TypeError, json.JSONDecodeError) as error:
         print(f"Release integrity gate failed: {error}", file=sys.stderr)
