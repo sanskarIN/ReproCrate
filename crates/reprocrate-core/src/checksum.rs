@@ -78,7 +78,7 @@ pub fn verify_release_checksum(
         .and_then(|name| name.to_str())
         .filter(|name| !name.is_empty())
         .ok_or("Archive requires a UTF-8 file name.")?;
-    let (mut sidecar, _) = regular_open(checksum_path, MAX_CHECKSUM_BYTES)?;
+    let (sidecar, _) = regular_open(checksum_path, MAX_CHECKSUM_BYTES)?;
     let mut sidecar_bytes = Vec::new();
     sidecar
         .take(MAX_CHECKSUM_BYTES + 1)
