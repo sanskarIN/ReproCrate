@@ -1,8 +1,8 @@
-# v0.8.0 distribution and integrity handoff (candidate)
+# v0.8.0 distribution and integrity handoff (published pre-release)
 
-Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate. Branch `feat/v0.8.0-distribution`.
+Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate. Development branch `feat/v0.8.0-distribution` merged by [PR #12](https://github.com/sanskarIN/ReproCrate/pull/12), preserving 33 focused commits.
 
-**Published release remains v0.7.0 until v0.8.0 passes the required CI and the GitHub Releases API confirms `draft:false`, `prerelease:true` and all twelve binary/checksum assets.**
+**Latest verified published pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0. The [release workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087) completed successfully. GitHub Releases API verified `draft:false`, `prerelease:true`, published 2026-10-18T04:16:28Z and all 12 genuine nonempty CLI/desktop archives/checksum files.
 
 ## Delivered source changes
 
@@ -14,12 +14,13 @@ Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate. Bra
 6. Version and lockfiles for CLI, core, native Tauri, desktop JS and bundle metadata aligned to 0.8.0; guarded release workflow only publishes after all platforms and checksum sidecars exist.
 7. Security, roadmap, changelog and README describe limitations and current publication state.
 
-## Remaining gates
+## Verified release and remaining work
 
-- Verify Rust workspace tests, Clippy and rustfmt on all three OS runners, plus desktop TypeScript/Vite/native IPC and platform packages.
-- Review PR and merge to main. Add `.release/v0.8.0` on main only after green checks, then confirm final publish and real asset metadata.
-- Check Pages deployment run separately; if GitHub Pages is disabled or environments block deployment, do **not** claim a live docs URL. Manual repository Pages configuration may be necessary.
-- Scheduled vulnerability scans are not the same as an independent complete security review; manual license attribution and clean-machine OS tests remain prerequisites before stable v1.0.0.
+- PR #12 merged into `main`; genuine release marker `.release/v0.8.0` committed at `bf0691c8d7e03776cc6f0f2321c51e1ec9e92c2a`.
+- The gated release run https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087 passed version checks, Rust formatting, Clippy, all workspace tests and dependency inventory validation. Three CLI and three native desktop package jobs all succeeded, followed by successful publication.
+- GitHub Releases API confirmed exactly **12 uploaded nonempty assets**: CLI and desktop unsigned binaries for Linux x86-64, Windows x86-64, macOS ARM64, plus six SHA-256 files.
+- **GitHub Pages not live yet**: first deployment https://github.com/sanskarIN/ReproCrate/actions/runs/39095879663 failed because Pages was not enabled; retry https://github.com/sanskarIN/ReproCrate/actions/runs/39095938968 failed with `Resource not accessible by integration` on creating a Pages site. Repository administrator must open **Settings → Pages → Build and deployment → Source = GitHub Actions**, then rerun the Docs workflow. Do not advertise the site before it succeeds.
+- Weekly/manual advisory scans were configured but are **not** proof of completed advisories or license compliance. A separate security/third-party license review, signed installers and clean-machine GUI QA remain necessary before a stable v1.0.0.
 
 ---
 
