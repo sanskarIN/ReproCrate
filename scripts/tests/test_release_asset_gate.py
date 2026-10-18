@@ -53,6 +53,16 @@ class ReleaseAssetGateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             gate.verify_release(candidate, "0.9.0")
 
+    def test_draft_release_is_selected_from_paginated_release_listing(self):
+        previous = valid_release()
+        previous["tag_name"] = "v0.8.0"
+        result = gate.select_release([previous, valid_release()], "0.9.0")
+        self.assertEqual(gate.verify_release(result, "0.9.0"), 12)
+        with self.assertRaises(ValueError):
+            gate.select_release([previous], "0.9.0")
+        with self.assertRaises(ValueError):
+            gate.select_release([valid_release(), valid_release()], "0.9.0")
+
     def test_pre_release_and_source_tag_required(self):
         for key, value in [("draft", False), ("prerelease", False), ("tag_name", "v0.8.0")]:
             candidate = valid_release()
