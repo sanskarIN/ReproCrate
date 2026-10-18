@@ -13,8 +13,7 @@ use privacy_bundle_commands::{
 };
 use reprocrate_core::{
     capture_command, inspect_environment, render_markdown, verify_release_checksum, CaptureOptions,
-    CaptureProfile,
-    IssueOptions, IssueTarget, Report, SCHEMA_VERSION,
+    CaptureProfile, IssueOptions, IssueTarget, Report, SCHEMA_VERSION,
 };
 use std::error::Error;
 use std::ffi::OsString;
