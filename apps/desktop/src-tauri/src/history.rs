@@ -355,7 +355,10 @@ mod tests {
     #[test]
     fn rejects_future_schema_without_downgrading_it() {
         let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
-        let root = std::env::temp_dir().join(format!("rc-history-future-{}-{stamp}", std::process::id()));
+        let root = std::env::temp_dir().join(format!(
+            "rc-history-future-{}-{stamp}",
+            std::process::id()
+        ));
         let file = root.join("history.sqlite3");
         let conn = open_database(&file).unwrap();
         conn.pragma_update(None, "user_version", 2_i64).unwrap();
@@ -363,7 +366,9 @@ mod tests {
         let error = open_database(&file).unwrap_err();
         assert!(error.contains("Unsupported local history database schema 2"));
         let untouched = Connection::open(&file).unwrap();
-        let version: i64 = untouched.pragma_query_value(None, "user_version", |row| row.get(0)).unwrap();
+        let version: i64 = untouched
+            .pragma_query_value(None, "user_version", |row| row.get(0))
+            .unwrap();
         assert_eq!(version, 2);
         drop(untouched);
         fs::remove_dir_all(root).unwrap();
