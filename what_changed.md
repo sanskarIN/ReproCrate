@@ -1,7 +1,7 @@
-# v0.9.0 hardening and release quality (candidate handoff)
+# v0.9.0 hardening and release quality (published pre-release)
 
-Date: 2026-10-18. Repo: https://github.com/sanskarIN/ReproCrate, development branch `feat/v0.9.0-release-quality`.
-The latest published, independently confirmed pre-release is **v0.8.0** until the v0.9.0 gate finishes and the GitHub Releases API confirms publication.
+Date: 2026-10-18. Repo: https://github.com/sanskarIN/ReproCrate, development branch `feat/v0.9.0-release-quality` merged via [PR #13](https://github.com/sanskarIN/ReproCrate/pull/13) with 26 focused commits.
+**Latest independently confirmed pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0. Public `draft:false`, `prerelease:true`, published 2026-10-18T05:19:10Z, all 12 real nonempty uploaded CLI/desktop archives and checksums.
 
 ## Current source work
 
@@ -16,14 +16,14 @@ The latest published, independently confirmed pre-release is **v0.8.0** until th
 - Added `docs/qa/release-candidate.md` distinguishing automated multi-platform checks from **not-yet-performed** manual clean-machine Windows/Linux/macOS GUI, accessibility, license and signing reviews.
 - Source docs staged in `docs/releases/v0.9.0.md`, README, CHANGELOG, ROADMAP and SECURITY.
 
-## Remaining / release gate
+## Verified public release and remaining tasks
 
-1. Rust CI passes on Ubuntu, Windows and macOS (full build/test, Clippy, rustfmt); native desktop source and test CI succeed.
-2. Merge reviewed PR into main; trigger the guarded pre-release using `.release/v0.9.0`.
-3. Confirm all six platform CLI/desktop packages pass, Python/real-binary smoke passes and the strict GitHub Releases 12-asset gate passes. No publish if not.
-4. Verify GitHub Releases API reports public `draft:false`, `prerelease:true`, 12 nonempty uploaded assets; only then update source docs as published.
-5. GitHub Pages first-time enablement requires admin action through repo Settings if not yet enabled. Do not claim a live site without independent deployment verification.
-6. Do not claim clean-machine GUI testing, signed installers, complete dependency/license audit, guaranteed private output or production-stable v1.0.0 from automated CI.
+1. **Merged:** PR #13 retained 26 focused feature commits; source is on main. Release marker `.release/v0.9.0` committed with follow-up corrections for authenticated draft lookup.
+2. **Final green workflow:** https://github.com/sanskarIN/ReproCrate/actions/runs/39099649232. Passed version validation, Rust formatting, Clippy, workspace tests and Python dependency inventory tests, 3 real platform CLI smoke tests and checksum self-verification, 3 desktop Tauri native builds/uploads, plus a strict **exactly 12 uploaded assets** publish gate.
+3. **Verified GitHub release:** v0.9.0 is public and tagged as a **pre-release**, not stable. All six real CLI/desktop unsigned binary archives and six SHA-256 files for Windows x86-64, Linux x86-64 and macOS ARM64 are uploaded and nonempty.
+4. **Safe failed attempt and fix:** Initial pipeline https://github.com/sanskarIN/ReproCrate/actions/runs/39098953794 compiled and uploaded all six binaries successfully, but refused to publish because the GitHub REST `releases/tags` lookup returned 404 for an unpublished draft. Fixed `release_asset_gate.py` to select a unique tag from the authenticated releases listing with regression tests, updated workflow, reran full 3-OS builds and published only after the strict checks passed.
+5. **GitHub Pages site still needs owner setup** unless separately confirmed live: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**, then rerun the docs workflow. Earlier deployment attempts failed from missing repo-level Pages enablement/permissions.
+6. **Manual clean-machine GUI, accessibility, signing/notarization, comprehensive license/security review and cross-OS compatibility tests remain unverified**; see `docs/qa/release-candidate.md`. v0.9.0 is experimental and does not claim stable v1.0.0 or perfectly sanitized evidence.
 
 ---
 
