@@ -1,3 +1,32 @@
+# v0.9.0 hardening and release quality (candidate handoff)
+
+Date: 2026-10-18. Repo: https://github.com/sanskarIN/ReproCrate, development branch `feat/v0.9.0-release-quality`.
+The latest published, independently confirmed pre-release is **v0.8.0** until the v0.9.0 gate finishes and the GitHub Releases API confirms publication.
+
+## Current source work
+
+- Escaped untrusted inline Markdown metadata in `render_markdown` to prevent active Markdown image and remote link syntax in report title, executable, arguments, launch errors and warnings, while retaining HTML escaping.
+- Added core regression tests for malicious inline Markdown and representative metadata channels. These reduce rendering hazards but do not prove arbitrary Markdown renderers secure.
+- Hardened CLI `import_json` to reject nonregular selected report files (including symlinks, FIFOs, directories and device files), check opened handle type and 4 MiB cap, and on Unix check dev/inode identity before reading.
+- Added import rejection tests for symlinks, directories and missing files, not claiming fully race-free filesystem access.
+- Added `scripts/smoke_cli.py`, headless tests against actual built v0.9.0 CLI executable: `--version`, `doctor --json`, inert log analyzer, offline self-generated archive SHA-256 check, corrupted checksum rejection, existing-output rejection.
+- Added `scripts/release_asset_gate.py` and unit tests. The published release gate now requires a non-published draft prerelease with exactly twelve correctly named, nonempty uploaded assets; six real executable archives and six checksum sidecars.
+- The v0.9.0 release workflow also runs the just-built CLI to verify the checksum of each platform's actual release archive before upload.
+- Updated all Rust core/CLI, native desktop/Tauri, npm frontend version metadata and locked manifests to v0.9.0.
+- Added `docs/qa/release-candidate.md` distinguishing automated multi-platform checks from **not-yet-performed** manual clean-machine Windows/Linux/macOS GUI, accessibility, license and signing reviews.
+- Source docs staged in `docs/releases/v0.9.0.md`, README, CHANGELOG, ROADMAP and SECURITY.
+
+## Remaining / release gate
+
+1. Rust CI passes on Ubuntu, Windows and macOS (full build/test, Clippy, rustfmt); native desktop source and test CI succeed.
+2. Merge reviewed PR into main; trigger the guarded pre-release using `.release/v0.9.0`.
+3. Confirm all six platform CLI/desktop packages pass, Python/real-binary smoke passes and the strict GitHub Releases 12-asset gate passes. No publish if not.
+4. Verify GitHub Releases API reports public `draft:false`, `prerelease:true`, 12 nonempty uploaded assets; only then update source docs as published.
+5. GitHub Pages first-time enablement requires admin action through repo Settings if not yet enabled. Do not claim a live site without independent deployment verification.
+6. Do not claim clean-machine GUI testing, signed installers, complete dependency/license audit, guaranteed private output or production-stable v1.0.0 from automated CI.
+
+---
+
 # v0.8.0 distribution and integrity handoff (published pre-release)
 
 Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate. Development branch `feat/v0.8.0-distribution` merged by [PR #12](https://github.com/sanskarIN/ReproCrate/pull/12), preserving 33 focused commits.
