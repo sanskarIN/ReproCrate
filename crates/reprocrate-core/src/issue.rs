@@ -61,7 +61,10 @@ fn safe_inline(value: &str, max_chars: usize) -> String {
                 _ => "&amp;",
             });
         } else {
-            if matches!(character, '\\' | '`' | '*' | '_' | '[' | ']' | '(' | ')' | '#' | '+' | '-' | '!' | '|' | '~') {
+            if matches!(
+                character,
+                '\\' | '`' | '*' | '_' | '[' | ']' | '(' | ')' | '#' | '+' | '-' | '!' | '|' | '~'
+            ) {
                 result.push('\\');
             }
             result.push(character);
@@ -196,7 +199,12 @@ mod tests {
     #[test]
     fn default_issue_is_minimal_and_private_for_all_targets() {
         let sample = fixture();
-        for target in [IssueTarget::Github, IssueTarget::Gitlab, IssueTarget::Gitea, IssueTarget::Generic] {
+        for target in [
+            IssueTarget::Github,
+            IssueTarget::Gitlab,
+            IssueTarget::Gitea,
+            IssueTarget::Generic,
+        ] {
             let draft = draft_issue(&sample, target, IssueOptions::default()).unwrap();
             assert!(!draft.markdown.contains("PRIVATE"));
             assert!(!draft.markdown.contains("secret-here"));
@@ -226,9 +234,18 @@ mod tests {
     fn requires_approval_for_any_optional_metadata() {
         let sample = fixture();
         for opts in [
-            IssueOptions { include_title: true, ..IssueOptions::default() },
-            IssueOptions { include_environment: true, ..IssueOptions::default() },
-            IssueOptions { include_categories: true, ..IssueOptions::default() },
+            IssueOptions {
+                include_title: true,
+                ..IssueOptions::default()
+            },
+            IssueOptions {
+                include_environment: true,
+                ..IssueOptions::default()
+            },
+            IssueOptions {
+                include_categories: true,
+                ..IssueOptions::default()
+            },
         ] {
             assert!(draft_issue(&sample, IssueTarget::Github, opts).is_err());
         }
