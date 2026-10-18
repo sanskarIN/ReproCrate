@@ -1,0 +1,70 @@
+name: Dependency inventory and advisory checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Cargo.lock"
+      - "apps/desktop/src-tauri/Cargo.lock"
+      - "apps/desktop/package-lock.json"
+      - "scripts/dependency_inventory.py"
+      - "scripts/tests/**"
+      - ".github/workflows/dependency-audit.yml"
+  pull_request:
+    paths:
+      - "Cargo.lock"
+      - "apps/desktop/src-tauri/Cargo.lock"
+      - "apps/desktop/package-lock.json"
+      - "scripts/**"
+      - ".github/workflows/dependency-audit.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: '18 4 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  locked-inventory:
+    name: Build locked dependency inventory
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate deterministic dependency metadata
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - name: Generate machine-readable local inventory
+        run: python3 scripts/dependency_inventory.py --output dependency-inventory.json
+      - name: Upload inventory for human review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: locked-dependency-inventory
+          path: dependency-inventory.json
+          if-no-files-found: error
+          retention-days: 30
+
+  rust-advisories:
+    name: RustSec advisory scan (scheduled or manual)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install RustSec cargo-audit CLI
+        run: |
+          rustup toolchain install stable --profile minimal
+          cargo +stable install cargo-audit --locked
+      - name: Audit CLI/core dependency lockfile
+        run: cargo +stable audit --file Cargo.lock
+      - name: Audit native desktop dependency lockfile
+        run: cargo +stable audit --file apps/desktop/src-tauri/Cargo.lock
+
+  npm-advisories:
+    name: npm advisories (scheduled or manual)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Check desktop npm lockfile advisories
+        run: npm audit --prefix apps/desktop --audit-level=high
