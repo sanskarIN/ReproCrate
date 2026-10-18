@@ -98,9 +98,9 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
-## [0.9.0] — 2026-10-18 (pre-release candidate)
+## [0.9.0] — 2026-10-18 (published pre-release)
 
-**Publication is gated on final cross-platform CI and authentic asset verification; v0.8.0 is currently the latest publicly verified release.**
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0. The [final guarded workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39099649232) passed version validation, Clippy, rustfmt, Rust tests, deterministic inventory checks, real-CLI smoke testing, archive SHA-256 checks, six native CLI/desktop builds, and strict 12-asset pre-publication validation. GitHub Releases API confirms a public prerelease with 12 uploaded nonempty artifacts.
 
 - Escape dangerous Markdown meta characters when exporting untrusted report title, executable/arguments, launch errors and warnings. Prevents injected inline Markdown links and images from being active in rendered report output.
 - Refuse symlinks, FIFOs and other non-regular input file types in CLI report import; enforce size/identity checks and reject Unix file swaps where detectable.
