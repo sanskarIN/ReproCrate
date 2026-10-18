@@ -49,7 +49,18 @@ fn read_regular(path: &Path, limit: usize) -> Result<(Vec<u8>, bool), String> {
         return Err("Only explicitly selected regular files are supported (no symlinks, pipes or directories).".into());
     }
     let file = File::open(path).map_err(|error| error.to_string())?;
-    if file.metadata().map_err(|error| error.to_string())?.len() > limit as u64 {
+    let opened = file.metadata().map_err(|error| error.to_string())?;
+    if !opened.is_file() {
+        return Err("Selected input changed to a non-regular file while opening.".into());
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        if stat.dev() != opened.dev() || stat.ino() != opened.ino() {
+            return Err("Selected input changed while opening; retry after reviewing the path.".into());
+        }
+    }
+    if opened.len() > limit as u64 {
         // Log preview can truncate, but report input must use strict bounds.
         if limit == MAX_REPORT_BYTES {
             return Err("Report exceeds the 4 MiB import cap.".into());
@@ -191,6 +202,27 @@ fn preview_review(
     )
 }
 
+// Reviewed exports can still contain private evidence. Do not inherit a
+// permissive umask on Unix; refuse overwriting any existing output.
+fn write_private_new(path: &Path, bytes: &[u8]) -> Result<(), String> {
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    let mut file = options
+        .open(path)
+        .map_err(|error| format!("Cannot create a new report (no overwrite): {error}"))?;
+    if let Err(error) = file.write_all(bytes).and_then(|_| file.sync_all()) {
+        drop(file);
+        let _ = fs::remove_file(path);
+        return Err(format!("Cannot write reviewed report: {error}"));
+    }
+    Ok(())
+}
+
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 fn save_review(
@@ -220,16 +252,7 @@ fn save_review(
         return Err("Reviewed report exceeds 4 MiB.".into());
     }
     let output = Path::new(&output_path);
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(output)
-        .map_err(|error| format!("Cannot create a new report (no overwrite): {error}"))?;
-    if let Err(error) = file.write_all(&bytes).and_then(|_| file.sync_all()) {
-        drop(file);
-        let _ = fs::remove_file(output);
-        return Err(format!("Cannot write reviewed report: {error}"));
-    }
+    write_private_new(output, &bytes)?;
     Ok("New reviewed report saved locally. Examine it before sharing.".into())
 }
 
@@ -267,6 +290,25 @@ mod tests {
     #[test]
     fn desktop_reports_offline_intent() {
         assert!(desktop_status().mode.contains("no automatic upload"));
+    }
+
+    #[test]
+    fn reviewed_exports_never_overwrite_existing_files() {
+        let path = std::env::temp_dir().join(format!(
+            "reprocrate-reviewed-{}-{}",
+            std::process::id(),
+            TEMP.fetch_add(1, Ordering::Relaxed)
+        ));
+        write_private_new(&path, b"reviewed secret").unwrap();
+        assert!(write_private_new(&path, b"overwritten").is_err());
+        assert_eq!(fs::read(&path).unwrap(), b"reviewed secret");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mode = fs::metadata(&path).unwrap().permissions().mode();
+            assert_eq!(mode & 0o077, 0, "reviewed exports must be owner-only");
+        }
+        fs::remove_file(path).unwrap();
     }
 
     #[test]
