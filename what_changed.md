@@ -1,3 +1,29 @@
+# Current handoff — v0.6.1 desktop privacy/history maintenance (candidate)
+
+Date: 2026-10-18. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.6.1-hardening`.
+
+**Latest independently confirmed published prerelease:** v0.6.0 at https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0. Do not present v0.6.1 as released until the new gated workflow succeeds and GitHub Releases API verifies publication and authentic downloadable assets.
+
+## Implemented on development branch
+
+1. Native Rust desktop history refuses SQLite databases with future `PRAGMA user_version` markers, protecting forward-compatible user data.
+2. Explicit indexing records canonical report paths after JSON schema validation to reduce duplicate aliases and preserve history across different working directories.
+3. Native import checks opened-handle regular-file status and Unix device/inode identity to reduce common file-swap races; no complete filesystem-race proof is claimed.
+4. Reviewed JSON exports use exclusive creation and owner-only (0600) Unix file permissions with partial-write cleanup. Windows file ACLs are not independently assured.
+5. Added regression coverage for future SQLite schemas remaining unchanged, reviewed-export permissions and no-overwrite behavior.
+6. Aligned root Rust, separate native Tauri Rust, npm/TypeScript, Tauri bundle and lockfile package versions to 0.6.1.
+7. Added `.github/workflows/prerelease-v0.6.1.yml`, guarded on a future `.release/v0.6.1` marker pushed to main after verification, building three CLI and three unsigned desktop archives plus SHA-256 checksums.
+8. Updated changelog, roadmap, security and technical docs; release notes at `docs/releases/v0.6.1.md`.
+
+## Release gates and known limitations
+
+- Confirm Rust CI formatting, linting, builds and tests on Ubuntu, Windows and macOS and native desktop frontend/binary checks before publishing.
+- Merge changes only after review and checks. Add the marker on main only once gates are green, then verify that **all** package jobs and final publish pass.
+- Existing unsigned developer-preview artifacts are not signed installers; no real-window clean-machine QA, comprehensive filesystem race proof, automatic reproduction, upload or enterprise certificate is claimed.
+- Next feature milestone remains **v0.7.0** (explicitly reviewed issue-export and integration adapters), not bundled into this maintenance update.
+
+---
+
 # Latest handoff — v0.6.0 local desktop history pre-release published
 
 Date: 2026-10-17. Repo: https://github.com/sanskarIN/ReproCrate
