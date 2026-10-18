@@ -1,0 +1,3 @@
+ReproCrate v0.8.0 experimental distribution and integrity prerelease.
+PR #12 merged. Publish only after complete multi-platform validation, genuine unsigned CLI/desktop archives and matching SHA-256 sidecars.
+This is not a signed installer or stable v1.0.0.
