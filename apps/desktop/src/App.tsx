@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { desktop, desktopAvailable } from "./bridge";
 import HistoryPanel from "./HistoryPanel";
+import IssuePanel from "./IssuePanel";
 import { countComparisonChanges, durationLabel, filenameDisplay } from "./format";
 import type { DesktopStatus, LogAnalysis, Recipe, ReportComparison, ReportSummary, ReviewedReport, ReviewOptions, View } from "./types";
 
@@ -12,6 +13,7 @@ const sections: {id:View; title:string; summary:string}[] = [
   {id:"logs",title:"Analyze logs",summary:"Heuristic failure signals"},
   {id:"recipe",title:"Manual recipe",summary:"A non-executable checklist"},
   {id:"privacy",title:"Privacy review",summary:"Control what gets exported"},
+  {id:"issue",title:"Issue drafts",summary:"Reviewed tracker Markdown"},
 ];
 const reviewDefaults: ReviewOptions = {
   excludeStdout:false, excludeStderr:false, excludeArguments:false,
@@ -79,7 +81,7 @@ export default function App() {
     </aside>
     <div className="page">
       <header className="topbar"><div className="breadcrumbs">ReproCrate <span>/</span> <strong>{current.title}</strong></div>
-        <div className="top-right"><span className="connection">● {native?"Desktop connected":"Browser preview"}</span><span>v{status?.version??"0.5.0"} · PRE-RELEASE</span></div>
+        <div className="top-right"><span className="connection">● {native?"Desktop connected":"Browser preview"}</span><span>v{status?.version??"0.7.0"} · PRE-RELEASE</span></div>
       </header>
       <main className="content">
         {failure&&<div className="notice error" role="alert"><strong>Action could not be completed</strong><p>{failure}</p></div>}
@@ -159,6 +161,8 @@ export default function App() {
             <p className="annotation">Command omitted: {recipe.command===null?"yes":"no"} · Automatic execution: {recipe.automatic_execution?"yes":"no"}. This is not a verified reproduction.</p>
           </section>:<Empty message="A local, non-executable diagnostic guide will appear here."/>}
         </>}
+
+        {view==="issue"&&<IssuePanel />}
 
         {view==="privacy"&&<>
           <div className="page-intro"><span>06 / EXPLICIT APPROVAL</span><h1>Review before sharing</h1><p>Exclude unwanted fields and mask literal strings in a new, reviewed report. The original stays untouched.</p></div>
