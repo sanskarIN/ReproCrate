@@ -4,6 +4,8 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. Version v0.6.0 adds opt-in private SQLite report history and search.
 
+> **v0.6.1 in preparation:** security and reliability maintenance for owner-only reviewed exports on Unix, stricter desktop file imports, and safer local history behavior. Until the new GitHub release is verified, **v0.6.0 remains the latest published release**. See [v0.6.1 candidate notes](docs/releases/v0.6.1.md).
+
 > **Latest pre-release:** [v0.6.0 CLI + Desktop developer preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0), published October 17, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
 
 ## Download
