@@ -98,9 +98,9 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
-## [0.8.0] — 2026-10-18 (pre-release candidate)
+## [0.8.0] — 2026-10-18 (published pre-release)
 
-**Publication pending verified cross-platform release gate; v0.7.0 is currently the latest published release.**
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0. Full gate succeeded: https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087. Verified 12 authentic nonempty CLI/desktop archive and checksum assets through the GitHub Releases API. The static site is committed, but first-time GitHub Pages enablement was blocked by missing workflow-token administration rights.
 
 - Added strict offline SHA-256 release archive verifier with streaming reads, size caps, filename matching and negative-path tests, exposed through `reprocrate verify-download`.
 - Added a self-contained accessible static documentation site and a separate GitHub Pages deployment workflow; deployment availability requires confirmation.
