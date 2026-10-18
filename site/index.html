@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ReproCrate is a local-first Rust developer diagnostics CLI and desktop workspace.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>ReproCrate — Private developer diagnostics</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
+    <a href="./" class="brand" aria-label="ReproCrate home"><span aria-hidden="true">R/</span> ReproCrate</a>
+    <nav aria-label="Primary navigation">
+      <a href="#features">Features</a>
+      <a href="#docs">Documentation</a>
+      <a href="#downloads">Download</a>
+      <a href="https://github.com/sanskarIN/ReproCrate" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-heading">
+      <p class="eyebrow">RUST CLI + DESKTOP · EPL-2.0 · OPEN SOURCE</p>
+      <h1 id="hero-heading">Turn messy failures into <em>reviewable evidence.</em></h1>
+      <p class="lead">Capture explicitly selected commands, study sanitized reports, compare outcomes, and draft issues locally. No cloud account, telemetry or automatic upload.</p>
+      <div class="actions"><a class="primary" href="https://github.com/sanskarIN/ReproCrate/releases" rel="noopener noreferrer">View GitHub releases ↗</a><a class="secondary" href="#docs">Explore documentation</a></div>
+      <p class="note"><strong>Developer pre-release:</strong> available binaries are unsigned and are not certified installers. Running selected commands is <strong>not sandboxed</strong>.</p>
+    </section>
+    <section id="features" aria-labelledby="features-heading">
+      <p class="eyebrow">DESIGNED FOR LOCAL CONTROL</p>
+      <h2 id="features-heading">Diagnostics without background uploading</h2>
+      <div class="cards">
+        <article><span>01 / CAPTURE</span><h3>Explicit process capture</h3><p>Run only the program you choose; record bounded output, exit status and environment basics. Execution is not isolated.</p></article>
+        <article><span>02 / COMPARE</span><h3>Structural report diffs</h3><p>Compare observations while omitting changed raw command arguments and log values from exported differences.</p></article>
+        <article><span>03 / REVIEW</span><h3>Privacy and offline issues</h3><p>Manually exclude sensitive fields and prepare GitHub, GitLab, Gitea or generic Markdown issue drafts without posting.</p></article>
+        <article><span>04 / HISTORY</span><h3>Opt-in desktop history</h3><p>Search only reports you explicitly index in a local SQLite database. Paths and metadata can still be sensitive.</p></article>
+      </div>
+    </section>
+    <section id="downloads" aria-labelledby="download-heading" class="stripe">
+      <p class="eyebrow">PLATFORM BUILDS</p>
+      <h2 id="download-heading">Unsigned Windows, Linux and macOS previews</h2>
+      <p>GitHub Releases provides Windows x86-64 ZIP, Linux x86-64 tar.gz and macOS ARM64 tar.gz archives for both CLI and desktop, along with SHA-256 sidecars. Binaries are not signed installers and system runtime prerequisites may apply.</p>
+      <a class="textlink" href="https://github.com/sanskarIN/ReproCrate/releases" rel="noopener noreferrer">Choose the latest published release ↗</a>
+      <div class="terminal"><p><span>$</span> reprocrate verify-download ./reprocrate-v0.8.0-linux-x86_64.tar.gz \</p><p class="indent">--checksum ./reprocrate-v0.8.0-linux-x86_64.tar.gz.sha256</p></div>
+      <p class="note">The checksum command is available starting with v0.8.0. Hash equality only detects a mismatch against the sidecar you obtained; it does not prove that the publisher or archive is trustworthy.</p>
+    </section>
+    <section id="docs" aria-labelledby="docs-heading">
+      <p class="eyebrow">GET STARTED</p>
+      <h2 id="docs-heading">Documentation and release references</h2>
+      <div class="cards links">
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/README.md">Project README <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/docs/reference/desktop.md">Desktop setup <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/docs/reference/issue-export.md">Offline issue drafting <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/docs/reference/download-integrity.md">Download verification <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/docs/security/dependency-audits.md">Dependency risk & licenses <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/sanskarIN/ReproCrate/blob/main/SECURITY.md">Security policy <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer><p>ReproCrate · Eclipse Public License 2.0 · <a href="https://github.com/sanskarIN/ReproCrate">Source code</a> · <a href="https://sanskarin.github.io/contact">Contact</a></p><p>Privacy by design does not replace a security review. Inspect everything before sharing.</p></footer>
+</body>
+</html>
