@@ -4,11 +4,11 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. Version v0.6.0 adds opt-in private SQLite report history and search.
 
-> **Latest pre-release:** [v0.7.0 CLI + Desktop issue drafts preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
+> **Latest pre-release:** [v0.8.0 CLI + Desktop distribution and integrity preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
 
 ## Download
 
-See the [v0.7.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
+See the [v0.8.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -75,7 +75,7 @@ reprocrate issue export --report reviewed.json --target github --output issue-dr
 
 The Tauri desktop also previews the complete draft before a user explicitly saves it. Optional title, environment or category details require review acknowledgment. See the [privacy-first issue export guide](docs/reference/issue-export.md). **v0.7.0 was verified as a public experimental pre-release** with the [successful release workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244).
 
-## v0.8.0 distribution and security improvements (candidate)
+## v0.8.0 distribution and security improvements (published pre-release)
 
 A new **offline checksum verifier** checks a chosen downloaded release archive against its SHA-256 sidecar. It never extracts or executes the archive:
 
@@ -85,7 +85,7 @@ reprocrate verify-download ./reprocrate-v0.8.0-linux-x86_64.tar.gz --checksum ./
 
 See [download verification](docs/reference/download-integrity.md) and the [platform matrix](docs/reference/distribution.md). Hash matching is an integrity check, **not proof of publisher authenticity**. The desktop and CLI continue to operate without mandatory network access or accounts.
 
-The self-contained [documentation website source](site/index.html) is deployed by a dedicated GitHub Pages workflow (deployment status must be checked separately). A lockfile-based [dependency inventory and advisory review](docs/security/dependency-audits.md) covers both Rust workspaces and npm, but does not guarantee clean licenses or an absence of vulnerabilities. **Until GitHub publication is verified, v0.7.0 remains the latest public pre-release.**
+The self-contained [documentation website source](site/index.html) is deployed by a dedicated GitHub Pages workflow (deployment status must be checked separately). A lockfile-based [dependency inventory and advisory review](docs/security/dependency-audits.md) covers both Rust workspaces and npm, but does not guarantee clean licenses or an absence of vulnerabilities. **v0.8.0 is a publicly verified experimental pre-release**, with 12 nonempty assets and the [completed gated workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087). The GitHub Pages site source is ready, but first-time deployment still requires the repository owner to select **Settings → Pages → Build and deployment → Source: GitHub Actions**; the provided workflow token cannot create the Pages site itself.
 
 ## Build from source
 
