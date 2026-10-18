@@ -86,6 +86,18 @@
 
 **Unfinished:** native file-picker UX, secure erasure guarantees, encrypted database, full UI accessibility evaluation and stable v1.0.0. Native desktop files are unsigned developer previews, not installers.
 
+## [0.6.1] — 2026-10-18 (pre-release candidate)
+
+**Publication pending CI and GitHub Releases verification.**
+
+- Fixed reviewed JSON export file permissions on Unix by explicitly creating new files with owner-only mode (0600), retaining no-overwrite behavior.
+- Verified file handle type and, on Unix, original-vs-opened device/inode identity to detect common path-swap races during bounded import.
+- Refused to downgrade unrecognized future SQLite history schema versions; added preservation regression coverage.
+- Canonicalized manually selected report paths before indexing, so history persists stable absolute paths.
+- Added targeted native regression tests, version-consistent CLI/desktop metadata and gated three-platform pre-release workflow.
+
+**Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
+
 ## Unreleased — toward v0.7.0
 
 Plan: secure, explicit issue export previews and integration adapters, improved native file selection/accessibility, comprehensive privacy and filesystem tests.

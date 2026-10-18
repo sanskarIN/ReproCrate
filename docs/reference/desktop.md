@@ -54,6 +54,10 @@ Native builds can be run from `apps/desktop` with `npm run desktop:build` (Tauri
 6. Tauri CSP is restricted to local content and its IPC bridge; capabilities are scoped to the main window and `core:default` only.
 7. File-size checks and new-file creation are protective but **not a substitute for a full filesystem race-condition audit**. Path entry by hand is a limitation of this first foundation.
 
+## v0.6.1 reviewed-export and read hardening
+
+Newly saved reviewed reports are created with owner-only permissions on Unix and continue to refuse overwriting existing files. Native file inspection checks opened file type and uses additional device/inode identity verification on Unix, reducing one class of path replacement races; it cannot guarantee that file contents remain unchanged throughout a read. History stores a canonical absolute path for selected report entries and refuses unsupported future SQLite schema markers. Imported evidence still requires manual review, and Windows ACLs depend on the operating system.
+
 ## Remaining desktop work
 
 Native OS smoke-testing in real graphical sessions; file-picker UX with precisely scoped grants; incremental large-log reading and cancellation; workflow persistence; keyboard and screen-reader testing; signed installers, distribution and update policies; end-user documentation; network/permission review; and sandboxing for any future command execution. None of these features is claimed to be complete in v0.5.0.

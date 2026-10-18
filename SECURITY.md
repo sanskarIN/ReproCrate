@@ -42,6 +42,10 @@ The experimental Tauri 2 desktop app uses the shared Rust core behind a narrow I
 
 The privacy-review screen explicitly presents potentially sensitive output for the user's inspection and creates a new output file without overwriting the source. Manual literal masks and scanner patterns are **not proof that the output is secret-free**. Local file path entry, TOCTOU races and native GUI privacy have not had independent external audits. Do not copy real secrets into reports or share reviewed exports blindly. See [desktop boundary documentation](docs/reference/desktop.md).
 
+## v0.6.1 desktop maintenance boundaries
+
+New reviewed JSON exports request owner-only (0600) permissions on Unix, alongside create-new-only behavior. On Windows, access control is still governed by system and directory settings. The importer checks the opened file handle is a regular file and, on Unix, verifies device/inode identity against the originally selected path. This reduces common symlink-swap risks but is **not** a complete defense against all races or concurrent content changes. History rejects unrecognized future database schema markers and stores a canonical path for explicitly indexed reports. None of these measures certifies imported content safe or redaction complete.
+
 ## v0.6.0 local history and metadata
 
 The desktop history feature is opt-in: only explicitly selected report paths and limited report metadata are stored in SQLite. Raw stdout/stderr, command arguments, attachments and full reports are not indexed. The SQLite database resides in the application data directory, is owner-only on Unix, rejects an existing database symlink/special file, and uses parameterized queries and bounded results.

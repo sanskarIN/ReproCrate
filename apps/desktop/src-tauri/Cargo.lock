@@ -2525,7 +2525,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "reprocrate-core"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "regex",
  "serde",
@@ -2536,7 +2536,7 @@ dependencies = [
 
 [[package]]
 name = "reprocrate-desktop"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "reprocrate-core",
  "rusqlite",
