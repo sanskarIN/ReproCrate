@@ -6,7 +6,8 @@ mod history;
 
 use reprocrate_core::{
     analyze_text, compare_reports, recipe_from_report, review_report, LogAnalysis, LogFormat,
-    Report, ReportComparison, ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
+    draft_issue, IssueDraft, IssueOptions, IssueTarget, Report, ReportComparison,
+    ReproductionRecipe, ReviewChoices, SCHEMA_VERSION,
 };
 use serde::Serialize;
 use std::fs::{self, File, OpenOptions};
@@ -202,6 +203,76 @@ fn preview_review(
     )
 }
 
+fn issue_target(input: &str) -> Result<IssueTarget, String> {
+    match input {
+        "github" => Ok(IssueTarget::Github),
+        "gitlab" => Ok(IssueTarget::Gitlab),
+        "gitea" => Ok(IssueTarget::Gitea),
+        "generic" => Ok(IssueTarget::Generic),
+        _ => Err("Unsupported issue adapter; choose github, gitlab, gitea or generic.".into()),
+    }
+}
+
+fn issue_candidate(
+    path: &str,
+    target: &str,
+    options: IssueOptions,
+) -> Result<IssueDraft, String> {
+    let report = load_report(path)?;
+    draft_issue(&report, issue_target(target)?, options)
+}
+
+/// Show the exact local issue markdown before the user opts in to saving.
+#[tauri::command]
+fn preview_issue(
+    path: String,
+    target: String,
+    include_title: bool,
+    include_environment: bool,
+    include_categories: bool,
+    acknowledge_reviewed: bool,
+) -> Result<IssueDraft, String> {
+    issue_candidate(
+        &path,
+        &target,
+        IssueOptions {
+            include_title,
+            include_environment,
+            include_categories,
+            acknowledge_reviewed,
+        },
+    )
+}
+
+/// Save only a fresh local Markdown file; never submit to a remote tracker.
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+fn save_issue(
+    path: String,
+    output_path: String,
+    target: String,
+    include_title: bool,
+    include_environment: bool,
+    include_categories: bool,
+    acknowledge_reviewed: bool,
+) -> Result<String, String> {
+    if path == output_path || output_path.trim().is_empty() {
+        return Err("Choose a distinct output path for your reviewed issue draft.".into());
+    }
+    let draft = issue_candidate(
+        &path,
+        &target,
+        IssueOptions {
+            include_title,
+            include_environment,
+            include_categories,
+            acknowledge_reviewed,
+        },
+    )?;
+    write_private_new(Path::new(&output_path), draft.markdown.as_bytes())?;
+    Ok("Issue draft saved locally. Nothing was uploaded or posted.".into())
+}
+
 // Reviewed exports can still contain private evidence. Do not inherit a
 // permissive umask on Unix; refuse overwriting any existing output.
 fn write_private_new(path: &Path, bytes: &[u8]) -> Result<(), String> {
@@ -266,6 +337,8 @@ pub fn run() {
             preview_recipe,
             preview_review,
             save_review,
+            preview_issue,
+            save_issue,
             history::remember_report,
             history::search_history,
             history::forget_history_entry
@@ -285,6 +358,13 @@ mod tests {
         assert!(manual_masks("secret\n\nnext").is_err());
         assert!(manual_masks(&"x".repeat(1025)).is_err());
         assert_eq!(manual_masks("private\nphrase").unwrap().len(), 2);
+    }
+
+    #[test]
+    fn unknown_issue_adapters_are_rejected() {
+        assert!(issue_target("remote").is_err());
+        assert!(issue_target("github.com/other").is_err());
+        assert!(matches!(issue_target("gitlab"), Ok(IssueTarget::Gitlab)));
     }
 
     #[test]
