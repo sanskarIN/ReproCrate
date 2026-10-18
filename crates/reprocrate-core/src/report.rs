@@ -121,8 +121,25 @@ fn html_escape(text: &str) -> String {
         .replace('<', "&lt;")
         .replace('>', "&gt;")
 }
+/// Literal Markdown text, never active links, images, emphasis or headings.
+/// HTML entities are emitted for markup delimiters before Markdown escaping.
 fn inline(text: &str) -> String {
-    html_escape(text).replace(['\n', '\r'], " ")
+    let escaped = html_escape(text);
+    let mut result = String::with_capacity(escaped.len());
+    for ch in escaped.chars() {
+        if matches!(ch, '\n' | '\r') {
+            result.push(' ');
+        } else {
+            if matches!(
+                ch,
+                '\\' | '`' | '*' | '_' | '[' | ']' | '(' | ')' | '#' | '+' | '-' | '!' | '|' | '~'
+            ) {
+                result.push('\\');
+            }
+            result.push(ch);
+        }
+    }
+    result
 }
 fn fenced(text: &str) -> String {
     let escaped = html_escape(text);
