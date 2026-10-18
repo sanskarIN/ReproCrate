@@ -515,7 +515,7 @@ mod tests {
         let link = std::env::temp_dir().join(format!("{id}.link"));
         fs::write(&target, b"{}").unwrap();
         symlink(&target, &link).unwrap();
-        let error = import_json(&link).err().expect("symbolic link must be refused");
+        let error = import_json(&link).expect_err("symbolic link must be refused");
         assert!(error.to_string().contains("regular file"));
         fs::remove_file(&link).unwrap();
         fs::remove_file(&target).unwrap();
