@@ -4,11 +4,11 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. Version v0.6.0 adds opt-in private SQLite report history and search.
 
-> **Latest pre-release:** [v0.8.0 CLI + Desktop distribution and integrity preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
+> **Latest pre-release:** [v0.9.0 CLI + Desktop release-quality preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
 
 ## Download
 
-See the [v0.8.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
+See the [v0.9.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -87,9 +87,9 @@ See [download verification](docs/reference/download-integrity.md) and the [platf
 
 The self-contained [documentation website source](site/index.html) is deployed by a dedicated GitHub Pages workflow (deployment status must be checked separately). A lockfile-based [dependency inventory and advisory review](docs/security/dependency-audits.md) covers both Rust workspaces and npm, but does not guarantee clean licenses or an absence of vulnerabilities. **v0.8.0 is a publicly verified experimental pre-release**, with 12 nonempty assets and the [completed gated workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087). The GitHub Pages site source is ready, but first-time deployment still requires the repository owner to select **Settings → Pages → Build and deployment → Source: GitHub Actions**; the provided workflow token cannot create the Pages site itself.
 
-## v0.9.0 release-candidate quality work (development)
+## v0.9.0 release-quality hardening (published pre-release)
 
-This milestone hardens **untrusted report metadata rendering** against active inline Markdown links/images, refuses unsafe CLI JSON import file types (including symlinks/pipes), and adds real executable smoke tests and a strict 12-asset pre-publication gate. The public release remains **v0.8.0** until the v0.9.0 workflow and GitHub Releases API independently confirm publication.
+This milestone hardens **untrusted report metadata rendering** against active inline Markdown links/images, refuses unsafe CLI JSON import file types (including symlinks/pipes), and adds real executable smoke tests and a strict 12-asset pre-publication gate. **v0.9.0 has been independently verified as a public experimental pre-release**, including a [successful guarded release workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39099649232), six genuine cross-platform executable archives and six SHA-256 sidecars.
 
 - [v0.9.0 release changes](docs/releases/v0.9.0.md)
 - [RC QA checklist — manual clean-machine steps are not yet completed](docs/qa/release-candidate.md)
