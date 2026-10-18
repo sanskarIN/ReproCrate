@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { HistoryEntry, DesktopStatus, LogAnalysis, Recipe, ReportComparison, ReportSummary, ReviewOptions, ReviewedReport } from "./types";
+import type { HistoryEntry, DesktopStatus, LogAnalysis, Recipe, ReportComparison, ReportSummary, ReviewOptions, ReviewedReport, IssueOptions, IssueTarget, IssueDraft } from "./types";
 
 export function desktopAvailable(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -14,6 +14,8 @@ async function call<T>(command: string, args: Record<string, unknown> = {}): Pro
 
 export const desktop = {
   status: () => call<DesktopStatus>("desktop_status"),
+  issuePreview: (path: string, target: IssueTarget, options: IssueOptions) => call<IssueDraft>("preview_issue", {path, target, ...options}),
+  issueSave: (path: string, outputPath: string, target: IssueTarget, options: IssueOptions) => call<string>("save_issue", {path, outputPath, target, ...options}),
   remember: (path: string) => call<HistoryEntry>("remember_report", { path }),
   history: (query: string) => call<HistoryEntry[]>("search_history", { query, limit: 50 }),
   forget: (id: number) => call<boolean>("forget_history_entry", { id }),
