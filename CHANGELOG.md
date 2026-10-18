@@ -98,6 +98,17 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
+## [0.8.0] — 2026-10-18 (pre-release candidate)
+
+**Publication pending verified cross-platform release gate; v0.7.0 is currently the latest published release.**
+
+- Added strict offline SHA-256 release archive verifier with streaming reads, size caps, filename matching and negative-path tests, exposed through `reprocrate verify-download`.
+- Added a self-contained accessible static documentation site and a separate GitHub Pages deployment workflow; deployment availability requires confirmation.
+- Added deterministic combined dependency inventory for both Rust lockfiles and the desktop npm lockfile, with CI artifact and regression tests.
+- Added separate scheduled/manual RustSec and npm advisory scans; these do not guarantee full vulnerability or licensing compliance.
+- Added distribution matrix and release verification documentation, synchronized source versions and lockfiles, plus guarded cross-platform prerelease workflow.
+- No new automatic network access, third-party runtime scripts, unsigned installer claims or background telemetry.
+
 ## [0.7.0] — 2026-10-18 (published pre-release)
 
 **Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0. Verified successful gate: https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244. GitHub Releases API confirms `draft:false`, `prerelease:true` and 12 genuine CLI/desktop archive/checksum assets.

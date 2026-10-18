@@ -1,3 +1,28 @@
+# v0.8.0 distribution and integrity handoff (candidate)
+
+Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate. Branch `feat/v0.8.0-distribution`.
+
+**Published release remains v0.7.0 until v0.8.0 passes the required CI and the GitHub Releases API confirms `draft:false`, `prerelease:true` and all twelve binary/checksum assets.**
+
+## Delivered source changes
+
+1. Streaming `verify_release_checksum` in Rust core; standalone CLI command `reprocrate verify-download ARCHIVE --checksum SIDE-CAR` with strict single-record SHA-256 parsing, basename checking, import caps, symlink rejection, non-execution, and misleading-authenticity warning.
+2. Core and CLI tests cover successful checks, mutation, mismatched or malformed sidecars and refusal to open directories.
+3. Accessible static website in `site/` with local CSS, restrictive CSP, keyboard navigation, no remote assets/scripts; independent GitHub Pages deployment workflow.
+4. Dependency inventory script and tests parse Cargo and npm lockfiles, preserving unknown license values rather than guessing. Workflow uploads a machine-readable inventory and schedules separate Cargo RustSec and npm advisory scans. The inventory is **not** a license clearance/security certification.
+5. Developer distribution table, checksum instructions, dependency review guidance and full notes at `docs/releases/v0.8.0.md`.
+6. Version and lockfiles for CLI, core, native Tauri, desktop JS and bundle metadata aligned to 0.8.0; guarded release workflow only publishes after all platforms and checksum sidecars exist.
+7. Security, roadmap, changelog and README describe limitations and current publication state.
+
+## Remaining gates
+
+- Verify Rust workspace tests, Clippy and rustfmt on all three OS runners, plus desktop TypeScript/Vite/native IPC and platform packages.
+- Review PR and merge to main. Add `.release/v0.8.0` on main only after green checks, then confirm final publish and real asset metadata.
+- Check Pages deployment run separately; if GitHub Pages is disabled or environments block deployment, do **not** claim a live docs URL. Manual repository Pages configuration may be necessary.
+- Scheduled vulnerability scans are not the same as an independent complete security review; manual license attribution and clean-machine OS tests remain prerequisites before stable v1.0.0.
+
+---
+
 # Current handoff — v0.7.0 offline issue draft adapters published
 
 Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate

@@ -4,6 +4,7 @@
 pub mod analysis;
 pub mod bundle;
 pub mod capture;
+pub mod checksum;
 pub mod compare;
 pub mod environment;
 pub mod issue;
@@ -17,6 +18,7 @@ pub use analysis::{
 };
 pub use bundle::{create_bundle, extract_bundle, verify_bundle, BundleManifest};
 pub use capture::{capture_command, CaptureOptions};
+pub use checksum::{verify_release_checksum, ChecksumVerification};
 pub use compare::{compare_reports, comparison_markdown, ReportComparison};
 pub use environment::{inspect_environment, CaptureProfile, Environment};
 pub use issue::{draft_issue, IssueDraft, IssueOptions, IssueTarget};

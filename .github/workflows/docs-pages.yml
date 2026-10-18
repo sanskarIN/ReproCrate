@@ -1,0 +1,43 @@
+name: Documentation website (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/docs-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "reprocrate-pages"
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Verify required offline website files
+        shell: bash
+        run: |
+          test -s site/index.html
+          test -s site/styles.css
+          grep -q 'Content-Security-Policy' site/index.html
+          if grep -R -E 'https://(fonts\.googleapis|cdn\.|unpkg\.|jsdelivr\.)' site; then
+            echo "Unexpected third-party asset source" >&2
+            exit 1
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
