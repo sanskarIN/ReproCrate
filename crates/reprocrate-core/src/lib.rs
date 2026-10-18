@@ -3,8 +3,8 @@
 
 pub mod analysis;
 pub mod bundle;
-pub mod checksum;
 pub mod capture;
+pub mod checksum;
 pub mod compare;
 pub mod environment;
 pub mod issue;
