@@ -19,8 +19,8 @@ pub struct ChecksumVerification {
 }
 
 fn regular_open(path: &Path, limit: u64) -> Result<(File, u64), String> {
-    let before = fs::symlink_metadata(path)
-        .map_err(|e| format!("Cannot inspect selected file: {e}"))?;
+    let before =
+        fs::symlink_metadata(path).map_err(|e| format!("Cannot inspect selected file: {e}"))?;
     if !before.file_type().is_file() {
         return Err("Selected file must be regular (symlinks and devices are rejected).".into());
     }
@@ -113,7 +113,9 @@ pub fn verify_release_checksum(
     }
     let actual = format!("{:x}", hasher.finalize());
     if actual != expected {
-        return Err("SHA-256 mismatch: the chosen archive differs from the checksum sidecar.".into());
+        return Err(
+            "SHA-256 mismatch: the chosen archive differs from the checksum sidecar.".into(),
+        );
     }
     Ok(ChecksumVerification {
         filename: filename.to_owned(),
@@ -135,7 +137,11 @@ mod tests {
             hash
         );
         assert!(expected_hash(&format!("{hash}  other.tar.gz"), "package.tar.gz").is_err());
-        assert!(expected_hash(&format!("{hash}  package.tar.gz\n{hash}  other"), "package.tar.gz").is_err());
+        assert!(expected_hash(
+            &format!("{hash}  package.tar.gz\n{hash}  other"),
+            "package.tar.gz"
+        )
+        .is_err());
         assert!(expected_hash("abc  package.tar.gz", "package.tar.gz").is_err());
         assert!(expected_hash(&format!("{hash} *package.tar.gz"), "package.tar.gz").is_err());
         assert!(expected_hash(&format!("{hash}  ../package.tar.gz"), "package.tar.gz").is_err());
@@ -143,7 +149,10 @@ mod tests {
 
     #[test]
     fn roundtrip_detects_mutation_and_does_not_extract() {
-        let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+        let stamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
         let root = std::env::temp_dir().join(format!("rc-checksum-{}-{stamp}", std::process::id()));
         fs::create_dir(&root).unwrap();
         let archive = root.join("archive.zip");
