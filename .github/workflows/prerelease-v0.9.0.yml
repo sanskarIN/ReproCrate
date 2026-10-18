@@ -66,6 +66,16 @@ jobs:
         run: |
           cargo +stable test --workspace --locked
           cargo +stable build -p reprocrate-cli --release --locked
+      - name: Headless smoke test of actual built CLI executable
+        shell: bash
+        run: |
+          executable="target/release/reprocrate"
+          python_bin="python3"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            executable="target/release/reprocrate.exe"
+            python_bin="python"
+          fi
+          "$python_bin" scripts/smoke_cli.py --binary "$executable"
       - name: Package Linux/macOS executable and checksum
         if: runner.os != 'Windows'
         shell: bash
