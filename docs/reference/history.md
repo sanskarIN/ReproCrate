@@ -16,7 +16,7 @@ From v0.6.1, paths are canonicalized after the selected report has been validate
 
 The SQLite table contains **only** the explicitly selected report path, a best-effort-sanitized report title, report ID, operating system, architecture, and the indexing timestamp. It **does not store** stdout, stderr, raw command arguments, log contents, attachment bytes or the original report JSON. Paths, titles and report IDs themselves can reveal personal or proprietary information. Never copy the SQLite database into public issue reports or backups you do not trust.
 
-On Windows/Linux/macOS the app stores `history.sqlite3` in Tauri's application-data directory. The native layer creates a private app-data directory and owner-only database permissions on Unix, rejects an existing symlink/special-file database, and requests SQLite secure deletion. SQL requests use bound parameters. This is best-effort protection; filesystem backups, copies, snapshots, OS logs and storage remnants can persist. **Forget index** is not proof of secure erasure.
+On Windows/Linux/macOS the app stores `history.sqlite3` in Tauri's application-data directory. The native layer creates a private app-data directory and owner-only database permissions on Unix, rejects an existing symlink/special-file database, and requests SQLite secure deletion. SQL requests use bound parameters. From v0.6.1, the database refuses to open a future unsupported SQLite schema version without changing its version marker. This is not a general migration mechanism. This is best-effort protection; filesystem backups, copies, snapshots, OS logs and storage remnants can persist. **Forget index** is not proof of secure erasure.
 
 ## Privacy and scope limits
 
