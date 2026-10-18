@@ -98,9 +98,9 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
-## [0.7.0] — 2026-10-18 (pre-release candidate)
+## [0.7.0] — 2026-10-18 (published pre-release)
 
-**Not yet publicly published; native CI and gated release still required.**
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0. Verified successful gate: https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244. GitHub Releases API confirms `draft:false`, `prerelease:true` and 12 genuine CLI/desktop archive/checksum assets.
 
 - Added privacy-first, no-network issue draft rendering for GitHub, GitLab, Gitea and generic Markdown to the shared Rust core.
 - Added `reprocrate issue export` with explicit report input, adapter choice, new-only Markdown output, and consent-gated optional metadata.
