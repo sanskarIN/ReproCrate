@@ -1,8 +1,8 @@
-# Current handoff — v0.7.0 offline issue draft adapters (candidate)
+# Current handoff — v0.7.0 offline issue draft adapters published
 
 Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate
-Development branch: `feat/v0.7.0-issue-drafts`.
-**Latest publicly verified pre-release as of source development:** v0.6.1. Do not claim v0.7.0 has been published until the GitHub Actions release gate and Releases API confirm all twelve real assets.
+Development branch: `feat/v0.7.0-issue-drafts`, merged through [PR #11](https://github.com/sanskarIN/ReproCrate/pull/11) at `abed25994bb209982ae7cd40d77dd0aa1b5747f1` (28 focused feature commits preserved).
+**Latest verified published pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0. Published October 18, 2026 at `2026-10-18T02:58:12Z`, with `draft:false` and `prerelease:true`, verified via GitHub Releases API.
 
 ## Implemented
 
@@ -16,12 +16,13 @@ Development branch: `feat/v0.7.0-issue-drafts`.
 - Versioned CLI/core, Tauri, frontend, config and locked dependency manifests to v0.7.0; added guarded release workflow.
 - Documentation: `docs/reference/issue-export.md`, `docs/releases/v0.7.0.md`, README, ROADMAP, CHANGELOG and SECURITY.
 
-## Release gates
+## Verified release evidence
 
-1. Ensure all Rust workspace checks and tests, including rustfmt and Clippy, pass on Ubuntu, macOS and Windows.
-2. Verify React tests/build, native Tauri IPC tests, and real unsigned desktop binary builds.
-3. Merge reviewed PR to `main`; only then add the `.release/v0.7.0` marker for guarded release.
-4. Confirm `draft:false`, `prerelease:true`, and 12 genuine Linux/Windows/macOS CLI and desktop archives/checksum assets through GitHub Releases API.
+1. **Successful release pipeline:** https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244. Validation, draft, three CLI build-upload jobs, three desktop build-upload jobs and publication all passed.
+2. **Genuine uploaded assets:** Six unsigned executable archives (CLI and desktop, Windows x86-64 / Linux x86-64 / macOS ARM64), each paired with SHA-256 file, total 12. GitHub Releases API independently confirmed all nonempty uploads.
+3. **Review:** PR #11 merged into main retaining all 28 focused commits. All GitHub-authored source commits use `sanskarin@outlook.in`; merge commits may be attributed to GitHub web-flow.
+4. **CI fixes:** Early gated attempts failed safely before publication. Corrected rustfmt in the new CLI integration test and removed a stale `0.6.1` assertion from the newly cloned version validation stage, then retriggered from `.release/v0.7.0` at `ca68483daf2ba08044b524c4c8c01e700e3d25aa`.
+5. **No stable v1.0.0 claim** or signed installer/clean-machine GUI certification. New issue drafts remain local only and manual review is required before any publication.
 
 **Limits:** No remote issue posting, credentials, automatic commands, verified reproduction, signed installers, full GUI smoke-test, or guaranteed removal of unrecognized secrets. Issue drafts require review before manual sharing.
 
