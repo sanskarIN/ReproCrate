@@ -42,6 +42,14 @@ The experimental Tauri 2 desktop app uses the shared Rust core behind a narrow I
 
 The privacy-review screen explicitly presents potentially sensitive output for the user's inspection and creates a new output file without overwriting the source. Manual literal masks and scanner patterns are **not proof that the output is secret-free**. Local file path entry, TOCTOU races and native GUI privacy have not had independent external audits. Do not copy real secrets into reports or share reviewed exports blindly. See [desktop boundary documentation](docs/reference/desktop.md).
 
+## v0.9.0 report import and Markdown safety boundaries
+
+The CLI rejects symbolic links, pipes, devices and directories for selected JSON report inputs before opening them; it confirms that the opened handle is regular and enforces a 4 MiB size cap, and on Unix rejects detected dev/inode changes. These checks **reduce** (but cannot eliminate) filesystem races and do not turn report imports into a sandbox. Desktop imports retain their separate bounded file-handle checks.
+
+Report Markdown now escapes user-controlled inline links, image syntax, emphasis and heading characters as **literal text**, in addition to encoding HTML delimiters. Standard output and standard error remain escaped dynamic fenced text, not executable content. These transformations help when previewing reports but **cannot guarantee** a particular third-party Markdown renderer is vulnerability-free. Review all exports and avoid posting sensitive reports.
+
+Release binaries undergo headless smoke testing and an exact pre-publish inventory check; that does **not authenticate unsigned binaries** or replace independent code-signing, malware analysis, accessibility checks, manual clean-machine GUI tests or dependency licensing reviews. See [candidate QA](docs/qa/release-candidate.md).
+
 ## v0.8.0 checksum and supply-chain boundaries
 
 `verify-download` checks explicitly selected local archives against single-line, exact-filename SHA-256 sidecars. It streams input with a 1 GiB archive cap and 512-byte checksum cap, rejects symbolic links/nonregular files, checks Unix opened-file identity and **never extracts or executes** archives. Equality only shows that the selected bytes match the supplied sidecar; without independent signatures, a malicious actor could replace both files. This is **not publisher authentication, code signing or malware scanning**.

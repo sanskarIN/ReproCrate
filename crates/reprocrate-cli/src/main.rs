@@ -263,8 +263,28 @@ fn create_new_report(path: &Path, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
 }
 
 fn import_json(path: &Path) -> Result<Report, Box<dyn Error>> {
+    // Refuse symlinks, named pipes and devices before opening: in particular,
+    // opening a FIFO could block indefinitely before the 4 MiB cap is applied.
+    let selected = fs::symlink_metadata(path)?;
+    if !selected.file_type().is_file() {
+        return Err("report input must be a regular file, not a symlink or device".into());
+    }
+    if selected.len() > 4 * 1024 * 1024 {
+        return Err("report exceeds the 4 MiB import limit".into());
+    }
     let file = File::open(path)?;
-    if file.metadata()?.len() > 4 * 1024 * 1024 {
+    let opened = file.metadata()?;
+    if !opened.is_file() {
+        return Err("report input changed to a non-regular file during open".into());
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        if selected.dev() != opened.dev() || selected.ino() != opened.ino() {
+            return Err("report input changed during open; select it again".into());
+        }
+    }
+    if opened.len() > 4 * 1024 * 1024 {
         return Err("report exceeds the 4 MiB import limit".into());
     }
     let mut bytes = Vec::new();
@@ -480,6 +500,33 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn report_import_rejects_directories_and_missing_files() {
+        assert!(import_json(&std::env::temp_dir()).is_err());
+        assert!(
+            import_json(&std::env::temp_dir().join("reprocrate_missing_report_81882")).is_err()
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn report_import_rejects_symlinks_before_reading() {
+        use std::os::unix::fs::symlink;
+        let id = format!(
+            "reprocrate-import-{}-{}",
+            std::process::id(),
+            reprocrate_core::report::timestamp_millis()
+        );
+        let target = std::env::temp_dir().join(format!("{id}.json"));
+        let link = std::env::temp_dir().join(format!("{id}.link"));
+        fs::write(&target, b"{}").unwrap();
+        symlink(&target, &link).unwrap();
+        let error = import_json(&link).expect_err("symbolic link must be refused");
+        assert!(error.to_string().contains("regular file"));
+        fs::remove_file(&link).unwrap();
+        fs::remove_file(&target).unwrap();
+    }
+
     #[test]
     fn capture_syntax_with_separator_parses() {
         let parsed = Cli::try_parse_from(["reprocrate", "capture", "--", "cargo", "test"])

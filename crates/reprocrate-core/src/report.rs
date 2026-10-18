@@ -121,8 +121,25 @@ fn html_escape(text: &str) -> String {
         .replace('<', "&lt;")
         .replace('>', "&gt;")
 }
+/// Literal Markdown text, never active links, images, emphasis or headings.
+/// HTML entities are emitted for markup delimiters before Markdown escaping.
 fn inline(text: &str) -> String {
-    html_escape(text).replace(['\n', '\r'], " ")
+    let escaped = html_escape(text);
+    let mut result = String::with_capacity(escaped.len());
+    for ch in escaped.chars() {
+        if matches!(ch, '\n' | '\r') {
+            result.push(' ');
+        } else {
+            if matches!(
+                ch,
+                '\\' | '`' | '*' | '_' | '[' | ']' | '(' | ')' | '#' | '+' | '-' | '!' | '|' | '~'
+            ) {
+                result.push('\\');
+            }
+            result.push(ch);
+        }
+    }
+    result
 }
 fn fenced(text: &str) -> String {
     let escaped = html_escape(text);
@@ -244,6 +261,57 @@ mod tests {
         assert!(!md.contains("password=abc"));
         assert!(md.contains("&lt;script&gt;"));
     }
+    #[test]
+    fn imported_metadata_cannot_insert_active_markdown_links_or_images() {
+        let source = "![external image](https://example.invalid/track) # Title\n**bold** [link](https://example.invalid)";
+        let rendered = inline(source);
+        assert!(rendered.contains(r"!\[external image\]\(https://example.invalid/track\)"));
+        assert!(rendered.contains(r"\# Title"));
+        assert!(rendered.contains(r"\*\*bold\*\*"));
+        assert!(rendered.contains(r"\[link\]\(https://example.invalid\)"));
+        assert!(!rendered.contains("![external image]("));
+        assert!(!rendered.contains("[link]("));
+        assert!(!rendered.contains('\n'));
+        assert_eq!(inline("<img src=x>"), "&lt;img src=x&gt;");
+    }
+
+    #[test]
+    fn every_metadata_channel_uses_literal_markdown_rendering() {
+        let env = inspect_environment(CaptureProfile::Minimal);
+        let capture = Capture {
+            executable: "[app](https://example.invalid)".into(),
+            arguments: vec!["![img](https://example.invalid)".into()],
+            started_unix_ms: 0,
+            duration_ms: 1,
+            exit_code: Some(1),
+            termination_signal: None,
+            timed_out: false,
+            launch_error: Some("[failure](https://example.invalid)".into()),
+            stdout: "plain output".into(),
+            stderr: String::new(),
+            stdout_truncated: false,
+            stderr_truncated: false,
+            max_output_bytes_per_stream: 256,
+        };
+        let mut report = Report::new("[title](https://example.invalid)".into(), env, capture);
+        report.warnings = vec!["![warning](https://example.invalid)".into()];
+        let rendered = render_markdown(&report);
+        for unsafe_markup in [
+            "[title](https://example.invalid)",
+            "[app](https://example.invalid)",
+            "![img](https://example.invalid)",
+            "[failure](https://example.invalid)",
+            "![warning](https://example.invalid)",
+        ] {
+            assert!(
+                !rendered.contains(unsafe_markup),
+                "untrusted metadata became active markup"
+            );
+        }
+        assert!(rendered.contains(r"\[title\]"));
+        assert!(rendered.contains("plain output"));
+    }
+
     #[test]
     fn schema_round_trip() {
         let env = inspect_environment(CaptureProfile::Minimal);
