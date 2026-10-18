@@ -12,7 +12,8 @@ use privacy_bundle_commands::{
     run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
 };
 use reprocrate_core::{
-    capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile,
+    capture_command, inspect_environment, render_markdown, verify_release_checksum, CaptureOptions,
+    CaptureProfile,
     IssueOptions, IssueTarget, Report, SCHEMA_VERSION,
 };
 use std::error::Error;
@@ -122,6 +123,14 @@ enum Commands {
     Issue {
         #[command(subcommand)]
         action: IssueActions,
+    },
+    /// Check a downloaded archive against its separate SHA-256 checksum file (offline).
+    VerifyDownload {
+        /// Local downloaded archive; does not extract or execute it.
+        archive: PathBuf,
+        /// Matching .sha256 file obtained independently from the release.
+        #[arg(long)]
+        checksum: PathBuf,
     },
     /// Print the small amount of environment information captured by profiles.
     Doctor {
@@ -374,6 +383,15 @@ fn run() -> Result<(), Box<dyn Error>> {
                 )?;
             }
         },
+        Commands::VerifyDownload { archive, checksum } => {
+            let verification = verify_release_checksum(&archive, &checksum)?;
+            println!("SHA-256 matches: {}", verification.filename);
+            println!("Verified bytes: {}", verification.bytes_checked);
+            println!("SHA-256: {}", verification.sha256);
+            eprintln!(
+                "Integrity only: matching checksums do not authenticate a publisher or prove safety."
+            );
+        }
         Commands::Doctor { json } => {
             let env = inspect_environment(CaptureProfile::Standard);
             if json {
