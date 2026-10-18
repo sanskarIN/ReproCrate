@@ -1,4 +1,4 @@
-export type View = "overview" | "history" | "inspect" | "compare" | "logs" | "recipe" | "privacy";
+export type View = "overview" | "history" | "inspect" | "compare" | "logs" | "recipe" | "privacy" | "issue";
 export type Relationship = "same" | "changed" | "added" | "removed" | "indeterminate";
 export interface DesktopStatus { name: string; version: string; operating_system: string; architecture: string; mode: string }
 export interface ReportSummary {
@@ -24,4 +24,18 @@ export interface HistoryEntry {
   os: string;
   architecture: string;
   indexed_unix_seconds: number;
+}
+
+export type IssueTarget = "github" | "gitlab" | "gitea" | "generic";
+export interface IssueOptions {
+  includeTitle: boolean;
+  includeEnvironment: boolean;
+  includeCategories: boolean;
+  acknowledgeReviewed: boolean;
+}
+export interface IssueDraft {
+  target: IssueTarget;
+  suggested_title: string;
+  markdown: string;
+  warnings: string[];
 }
