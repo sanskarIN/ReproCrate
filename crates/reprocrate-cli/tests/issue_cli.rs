@@ -66,7 +66,12 @@ fn issue_export_requires_approval_and_never_includes_raw_logs() {
     );
     let md = fs::read_to_string(&output).unwrap();
     assert!(md.contains("Gitea"));
-    for private in ["PRIVATE_TITLE", "PRIVATE_STDOUT", "PRIVATE_STDERR", "PRIVATE_ARGS"] {
+    for private in [
+        "PRIVATE_TITLE",
+        "PRIVATE_STDOUT",
+        "PRIVATE_STDERR",
+        "PRIVATE_ARGS",
+    ] {
         assert!(!md.contains(private), "{private} leaked into issue draft");
     }
     assert!(md.contains("No issue was created or uploaded"));
@@ -84,7 +89,14 @@ fn issue_export_requires_approval_and_never_includes_raw_logs() {
 #[test]
 fn unknown_target_is_rejected_by_cli() {
     let result = Command::new(env!("CARGO_BIN_EXE_reprocrate"))
-        .args(["issue", "export", "--report", "unused.json", "--target", "unknown"])
+        .args([
+            "issue",
+            "export",
+            "--report",
+            "unused.json",
+            "--target",
+            "unknown",
+        ])
         .output()
         .unwrap();
     assert!(!result.status.success());
