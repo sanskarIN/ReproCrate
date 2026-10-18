@@ -86,9 +86,9 @@
 
 **Unfinished:** native file-picker UX, secure erasure guarantees, encrypted database, full UI accessibility evaluation and stable v1.0.0. Native desktop files are unsigned developer previews, not installers.
 
-## [0.6.1] — 2026-10-18 (pre-release candidate)
+## [0.6.1] — 2026-10-18 (published pre-release)
 
-**Publication pending CI and GitHub Releases verification.**
+**Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.1. **Verified:** https://github.com/sanskarIN/ReproCrate/actions/runs/39085609817 — all validation, draft, six build-upload jobs and publish passed. GitHub Releases API confirmed 12 authentic executable/checksum assets.
 
 - Fixed reviewed JSON export file permissions on Unix by explicitly creating new files with owner-only mode (0600), retaining no-overwrite behavior.
 - Verified file handle type and, on Unix, original-vs-opened device/inode identity to detect common path-swap races during bounded import.
