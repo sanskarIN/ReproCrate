@@ -98,6 +98,19 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
+## [0.9.0] — 2026-10-18 (pre-release candidate)
+
+**Publication is gated on final cross-platform CI and authentic asset verification; v0.8.0 is currently the latest publicly verified release.**
+
+- Escape dangerous Markdown meta characters when exporting untrusted report title, executable/arguments, launch errors and warnings. Prevents injected inline Markdown links and images from being active in rendered report output.
+- Refuse symlinks, FIFOs and other non-regular input file types in CLI report import; enforce size/identity checks and reject Unix file swaps where detectable.
+- Add malicious-input regressions and a cross-platform offline smoke suite for the real release-built CLI executable.
+- Strengthen release gate with per-platform CLI verification of its **own produced archive SHA-256**, and a fail-closed GitHub Releases API metadata validator for precisely 12 uploaded nonempty archives/sidecars.
+- Add release-candidate QA matrix and manual clean-machine test checklist, explicitly separating unverified GUI/accessibility scenarios from CI checks.
+- Bump Rust CLI/core and desktop/Tauri frontend/package versions and lockfiles to 0.9.0.
+
+**Not claimed:** stable production release, signed installers, complete secret removal, manual GUI QA, complete license/security certification, or a public GitHub Pages site.
+
 ## [0.8.0] — 2026-10-18 (published pre-release)
 
 **Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.8.0. Full gate succeeded: https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087. Verified 12 authentic nonempty CLI/desktop archive and checksum assets through the GitHub Releases API. The static site is committed, but first-time GitHub Pages enablement was blocked by missing workflow-token administration rights.
