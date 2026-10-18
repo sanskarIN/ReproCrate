@@ -65,6 +65,16 @@ File paths and metadata can themselves be private. Forgetting an index entry doe
 
 Reviewed JSON exports now request owner-only permissions on Unix; native imports reject opened non-regular files and compare selected file identities on Unix. Indexed reports store a canonical path, and unknown future history database schema versions are rejected without downgrading. See the [v0.6.1 maintenance notes](docs/releases/v0.6.1.md). No guaranteed secret removal, complete filesystem race audit, or signed installers are claimed.
 
+## Offline issue drafting (v0.7.0 development)
+
+Generate a local Markdown issue draft for GitHub, GitLab, Gitea or a generic issue tracker. This feature **never sends HTTP requests, posts an issue or asks for API tokens**. Raw commands, logs and report title are omitted by default.
+
+```sh
+reprocrate issue export --report reviewed.json --target github --output issue-draft.md
+```
+
+The Tauri desktop also previews the complete draft before a user explicitly saves it. Optional title, environment or category details require review acknowledgment. See the [privacy-first issue export guide](docs/reference/issue-export.md). **v0.6.1 remains the latest published release until v0.7.0 is independently verified.**
+
 ## Build from source
 
 Install a stable Rust toolchain (Rust 1.82 or newer), then:

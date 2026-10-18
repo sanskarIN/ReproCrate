@@ -1,3 +1,32 @@
+# Current handoff — v0.7.0 offline issue draft adapters (candidate)
+
+Date: October 18, 2026. Repository: https://github.com/sanskarIN/ReproCrate
+Development branch: `feat/v0.7.0-issue-drafts`.
+**Latest publicly verified pre-release as of source development:** v0.6.1. Do not claim v0.7.0 has been published until the GitHub Actions release gate and Releases API confirm all twelve real assets.
+
+## Implemented
+
+- Rust core `issue.rs` introduces `IssueTarget`, `IssueOptions`, `IssueDraft`, and inert `draft_issue` with adapters for GitHub, GitLab, Gitea and generic Markdown.
+- Default drafts disclose only structural execution status/truncation. Report titles, arguments, commands, raw stdout/stderr, paths, report IDs and finding messages are not exported.
+- Optional title, environment and bounded structural finding categories require affirmative review acknowledgment; re-redaction and escaping are applied to included untrusted strings.
+- CLI `issue export` writes a new local Markdown file, refuses overwrite, performs existing bounded 4 MiB report import and schema validation; Unix files use owner-only permissions.
+- Tauri IPC `preview_issue` and `save_issue` use the same Rust core, validate adapter names and refuse overwrites, preserving the no-network/no-shell boundary.
+- React `IssuePanel` provides tracker selection, opt-in fields, explicit acknowledgment, complete Markdown preview and user-initiated local save. Added page navigation and typed IPC.
+- Added Rust privacy regressions and cross-platform CLI integration tests for no secret disclosure by default, approval requirements, unsafe markup and overwrite refusal.
+- Versioned CLI/core, Tauri, frontend, config and locked dependency manifests to v0.7.0; added guarded release workflow.
+- Documentation: `docs/reference/issue-export.md`, `docs/releases/v0.7.0.md`, README, ROADMAP, CHANGELOG and SECURITY.
+
+## Release gates
+
+1. Ensure all Rust workspace checks and tests, including rustfmt and Clippy, pass on Ubuntu, macOS and Windows.
+2. Verify React tests/build, native Tauri IPC tests, and real unsigned desktop binary builds.
+3. Merge reviewed PR to `main`; only then add the `.release/v0.7.0` marker for guarded release.
+4. Confirm `draft:false`, `prerelease:true`, and 12 genuine Linux/Windows/macOS CLI and desktop archives/checksum assets through GitHub Releases API.
+
+**Limits:** No remote issue posting, credentials, automatic commands, verified reproduction, signed installers, full GUI smoke-test, or guaranteed removal of unrecognized secrets. Issue drafts require review before manual sharing.
+
+---
+
 # Current handoff — v0.6.1 desktop privacy/history maintenance published
 
 Date: 2026-10-18. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.6.1-hardening`, merged as [PR #10](https://github.com/sanskarIN/ReproCrate/pull/10) at `f8ff9549900c591c9cc786e00bab2db33ec5a251` with 21 feature/maintenance commits preserved.

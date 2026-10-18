@@ -98,6 +98,21 @@
 
 **Remaining:** native GUI smoke tests, Windows ACL review, comprehensive race audit, database migrations/encryption, code signing, and installer distribution. No automatic upload or recipe execution.
 
-## Unreleased — toward v0.7.0
+## [0.7.0] — 2026-10-18 (pre-release candidate)
+
+**Not yet publicly published; native CI and gated release still required.**
+
+- Added privacy-first, no-network issue draft rendering for GitHub, GitLab, Gitea and generic Markdown to the shared Rust core.
+- Added `reprocrate issue export` with explicit report input, adapter choice, new-only Markdown output, and consent-gated optional metadata.
+- Added a native desktop issue draft page with complete preview and local private export; browser demo remains read-only.
+- Kept report title, logs, command lines, arguments, paths and raw finding messages out of issue drafts by default; categories are capped and opt-in.
+- Added Rust core security regressions and end-to-end CLI tests; all work is kept local and uses existing import size/schema limits.
+- Aligned CLI, desktop and reproducible lockfile versions; prepared gated three-OS prerelease pipeline.
+
+**Remaining limitations:** no remote API integration, automatic posting, complete secret scanning, signed installers or clean-machine GUI validation. Manual review remains mandatory before sharing anything.
+
+## Unreleased — toward v0.8.0
+
+Next: packaging/distribution, docs site, dependency licenses/security audits, native file picker and broader GUI QA.
 
 Plan: secure, explicit issue export previews and integration adapters, improved native file selection/accessibility, comprehensive privacy and filesystem tests.

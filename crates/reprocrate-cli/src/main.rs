@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: EPL-2.0
 mod compare_recipe_commands;
+mod issue_commands;
 mod log_command;
 mod privacy_bundle_commands;
 
 use clap::{Parser, Subcommand, ValueEnum};
 use compare_recipe_commands::{run_compare, run_recipe_create, run_recipe_inspect};
+use issue_commands::run_issue_export;
 use log_command::{run_analysis, FormatArg};
 use privacy_bundle_commands::{
     run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
 };
 use reprocrate_core::{
-    capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile, Report,
-    SCHEMA_VERSION,
+    capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile,
+    IssueOptions, IssueTarget, Report, SCHEMA_VERSION,
 };
 use std::error::Error;
 use std::ffi::OsString;
@@ -116,6 +118,11 @@ enum Commands {
         #[command(subcommand)]
         action: RecipeActions,
     },
+    /// Export a manually reviewed, inert issue draft for GitHub/GitLab/Gitea/Markdown.
+    Issue {
+        #[command(subcommand)]
+        action: IssueActions,
+    },
     /// Print the small amount of environment information captured by profiles.
     Doctor {
         #[arg(long)]
@@ -172,6 +179,49 @@ enum RecipeActions {
     Inspect { input: PathBuf },
 }
 
+#[derive(Subcommand)]
+enum IssueActions {
+    /// Save an offline Markdown draft (never posts an issue).
+    Export {
+        #[arg(long)]
+        report: PathBuf,
+        #[arg(long, default_value = "reprocrate-issue.md")]
+        output: PathBuf,
+        #[arg(long, value_enum, default_value_t = IssueTargetArg::Github)]
+        target: IssueTargetArg,
+        /// Opt in to the report title, which may reveal sensitive details.
+        #[arg(long)]
+        include_title: bool,
+        /// Opt in to high-level OS and architecture information.
+        #[arg(long)]
+        include_environment: bool,
+        /// Opt in to summary categories, never raw log messages.
+        #[arg(long)]
+        include_categories: bool,
+        /// Affirmatively acknowledge manually reviewing the source report.
+        #[arg(long)]
+        acknowledge_reviewed: bool,
+    },
+}
+
+#[derive(Clone, Copy, Debug, ValueEnum)]
+enum IssueTargetArg {
+    Github,
+    Gitlab,
+    Gitea,
+    Generic,
+}
+impl From<IssueTargetArg> for IssueTarget {
+    fn from(value: IssueTargetArg) -> Self {
+        match value {
+            IssueTargetArg::Github => Self::Github,
+            IssueTargetArg::Gitlab => Self::Gitlab,
+            IssueTargetArg::Gitea => Self::Gitea,
+            IssueTargetArg::Generic => Self::Generic,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, ValueEnum)]
 enum ProfileArg {
     Minimal,
@@ -187,7 +237,14 @@ impl From<ProfileArg> for CaptureProfile {
 }
 
 fn create_new_report(path: &Path, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
-    let mut file = OpenOptions::new().write(true).create_new(true).open(path)?;
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    let mut file = options.open(path)?;
     if let Err(error) = file.write_all(bytes).and_then(|_| file.sync_all()) {
         // Do not leave behind a misleading successful-looking partial export.
         drop(file);
@@ -293,6 +350,29 @@ fn run() -> Result<(), Box<dyn Error>> {
                 )?;
             }
             RecipeActions::Inspect { input } => run_recipe_inspect(input)?,
+        },
+        Commands::Issue { action } => match action {
+            IssueActions::Export {
+                report,
+                output,
+                target,
+                include_title,
+                include_environment,
+                include_categories,
+                acknowledge_reviewed,
+            } => {
+                run_issue_export(
+                    report,
+                    output,
+                    target.into(),
+                    IssueOptions {
+                        include_title,
+                        include_environment,
+                        include_categories,
+                        acknowledge_reviewed,
+                    },
+                )?;
+            }
         },
         Commands::Doctor { json } => {
             let env = inspect_environment(CaptureProfile::Standard);
