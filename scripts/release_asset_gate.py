@@ -53,7 +53,13 @@ def main():
     parser.add_argument("--version", required=True)
     args = parser.parse_args()
     try:
-        count = verify_release(json.load(sys.stdin), args.version)
+        source = json.load(sys.stdin)
+        if isinstance(source, list):
+            matching = [item for item in source if isinstance(item, dict) and item.get("tag_name") == f"v{args.version}"]
+            if len(matching) != 1:
+                raise ValueError("Expected exactly one draft with the requested tag")
+            source = matching[0]
+        count = verify_release(source, args.version)
     except (ValueError, TypeError, json.JSONDecodeError) as error:
         print(f"Release integrity gate failed: {error}", file=sys.stderr)
         return 1
