@@ -1,10 +1,10 @@
-# Current handoff — v0.6.1 desktop privacy/history maintenance (candidate)
+# Current handoff — v0.6.1 desktop privacy/history maintenance published
 
-Date: 2026-10-18. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.6.1-hardening`.
+Date: 2026-10-18. Repository: https://github.com/sanskarIN/ReproCrate. Development branch: `feat/v0.6.1-hardening`, merged as [PR #10](https://github.com/sanskarIN/ReproCrate/pull/10) at `f8ff9549900c591c9cc786e00bab2db33ec5a251` with 21 feature/maintenance commits preserved.
 
-**Latest independently confirmed published prerelease:** v0.6.0 at https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.0. Do not present v0.6.1 as released until the new gated workflow succeeds and GitHub Releases API verifies publication and authentic downloadable assets.
+**Latest verified public experimental pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.1. GitHub Releases API confirms `draft:false`, `prerelease:true`, published `2026-10-18T01:20:13Z`; tag target `995b8f8261f26ba0508fe2e8752a0cc8fbda724c`.
 
-## Implemented on development branch
+## Implemented and published
 
 1. Native Rust desktop history refuses SQLite databases with future `PRAGMA user_version` markers, protecting forward-compatible user data.
 2. Explicit indexing records canonical report paths after JSON schema validation to reduce duplicate aliases and preserve history across different working directories.
@@ -15,10 +15,11 @@ Date: 2026-10-18. Repository: https://github.com/sanskarIN/ReproCrate. Developme
 7. Added `.github/workflows/prerelease-v0.6.1.yml`, guarded on a future `.release/v0.6.1` marker pushed to main after verification, building three CLI and three unsigned desktop archives plus SHA-256 checksums.
 8. Updated changelog, roadmap, security and technical docs; release notes at `docs/releases/v0.6.1.md`.
 
-## Release gates and known limitations
+## Verified publication and known limitations
 
-- Confirm Rust CI formatting, linting, builds and tests on Ubuntu, Windows and macOS and native desktop frontend/binary checks before publishing.
-- Merge changes only after review and checks. Add the marker on main only once gates are green, then verify that **all** package jobs and final publish pass.
+- **Source:** PR #10 merged and release marker `.release/v0.6.1` added to `main` at `995b8f8261f26ba0508fe2e8752a0cc8fbda724c`.
+- **Successful gated GitHub Actions run:** https://github.com/sanskarIN/ReproCrate/actions/runs/39085609817 — validation, draft, 3 CLI package jobs, 3 native desktop package jobs and publish all succeeded.
+- **Verified 12 nonempty assets via GitHub Releases API:** Linux x86-64, Windows x86-64 and macOS ARM64 each have CLI and desktop unsigned executable archives, with separate SHA-256 checksum files.
 - Existing unsigned developer-preview artifacts are not signed installers; no real-window clean-machine QA, comprehensive filesystem race proof, automatic reproduction, upload or enterprise certificate is claimed.
 - Next feature milestone remains **v0.7.0** (explicitly reviewed issue-export and integration adapters), not bundled into this maintenance update.
 
