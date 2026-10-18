@@ -8,7 +8,10 @@ use std::time::{SystemTime, UNIX_EPOCH};
 static COUNTER: AtomicU64 = AtomicU64::new(0);
 
 fn fixture() -> (PathBuf, PathBuf, PathBuf) {
-    let time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+    let time = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
     let root = std::env::temp_dir().join(format!(
         "rc-download-check-{}-{time}-{}",
         std::process::id(),
@@ -62,7 +65,11 @@ fn corrupt_archive_and_wrong_filename_fail_closed() {
 #[test]
 fn malformed_or_multiline_sidecar_cannot_pass() {
     let (root, archive, checksum) = fixture();
-    fs::write(&checksum, format!("{}  reprocrate-v0.8.0-demo.zip\nextra\n", "a".repeat(64))).unwrap();
+    fs::write(
+        &checksum,
+        format!("{}  reprocrate-v0.8.0-demo.zip\nextra\n", "a".repeat(64)),
+    )
+    .unwrap();
     assert!(!verify(&archive, &checksum).status.success());
     fs::remove_dir_all(root).unwrap();
 }
