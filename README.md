@@ -98,7 +98,7 @@ Once installed, replace `cargo run -p reprocrate-cli --` with `reprocrate`.
 - Versioned JSON and Markdown, generated without a hosted service
 - Report inspection and diagnostic environment summary
 
-Not yet provided: desktop installers/GUI, exhaustive archive security audits, comprehensive test-framework parsers, **automated** reproduction, or cloud integrations. Comparing reports and generating manual recipes do not constitute automated reproduction. v0.5.0 provides verified unsigned desktop developer-preview binaries as well as CLI archives; neither is a signed installer.
+Not yet provided: signed desktop installers, full graphical smoke testing, exhaustive archive security audits, comprehensive test-framework parsers, **automated** reproduction, or cloud integrations. Comparing reports and generating manual recipes do not constitute automated reproduction. v0.5.0 provides verified unsigned desktop developer-preview binaries as well as CLI archives; neither is a signed installer.
 
 See [ROADMAP.md](ROADMAP.md), [SECURITY.md](SECURITY.md) and [what_changed.md](what_changed.md) for scope and validation status.
 
