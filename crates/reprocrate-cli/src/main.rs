@@ -263,8 +263,28 @@ fn create_new_report(path: &Path, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
 }
 
 fn import_json(path: &Path) -> Result<Report, Box<dyn Error>> {
+    // Refuse symlinks, named pipes and devices before opening: in particular,
+    // opening a FIFO could block indefinitely before the 4 MiB cap is applied.
+    let selected = fs::symlink_metadata(path)?;
+    if !selected.file_type().is_file() {
+        return Err("report input must be a regular file, not a symlink or device".into());
+    }
+    if selected.len() > 4 * 1024 * 1024 {
+        return Err("report exceeds the 4 MiB import limit".into());
+    }
     let file = File::open(path)?;
-    if file.metadata()?.len() > 4 * 1024 * 1024 {
+    let opened = file.metadata()?;
+    if !opened.is_file() {
+        return Err("report input changed to a non-regular file during open".into());
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        if selected.dev() != opened.dev() || selected.ino() != opened.ino() {
+            return Err("report input changed during open; select it again".into());
+        }
+    }
+    if opened.len() > 4 * 1024 * 1024 {
         return Err("report exceeds the 4 MiB import limit".into());
     }
     let mut bytes = Vec::new();
