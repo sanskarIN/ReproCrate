@@ -13,7 +13,7 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | v0.6.1 | **Shipped as pre-release:** Unix reviewed-export privacy, selected-file read checks, canonical history paths, SQLite future-schema refusal, regression tests and verified three-platform packages. |
 | v0.7.0 | **Shipped as pre-release:** offline GitHub/GitLab/Gitea/generic issue Markdown adapters, opt-in reviewed metadata, local CLI/desktop exports and verified unsigned three-platform binaries. |
 | v0.8.0 | **Shipped as pre-release:** offline download checksum verification, static website source/Pages workflow, locked dependency inventory, scheduled advisory scans, cross-platform distribution docs and verified CLI/desktop archives. **Pages first-time enablement requires repository Settings action.** |
-| v0.9.0 | Release candidate and clean-machine testing |
+| v0.9.0 | **Source candidate:** harden report Markdown rendering and CLI import file identity, add real built-binary offline smoke tests and pre-publication archive manifest validation, and document clean-machine manual QA. **Actual clean-machine and accessibility tests remain pending.** |
 | v1.0.0 | First stable release after quality, privacy and platform gates pass |
 
 See [what_changed.md](what_changed.md) for actual progress. Do not confuse a GitHub pre-release with a production-ready build.
