@@ -1,3 +1,5 @@
 v0.9.0 experimental release quality pre-release; PR #13 merged.
 Publish only after Rust validation, deterministic inventory, real CLI smoke tests, all six true CLI+desktop cross-platform native archives, archive SHA-256 self verification and strict 12-upload GitHub Releases gate.
 This is not a stable release, signed installer or clean-machine GUI certification.
+
+Release asset gate retry: draft release v0.9.0 is visible via authenticated release listing, while direct tag lookup returned 404. Use unique-tag selection from listing, with the full strict 12-asset validator preserved.
