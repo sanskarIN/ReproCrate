@@ -4,11 +4,11 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. Version v0.6.0 adds opt-in private SQLite report history and search.
 
-> **Latest pre-release:** [v0.6.1 CLI + Desktop maintenance preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.1), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
+> **Latest pre-release:** [v0.7.0 CLI + Desktop issue drafts preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
 
 ## Download
 
-See the [v0.6.1 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.6.1) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
+See the [v0.7.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.7.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
 
 ## Analyze logs (available in v0.2.0)
 
@@ -65,7 +65,7 @@ File paths and metadata can themselves be private. Forgetting an index entry doe
 
 Reviewed JSON exports now request owner-only permissions on Unix; native imports reject opened non-regular files and compare selected file identities on Unix. Indexed reports store a canonical path, and unknown future history database schema versions are rejected without downgrading. See the [v0.6.1 maintenance notes](docs/releases/v0.6.1.md). No guaranteed secret removal, complete filesystem race audit, or signed installers are claimed.
 
-## Offline issue drafting (v0.7.0 development)
+## Offline issue drafting (v0.7.0 published pre-release)
 
 Generate a local Markdown issue draft for GitHub, GitLab, Gitea or a generic issue tracker. This feature **never sends HTTP requests, posts an issue or asks for API tokens**. Raw commands, logs and report title are omitted by default.
 
@@ -73,7 +73,7 @@ Generate a local Markdown issue draft for GitHub, GitLab, Gitea or a generic iss
 reprocrate issue export --report reviewed.json --target github --output issue-draft.md
 ```
 
-The Tauri desktop also previews the complete draft before a user explicitly saves it. Optional title, environment or category details require review acknowledgment. See the [privacy-first issue export guide](docs/reference/issue-export.md). **v0.6.1 remains the latest published release until v0.7.0 is independently verified.**
+The Tauri desktop also previews the complete draft before a user explicitly saves it. Optional title, environment or category details require review acknowledgment. See the [privacy-first issue export guide](docs/reference/issue-export.md). **v0.7.0 was verified as a public experimental pre-release** with the [successful release workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244).
 
 ## Build from source
 
