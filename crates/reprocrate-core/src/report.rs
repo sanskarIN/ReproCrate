@@ -303,7 +303,10 @@ mod tests {
             "[failure](https://example.invalid)",
             "![warning](https://example.invalid)",
         ] {
-            assert!(!rendered.contains(unsafe_markup), "untrusted metadata became active markup");
+            assert!(
+                !rendered.contains(unsafe_markup),
+                "untrusted metadata became active markup"
+            );
         }
         assert!(rendered.contains(r"\[title\]"));
         assert!(rendered.contains("plain output"));
