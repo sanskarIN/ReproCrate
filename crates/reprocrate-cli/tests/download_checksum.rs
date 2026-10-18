@@ -18,11 +18,8 @@ fn fixture() -> (PathBuf, PathBuf, PathBuf) {
     let archive = root.join("reprocrate-v0.8.0-demo.zip");
     let checksum = root.join("reprocrate-v0.8.0-demo.zip.sha256");
     fs::write(&archive, b"release archive bytes").unwrap();
-    // SHA-256 for the fixture is computed by shared core to avoid fake digests.
-    let digest = {
-        use sha2::{Digest, Sha256};
-        format!("{:x}", Sha256::digest(b"release archive bytes"))
-    };
+    // Known SHA-256 test vector, independently computed for these bytes.
+    let digest = "732d72e2a4bb150232c9885bb63214b769658e30289bd77bf7fd708291d74fad";
     fs::write(&checksum, format!("{digest}  reprocrate-v0.8.0-demo.zip\n")).unwrap();
     (root, archive, checksum)
 }
