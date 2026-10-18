@@ -237,7 +237,14 @@ impl From<ProfileArg> for CaptureProfile {
 }
 
 fn create_new_report(path: &Path, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
-    let mut file = OpenOptions::new().write(true).create_new(true).open(path)?;
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    let mut file = options.open(path)?;
     if let Err(error) = file.write_all(bytes).and_then(|_| file.sync_all()) {
         // Do not leave behind a misleading successful-looking partial export.
         drop(file);
