@@ -12,8 +12,8 @@ use privacy_bundle_commands::{
     run_bundle_create, run_bundle_extract, run_bundle_inspect, run_review,
 };
 use reprocrate_core::{
-    capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile, Report,
-    IssueOptions, IssueTarget, SCHEMA_VERSION,
+    capture_command, inspect_environment, render_markdown, CaptureOptions, CaptureProfile,
+    IssueOptions, IssueTarget, Report, SCHEMA_VERSION,
 };
 use std::error::Error;
 use std::ffi::OsString;
