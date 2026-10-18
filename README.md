@@ -87,6 +87,16 @@ See [download verification](docs/reference/download-integrity.md) and the [platf
 
 The self-contained [documentation website source](site/index.html) is deployed by a dedicated GitHub Pages workflow (deployment status must be checked separately). A lockfile-based [dependency inventory and advisory review](docs/security/dependency-audits.md) covers both Rust workspaces and npm, but does not guarantee clean licenses or an absence of vulnerabilities. **v0.8.0 is a publicly verified experimental pre-release**, with 12 nonempty assets and the [completed gated workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39095891087). The GitHub Pages site source is ready, but first-time deployment still requires the repository owner to select **Settings → Pages → Build and deployment → Source: GitHub Actions**; the provided workflow token cannot create the Pages site itself.
 
+## v0.9.0 release-candidate quality work (development)
+
+This milestone hardens **untrusted report metadata rendering** against active inline Markdown links/images, refuses unsafe CLI JSON import file types (including symlinks/pipes), and adds real executable smoke tests and a strict 12-asset pre-publication gate. The public release remains **v0.8.0** until the v0.9.0 workflow and GitHub Releases API independently confirm publication.
+
+- [v0.9.0 release changes](docs/releases/v0.9.0.md)
+- [RC QA checklist — manual clean-machine steps are not yet completed](docs/qa/release-candidate.md)
+- [Security policy](SECURITY.md)
+
+Automated test success is **not** proof of clean-machine graphical compatibility, signed installers, complete privacy guarantees or stable production readiness.
+
 ## Build from source
 
 Install a stable Rust toolchain (Rust 1.82 or newer), then:
