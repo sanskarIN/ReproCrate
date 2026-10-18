@@ -75,6 +75,18 @@ reprocrate issue export --report reviewed.json --target github --output issue-dr
 
 The Tauri desktop also previews the complete draft before a user explicitly saves it. Optional title, environment or category details require review acknowledgment. See the [privacy-first issue export guide](docs/reference/issue-export.md). **v0.7.0 was verified as a public experimental pre-release** with the [successful release workflow](https://github.com/sanskarIN/ReproCrate/actions/runs/39091493244).
 
+## v0.8.0 distribution and security improvements (candidate)
+
+A new **offline checksum verifier** checks a chosen downloaded release archive against its SHA-256 sidecar. It never extracts or executes the archive:
+
+```sh
+reprocrate verify-download ./reprocrate-v0.8.0-linux-x86_64.tar.gz --checksum ./reprocrate-v0.8.0-linux-x86_64.tar.gz.sha256
+```
+
+See [download verification](docs/reference/download-integrity.md) and the [platform matrix](docs/reference/distribution.md). Hash matching is an integrity check, **not proof of publisher authenticity**. The desktop and CLI continue to operate without mandatory network access or accounts.
+
+The self-contained [documentation website source](site/index.html) is deployed by a dedicated GitHub Pages workflow (deployment status must be checked separately). A lockfile-based [dependency inventory and advisory review](docs/security/dependency-audits.md) covers both Rust workspaces and npm, but does not guarantee clean licenses or an absence of vulnerabilities. **Until GitHub publication is verified, v0.7.0 remains the latest public pre-release.**
+
 ## Build from source
 
 Install a stable Rust toolchain (Rust 1.82 or newer), then:
