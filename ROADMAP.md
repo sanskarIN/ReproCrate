@@ -11,7 +11,7 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | v0.5.0 | **Shipped as pre-release:** Tauri 2/React desktop foundation, shared Rust-core IPC, report inspection, comparisons, bounded log analysis, inert recipes, privacy review, cross-platform CI and unsigned desktop developer-preview executables. No installers or stable claim. |
 | v0.6.0 | **Shipped as pre-release:** opt-in private SQLite report history, bounded local search, inspection links, forgetting indexed entries, three-OS desktop tests and real unsigned executables. Accessibility/file-picker/security refinement remains planned. |
 | v0.6.1 | **Shipped as pre-release:** Unix reviewed-export privacy, selected-file read checks, canonical history paths, SQLite future-schema refusal, regression tests and verified three-platform packages. |
-| v0.7.0 | **Implementation candidate:** offline GitHub/GitLab/Gitea/generic issue Markdown adapters with manual preview, opt-in metadata and no-upload CLI/desktop export; release gated on native CI. |
+| v0.7.0 | **Shipped as pre-release:** offline GitHub/GitLab/Gitea/generic issue Markdown adapters, opt-in reviewed metadata, local CLI/desktop exports and verified unsigned three-platform binaries. |
 | v0.8.0 | Cross-platform distribution, docs site, license/security audits |
 | v0.9.0 | Release candidate and clean-machine testing |
 | v1.0.0 | First stable release after quality, privacy and platform gates pass |
