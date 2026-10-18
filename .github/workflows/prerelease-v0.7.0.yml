@@ -17,9 +17,9 @@ jobs:
       - name: Check version metadata consistency
         shell: bash
         run: |
-          grep -Fxq 'version = "0.6.1"' Cargo.toml
-          grep -Fxq 'version = "0.6.1"' apps/desktop/src-tauri/Cargo.toml
-          node -e "const fs=require('node:fs');for(const p of ['apps/desktop/package.json','apps/desktop/package-lock.json','apps/desktop/src-tauri/tauri.conf.json']){if(JSON.parse(fs.readFileSync(p,'utf8')).version!=='0.6.1')process.exit(1)}"
+          grep -Fxq 'version = "0.7.0"' Cargo.toml
+          grep -Fxq 'version = "0.7.0"' apps/desktop/src-tauri/Cargo.toml
+          node -e "const fs=require('node:fs');for(const p of ['apps/desktop/package.json','apps/desktop/package-lock.json','apps/desktop/src-tauri/tauri.conf.json']){if(JSON.parse(fs.readFileSync(p,'utf8')).version!=='0.7.0')process.exit(1)}"
       - run: cargo +stable fmt --all --check
       - run: cargo +stable clippy --workspace --all-targets --all-features --locked -- -D warnings
       - run: cargo +stable test --workspace --locked
