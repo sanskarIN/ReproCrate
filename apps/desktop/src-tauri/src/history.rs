@@ -80,6 +80,13 @@ fn open_database(path: &Path) -> Result<Connection, String> {
     let conn = Connection::open(path).map_err(|e| format!("Cannot open local history: {e}"))?;
     conn.busy_timeout(Duration::from_secs(3))
         .map_err(|e| e.to_string())?;
+    // Never silently downgrade or write to a database from a future release.
+    let schema: i64 = conn
+        .pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|e| format!("Cannot inspect local history schema: {e}"))?;
+    if schema > 1 || schema < 0 {
+        return Err(format!("Unsupported local history database schema {schema}; refusing to modify it."));
+    }
     conn.execute_batch(
         "PRAGMA journal_mode = DELETE;
          PRAGMA secure_delete = ON;
@@ -231,10 +238,17 @@ fn database_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
 #[tauri::command]
 pub fn remember_report(app: tauri::AppHandle, path: String) -> Result<HistoryEntry, String> {
     let report = crate::load_report(&path)?;
+    // Persist a stable absolute path rather than one relative to the current
+    // process directory; this also deduplicates equivalent path spellings.
+    let canonical = fs::canonicalize(&path)
+        .map_err(|e| format!("Cannot resolve selected report path: {e}"))?;
+    let canonical = canonical
+        .to_str()
+        .ok_or("Report path cannot be represented as UTF-8.")?;
     let conn = open_database(&database_path(&app)?)?;
     add_report(
         &conn,
-        &path,
+        canonical,
         &report.title,
         &report.report_id,
         &report.environment.os,
@@ -335,6 +349,23 @@ mod tests {
         assert_eq!(items[0].id, saved.id);
         assert!(forget(&second, saved.id).unwrap());
         drop(second);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn rejects_future_schema_without_downgrading_it() {
+        let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+        let root = std::env::temp_dir().join(format!("rc-history-future-{}-{stamp}", std::process::id()));
+        let file = root.join("history.sqlite3");
+        let conn = open_database(&file).unwrap();
+        conn.pragma_update(None, "user_version", 2_i64).unwrap();
+        drop(conn);
+        let error = open_database(&file).unwrap_err();
+        assert!(error.contains("Unsupported local history database schema 2"));
+        let untouched = Connection::open(&file).unwrap();
+        let version: i64 = untouched.pragma_query_value(None, "user_version", |row| row.get(0)).unwrap();
+        assert_eq!(version, 2);
+        drop(untouched);
         fs::remove_dir_all(root).unwrap();
     }
 
