@@ -1,0 +1,3 @@
+v0.9.0 experimental release quality pre-release; PR #13 merged.
+Publish only after Rust validation, deterministic inventory, real CLI smoke tests, all six true CLI+desktop cross-platform native archives, archive SHA-256 self verification and strict 12-upload GitHub Releases gate.
+This is not a stable release, signed installer or clean-machine GUI certification.
