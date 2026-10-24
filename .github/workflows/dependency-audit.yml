@@ -44,7 +44,7 @@ jobs:
 
   rust-advisories:
     name: RustSec advisory scan (scheduled or manual)
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -52,10 +52,18 @@ jobs:
         run: |
           rustup toolchain install stable --profile minimal
           cargo +stable install cargo-audit --locked
-      - name: Audit CLI/core dependency lockfile
-        run: cargo +stable audit --file Cargo.lock
-      - name: Audit native desktop dependency lockfile
-        run: cargo +stable audit --file apps/desktop/src-tauri/Cargo.lock
+      - name: Audit both Rust lockfiles (always inspect both)
+        shell: bash
+        run: |
+          set +e
+          cargo +stable audit --file Cargo.lock
+          cli_result=$?
+          cargo +stable audit --file apps/desktop/src-tauri/Cargo.lock
+          desktop_result=$?
+          if [ "$cli_result" -ne 0 ] || [ "$desktop_result" -ne 0 ]; then
+            echo "RustSec advisories or scanning errors were found; both lockfiles require review." >&2
+            exit 1
+          fi
 
   npm-advisories:
     name: npm advisories (scheduled or manual)
