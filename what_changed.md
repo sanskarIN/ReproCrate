@@ -1,7 +1,7 @@
-# v0.9.1 ZIP advisory remediation — development handoff
+# v0.9.1 ZIP advisory remediation — published pre-release handoff
 
 Date: October 24, 2026. Repo: https://github.com/sanskarIN/ReproCrate
-Branch: `feat/v0.9.1-zip-audit-hardening`. **Not a published release until the guarded v0.9.1 workflow succeeds.**
+Branch: `feat/v0.9.1-zip-audit-hardening`, merged by [PR #14](https://github.com/sanskarIN/ReproCrate/pull/14). **Published experimental pre-release:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.1. GitHub verified `draft:false`, `prerelease:true` and exactly 12 uploaded assets.
 
 ## Findings and implemented work
 
@@ -11,14 +11,15 @@ Branch: `feat/v0.9.1-zip-audit-hardening`. **Not a published release until the g
 - Updated the core workspace, Tauri Rust package, Tauri config, npm package and npm lock root metadata to version **0.9.1**.
 - Added `scripts/tests/test_version_lockfiles.py` to reject unpatched ZIP dependency locks or metadata drift.
 - Added a version-specific guarded CLI and desktop prerelease workflow with `cargo-audit` for **both** Rust lockfiles, npm high-severity audit, Rust validation, true 3-OS binary builds and a strict twelve-asset SHA-256-sidecar publication gate.
-- Added versioned candidate release notes and corrected the public README/security policy to distinguish published v0.9.0 (unpatched dependency) from candidate v0.9.1.
+- Added versioned candidate release notes and corrected the public README/security policy to distinguish published v0.9.0 (unpatched dependency) from published v0.9.1.
 
-## Outstanding before publication
+## Verified publication and remaining gates
 
-1. Confirm final PR checks pass and merge the reviewed branch without bypassing failures.
-2. Commit `.release/v0.9.1` on `main` only after CI clears; this is the sole release trigger.
-3. Confirm workflow validate, package, and publish jobs pass and releases API exposes v0.9.1 as non-draft prerelease with all 12 genuine assets.
-4. Do **not** represent checksum checks as code signing, clean-machine GUI verification, guaranteed secret removal, or a stable release.
+1. **Merged PR #14** after passing three-platform Rust CI, three-platform native desktop checks and dual RustSec lockfile audits. Source files and updated dependency locks are on `main`.
+2. **Release trigger:** `.release/v0.9.1` committed on `main`. Initial release job [40086543575](https://github.com/sanskarIN/ReproCrate/actions/runs/40086543575) safely refused to publish because `scripts/smoke_cli.py` expected v0.9.0. Fixed smoke test to use the manifest and retriggered marker; second [workflow 40086886064](https://github.com/sanskarIN/ReproCrate/actions/runs/40086886064) completed successfully.
+3. **Final CI evidence:** validation, both locked RustSec scans, high-severity npm audit, Python checks, all real CLI smoke tests, three desktop native build jobs, checksum self-verification and exactly 12 asset manifest gate passed.
+4. **Published artifacts:** [v0.9.1](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.1) released October 24, 2026 (`2026-10-24T10:49:57Z`), GitHub API verified `draft:false`, `prerelease:true`, and six CLI+desktop native packages plus six .sha256 sidecars for Linux x86-64, macOS ARM64 and Windows x86-64.
+5. **Not yet complete:** signing/notarization, independent clean-machine GUI and accessibility QA, full OS matrix/manual security review and v1.0 stable certification. Matching checksums are not publisher authentication.
 
 ---
 
