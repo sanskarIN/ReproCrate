@@ -1,3 +1,5 @@
 v0.9.1 experimental security maintenance pre-release; PR #14 merged.
 Release only after frozen CLI and native desktop Rust builds, RustSec advisory scans of both Cargo lockfiles, npm high-severity audit, three-platform CLI executable smoke tests, native 3-OS desktop builds, SHA-256 local verification, and the strict 12 uploaded-asset prerelease draft gate all pass.
 No stable-release, signed-installer, clean-machine GUI/accessibility or publisher-authenticity guarantees.
+
+Release retry: avoid stale version expectations by reading the workspace version from Cargo.toml in the actual CLI smoke test. Retain all RustSec, npm, platform, checksum and exact 12-asset publication gates.
