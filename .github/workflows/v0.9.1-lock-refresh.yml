@@ -42,5 +42,14 @@ jobs:
           git add Cargo.lock apps/desktop/src-tauri/Cargo.lock
           if ! git diff --cached --quiet; then
             git commit -m "fix(lockfiles): lock patched zip 9.0.5 across CLI and desktop"
-            git push origin HEAD:feat/v0.9.1-zip-audit-hardening
+            for attempt in 1 2 3 4 5; do
+              git fetch origin feat/v0.9.1-zip-audit-hardening
+              git rebase origin/feat/v0.9.1-zip-audit-hardening
+              if git push origin HEAD:feat/v0.9.1-zip-audit-hardening; then
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Branch advanced repeatedly; refusing force push" >&2
+            exit 1
           fi
