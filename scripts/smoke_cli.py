@@ -11,6 +11,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import tomllib
 
 
 def run(binary, *args, succeed=True):
@@ -30,7 +31,10 @@ def run(binary, *args, succeed=True):
 
 def check(binary):
     version = run(binary, "--version")
-    if "0.9.0" not in version:
+    manifest = Path(__file__).resolve().parents[1] / "Cargo.toml"
+    with manifest.open("rb") as stream:
+        expected_version = tomllib.load(stream)["workspace"]["package"]["version"]
+    if version.strip() != f"reprocrate {expected_version}":
         raise AssertionError(f"Unexpected CLI version: {version[:100]}")
     run(binary, "--help")
     env = json.loads(run(binary, "doctor", "--json"))
