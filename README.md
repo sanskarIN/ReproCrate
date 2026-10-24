@@ -4,11 +4,13 @@
 
 ReproCrate is a local-first, EPL-2.0-licensed developer diagnostics toolkit. The Rust CLI can capture **explicitly selected** commands without a shell, bound captured output, record outcomes, sanitize common secret patterns, and export JSON and Markdown reports. Version v0.2.0 added bounded offline log analysis and heuristic failure fingerprints. Version v0.3.0 added explicit privacy review and integrity-checked portable ZIP bundles. Version v0.4.0 added privacy-minimizing report comparisons and inert reproduction checklists. Version v0.5.0 introduced a Tauri 2/React desktop interface backed by the same Rust core. Version v0.6.0 adds opt-in private SQLite report history and search.
 
-> **Security maintenance:** v0.9.1 is under development to replace the ZIP dependency flagged in the October 19 RustSec run. The currently published v0.9.0 binaries do **not** include that patch. See [v0.9.1 candidate notes](docs/releases/v0.9.1.md).\n\n> **Latest pre-release:** [v0.9.0 CLI + Desktop release-quality preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0), published October 18, 2026. The release contains genuine unsigned Windows x86-64, Linux x86-64 and macOS ARM64 binaries for both CLI and desktop, each paired with a SHA-256 file. **Experimental:** not a stable v1.0.0, signed installer or clean-machine graphical QA certification.
+> **Latest pre-release:** [v0.9.1 security maintenance preview](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.1), published October 24, 2026. Patched `zip` 9.0.5 replaces the dependency affected by three RustSec advisories in both CLI/core and native desktop lockfiles. All six Windows/Linux/macOS CLI + desktop unsigned archives and six SHA-256 sidecars were uploaded after successful multi-platform verification. **Experimental:** not stable, code-signed or clean-machine GUI certified.
+
+> **Older version:** [v0.9.0](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0) was built with the previously flagged ZIP dependency. Prefer v0.9.1 or newer when downloading.
 
 ## Download
 
-See the [v0.9.0 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.0) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
+See the [v0.9.1 pre-release](https://github.com/sanskarIN/ReproCrate/releases/tag/v0.9.1) for six unsigned executable archives (three **CLI** and three **Tauri desktop developer-preview** builds) and their six SHA-256 files. Desktop binaries are raw executables, not installers or signed `.app`/`.msi`/`.deb` packages; system WebView2/WebKitGTK prerequisites may apply. Inspect and verify checksums before running downloaded software.
 
 ## Analyze logs (available in v0.2.0)
 
