@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.1] — 2026-10-24 (security maintenance pre-release candidate)
+
+**Status:** Preparing a guarded pre-release. This entry does not claim publication.
+
+- Replaced vulnerable `zip` 2.6.1 with patched `zip` 9.0.5 in both Rust lockfiles for RustSec advisories RUSTSEC-2026-0367, RUSTSEC-2026-0368 and RUSTSEC-2026-0369.
+- Raised CLI/core workspace MSRV to 1.88 as required by patched ZIP, aligned desktop/Tauri/npm version 0.9.1, and added locked-manifest regression coverage.
+- Made v0.9.1 release publication conditional on both RustSec locked-workspace audits and a high-severity npm audit, in addition to prior three-platform builds, CLI smoke tests, checksum self-verification and exact 12-upload draft gate.
+- Did not change report/bundle wire schemas or enable implicit network requests or command execution.
+
+**Remaining:** CI and publication evidence, independent clean-machine GUI/accessibility QA, signed distribution and stable quality gates. See [v0.9.1 release notes](docs/releases/v0.9.1.md).
+
+
 ## [0.1.0] — 2026-10-17 (pre-release)
 
 **Published:** https://github.com/sanskarIN/ReproCrate/releases/tag/v0.1.0

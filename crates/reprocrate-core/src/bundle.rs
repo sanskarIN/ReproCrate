@@ -157,7 +157,7 @@ fn inspect_members(bytes: &[u8]) -> io::Result<(BundleManifest, BTreeMap<String,
 
     for index in 0..archive.len() {
         let mut entry = archive.by_index(index).map_err(zip_error)?;
-        let name = entry.name().to_owned();
+        let name = entry.name().map_err(zip_error)?.into_owned();
         if !is_allowed_path(&name)
             || name.contains('\\')
             || name.starts_with('/')

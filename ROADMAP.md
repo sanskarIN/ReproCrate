@@ -14,6 +14,6 @@ Versions reflect **planned** scope, not released artifacts. Releases must be sup
 | v0.7.0 | **Shipped as pre-release:** offline GitHub/GitLab/Gitea/generic issue Markdown adapters, opt-in reviewed metadata, local CLI/desktop exports and verified unsigned three-platform binaries. |
 | v0.8.0 | **Shipped as pre-release:** offline download checksum verification, static website source/Pages workflow, locked dependency inventory, scheduled advisory scans, cross-platform distribution docs and verified CLI/desktop archives. **Pages first-time enablement requires repository Settings action.** |
 | v0.9.0 | **Shipped as pre-release:** literal Markdown metadata, safer CLI JSON input checks, real CLI binary smoke tests, authenticated draft-aware 12-asset gate and tested cross-platform CLI/desktop binaries. **Manual clean-machine GUI/accessibility and signing remain pending.** |
-| v1.0.0 | First stable release after quality, privacy and platform gates pass |
+| v0.9.1 | **In progress:** patched ZIP 9.0.5 in independently locked CLI/desktop Rust workspaces, package metadata synchronization, release-specific advisory scans, unchanged privacy posture, gated three-OS packages. Not published until all checks pass. |\n| v1.0.0 | First stable release after quality, privacy and platform gates pass |
 
 See [what_changed.md](what_changed.md) for actual progress. Do not confuse a GitHub pre-release with a production-ready build.

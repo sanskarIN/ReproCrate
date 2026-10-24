@@ -20,3 +20,9 @@ GitHub Actions `Dependency inventory and advisory checks` tests and uploads the 
 Review licensing with a qualified maintainer: each dependency may have more than one permissible license, and `license: null` means no declaration in the lockfile, **not license-free**. Check original package manifests and required notice conditions. `LICENSE` in this repository covers ReproCrate's own code; third-party code has independent obligations.
 
 Source code dependencies are controlled by committed lockfiles. Existing pinned GitHub Actions are maintained separately from packages. The v0.8.0 audit process provides evidence to review—not a claim of complete supply-chain safety.
+
+## October 2026 ZIP remediation — v0.9.1 candidate
+
+The [October 19 scheduled scan](https://github.com/sanskarIN/ReproCrate/actions/runs/39233612449) reported three advisories against locked `zip` 2.6.1: RUSTSEC-2026-0367, -0368 and -0369. npm advisory and dependency-inventory jobs succeeded, but the RustSec job failed. The prior `zip` version was used for explicitly bounded local diagnostic bundles, not for upstream `ZipArchive::extract()`; no claim of proven exploitation or safety is made.
+
+The v0.9.1 candidate pins `zip` to patched 9.0.5 and regenerates both independent Rust lockfiles rather than suppressing advisories. The new version requires Rust 1.88+. A release-specific validator must run RustSec against **both** lockfiles and npm audit against frontend dependencies before publication. Keep investigating new failures; do **not** silence critical advisories with an ignore list merely to make a release pass. Current published v0.9.0 binaries should not be represented as including these future patches.

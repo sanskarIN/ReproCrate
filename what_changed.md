@@ -1,3 +1,27 @@
+# v0.9.1 ZIP advisory remediation — development handoff
+
+Date: October 24, 2026. Repo: https://github.com/sanskarIN/ReproCrate
+Branch: `feat/v0.9.1-zip-audit-hardening`. **Not a published release until the guarded v0.9.1 workflow succeeds.**
+
+## Findings and implemented work
+
+- Scheduled dependency audit run https://github.com/sanskarIN/ReproCrate/actions/runs/39233612449 failed October 19 because `Cargo.lock` contained `zip` **2.6.1**, flagged by RUSTSEC-2026-0367, -0368 and -0369 (including a critical advisory). npm and locked inventory jobs succeeded. This is a dependency warning, not evidence of proven exploitation.
+- Updated the shared Rust ZIP requirement from 2.4 to **exactly 9.0.5**, with minimal `deflate` feature, and raised core/CLI Rust MSRV to 1.88.
+- Re-resolved and committed **both** independent Rust lockfiles through GitHub Actions, after an initial safe non-fast-forward rejection. Successful one-shot CI lockfile updater run: https://github.com/sanskarIN/ReproCrate/actions/runs/40085860698. The one-shot workflow was removed after the lockfiles landed. Last generated lockfile commit uses `sanskarin@outlook.in`.
+- Updated the core workspace, Tauri Rust package, Tauri config, npm package and npm lock root metadata to version **0.9.1**.
+- Added `scripts/tests/test_version_lockfiles.py` to reject unpatched ZIP dependency locks or metadata drift.
+- Added a version-specific guarded CLI and desktop prerelease workflow with `cargo-audit` for **both** Rust lockfiles, npm high-severity audit, Rust validation, true 3-OS binary builds and a strict twelve-asset SHA-256-sidecar publication gate.
+- Added versioned candidate release notes and corrected the public README/security policy to distinguish published v0.9.0 (unpatched dependency) from candidate v0.9.1.
+
+## Outstanding before publication
+
+1. Confirm final PR checks pass and merge the reviewed branch without bypassing failures.
+2. Commit `.release/v0.9.1` on `main` only after CI clears; this is the sole release trigger.
+3. Confirm workflow validate, package, and publish jobs pass and releases API exposes v0.9.1 as non-draft prerelease with all 12 genuine assets.
+4. Do **not** represent checksum checks as code signing, clean-machine GUI verification, guaranteed secret removal, or a stable release.
+
+---
+
 # v0.9.0 hardening and release quality (published pre-release)
 
 Date: 2026-10-18. Repo: https://github.com/sanskarIN/ReproCrate, development branch `feat/v0.9.0-release-quality` merged via [PR #13](https://github.com/sanskarIN/ReproCrate/pull/13) with 26 focused commits.
