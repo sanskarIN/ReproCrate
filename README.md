@@ -150,4 +150,4 @@ The project is published under the [Eclipse Public License 2.0](LICENSE). Source
 - [Contact](https://sanskarin.github.io/contact)
 - [Documentation (planned, not yet deployed)](https://sanskarin.github.io/ReproCrate)
 
-Optional support: [Buy Me a Coffee](https://buymeacoffee.com/SanskarCodes) · [Razorpay](https://razorpay.me/@SanskarCodes) · [PayPal](https://paypal.me/SanskarCodes).
+Optional support: [GitHub Sponsors](https://github.com/sponsors/sanskarIN) · [Buy Me a Coffee](https://buymeacoffee.com/SanskarCodes) · [Razorpay](https://razorpay.me/@SanskarCodes) · [PayPal](https://paypal.me/SanskarCodes).
